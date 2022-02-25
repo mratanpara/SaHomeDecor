@@ -38,3 +38,21 @@ const kSecondHeadingTextStyle = TextStyle(
   fontSize: 26,
   fontWeight: FontWeight.bold,
 );
+
+//Tab indicator
+BoxDecoration kTabIndicatorDecoration = BoxDecoration(
+  color: Colors.black,
+  borderRadius: BorderRadius.circular(14),
+  shape: BoxShape.rectangle,
+);
+
+//app bar text style
+const kFirstTitleTextStyle = TextStyle(
+  color: Colors.grey,
+  fontSize: 18,
+);
+const kSecondTitleTextStyle = TextStyle(
+  fontSize: 20,
+  letterSpacing: 1,
+  fontWeight: FontWeight.bold,
+);

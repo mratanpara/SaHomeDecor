@@ -6,11 +6,6 @@ ThemeData lightTheme() {
     brightness: Brightness.light,
     fontFamily: 'Asap',
     scaffoldBackgroundColor: Colors.white,
-    tabBarTheme: const TabBarTheme(
-      indicatorSize: TabBarIndicatorSize.label,
-      labelColor: Colors.black,
-      unselectedLabelColor: Colors.grey,
-    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white10,
       elevation: 0,
