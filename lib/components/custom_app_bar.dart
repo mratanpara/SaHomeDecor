@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final IconData leadingIcon;
   final String title;
-  final IconData actionIcon;
+  final IconData? actionIcon;
 
   CustomAppBar(
       {required this.title,

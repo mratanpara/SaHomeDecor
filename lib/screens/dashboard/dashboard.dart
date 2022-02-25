@@ -4,6 +4,8 @@ import 'package:decor/constants.dart';
 import 'package:decor/models/bottom_nav_bar_index.dart';
 import 'package:decor/screens/favorite/favorite_screen.dart';
 import 'package:decor/screens/home/home_screen.dart';
+import 'package:decor/screens/notification/notification_screen.dart';
+import 'package:decor/screens/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,8 +23,8 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
     const FavoriteScreen(),
-    const Center(child: Text('notification')),
-    const Center(child: Text('account')),
+    const NotificationScreen(),
+    const ProfileScreen(),
   ];
 
   @override

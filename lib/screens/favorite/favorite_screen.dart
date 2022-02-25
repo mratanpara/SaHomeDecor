@@ -32,7 +32,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  'assets/images/chair.jpeg',
+                  'assets/images/category/chair-1.jpg',
                   fit: BoxFit.cover,
                   height: size.height * 0.15,
                   width: size.width * 0.3,

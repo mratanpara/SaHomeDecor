@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: Image.asset(
-                            'assets/images/bed.jpeg',
+                            'assets/images/category/simple-desk.png',
                             fit: BoxFit.cover,
                             height: size.height * 0.3,
                             width: size.width * 0.47,
@@ -68,23 +68,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           contentPadding: EdgeInsets.zero,
                           minVerticalPadding: size.width * 0.01,
                           dense: true,
-                          title: Text(
+                          title: const Text(
                             'Bed',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: kNormalFontSize,
-                              letterSpacing: 2,
-                            ),
+                            style: kGridViewTitleStyle,
                           ),
-                          subtitle: Text(
+                          subtitle: const Text(
                             '\$ 12.00',
-                            style: TextStyle(
-                              fontSize: kNormalFontSize,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: kGridViewSubTitleStyle,
                           ),
-                          trailing: IconButton(
+                          trailing: const IconButton(
                             onPressed: null,
                             icon: Icon(
                               CupertinoIcons.bag,
@@ -111,8 +103,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         controller: _tabController,
         tabs: const <Widget>[
           Tab(
-            icon: Icon(FontAwesomeIcons.star, size: kIconSize),
-            text: 'All',
+            icon: Icon(Icons.home, size: kIconSize),
+            text: 'See All',
           ),
           Tab(
             icon: Icon(FontAwesomeIcons.chair, size: kIconSize),

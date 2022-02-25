@@ -39,19 +39,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Padding _cardWithShadow(Size size) => Padding(
         padding: kCardPadding,
         child: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(.5),
-                blurRadius: 20.0, // soften the shadow
-                spreadRadius: 0.0, //extend the shadow
-                offset: const Offset(
-                  5.0, // Move to right 10  horizontally
-                  5.0, // Move to bottom 10 Vertically
-                ),
-              )
-            ],
-          ),
+          decoration: kBoxShadow,
           child: Card(
             shadowColor: Colors.transparent,
             color: kBgColor,
