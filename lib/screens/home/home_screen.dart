@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants.dart';
+import 'package:decor/screens/cart/cart_screen.dart';
+import 'package:decor/screens/details/detail_screen.dart';
+import 'package:decor/screens/home/components/categories_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,10 +19,24 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late TabController _tabController;
 
+  final List<String> _category = [
+    'armchairs',
+    'beds',
+    'chairs',
+    'sofas',
+  ];
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
+  }
+
+  String _getCategory() {
+    for (int i = 0; i < _category.length; i++) {
+      return _category[i];
+    }
+    return '';
   }
 
   @override
@@ -29,70 +47,65 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         title: 'Beautiful',
         actionIcon: CupertinoIcons.cart,
         leadingIcon: CupertinoIcons.search,
+        onActionIconPressed: () {
+          Navigator.pushNamed(context, CartScreen.id);
+        },
+        onLeadingIconPressed: null,
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
             vertical: size.height * 0.02, horizontal: size.width * 0.02),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),
-          child: Column(
-            children: [
-              _categoryTabs(),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: const ScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 20,
-                    mainAxisExtent: size.height * 0.40,
+        child: Column(
+          children: [
+            _categoryTabs(),
+            Flexible(
+              child: SizedBox(
+                height: size.height,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(
+                            parent: AlwaysScrollableScrollPhysics()),
+                        child: Flexible(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              for (int i = 0; i < _category.length; i++)
+                                CategoriesData(
+                                    size: size,
+                                    collection: _category.elementAt(i)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      _getCategories(size: size, category: 'chairs'),
+                      _getCategories(size: size, category: 'sofas'),
+                      _getCategories(size: size, category: 'beds'),
+                      _getCategories(size: size, category: 'armchairs'),
+                    ],
                   ),
-                  itemCount: 6,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(
-                            'assets/images/category/simple-desk.png',
-                            fit: BoxFit.cover,
-                            height: size.height * 0.3,
-                            width: size.width * 0.47,
-                          ),
-                        ),
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          minVerticalPadding: size.width * 0.01,
-                          dense: true,
-                          title: const Text(
-                            'Bed',
-                            style: kGridViewTitleStyle,
-                          ),
-                          subtitle: const Text(
-                            '\$ 12.00',
-                            style: kGridViewSubTitleStyle,
-                          ),
-                          trailing: const IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              CupertinoIcons.bag,
-                              size: 22,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
                 ),
               ),
-            ],
-          ),
+            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+            //   child:
+            // ),
+          ],
         ),
       ),
+    );
+  }
+
+  SingleChildScrollView _getCategories(
+      {required Size size, required String category}) {
+    return SingleChildScrollView(
+      physics:
+          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      child: CategoriesData(size: size, collection: category),
     );
   }
 

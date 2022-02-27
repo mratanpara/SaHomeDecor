@@ -21,65 +21,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leadingIcon: CupertinoIcons.search,
         title: 'Profile',
         actionIcon: Icons.logout,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () {},
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
         padding: kAllPadding,
-        child: Column(
-          children: [
-            Padding(
-              padding: kSymmetricPaddingVer,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage:
-                        const AssetImage('assets/images/thumbnail.jpeg'),
-                    radius: size.width * 0.1,
-                  ),
-                  const Flexible(
-                    child: ListTile(
-                      title: Padding(
-                        padding: kBottomPadding,
-                        child: Text(
-                          'Mohit Ratanpara',
-                          style: kProfileTileTitleTextStyle,
+        child: SizedBox(
+          height: size.height * 0.85,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: kSymmetricPaddingVer,
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage:
+                          const AssetImage('assets/images/thumbnail.jpeg'),
+                      radius: size.width * 0.1,
+                    ),
+                    const Flexible(
+                      child: ListTile(
+                        title: Padding(
+                          padding: kBottomPadding,
+                          child: Text(
+                            'Mohit Ratanpara',
+                            style: kProfileTileTitleTextStyle,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'mratanpara@gmail.com',
+                          style: kProfileTileSubTitleTextStyle,
                         ),
                       ),
-                      subtitle: Text(
-                        'mratanpara@gmail.com',
-                        style: kProfileTileSubTitleTextStyle,
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: kSymmetricPaddingVer,
-              child: CustomCard(
-                  title: 'My Order', subTitle: 'Already have 10 orders'),
-            ),
-            Padding(
-              padding: kSymmetricPaddingVer,
-              child: CustomCard(
-                  title: 'Shipping Addresses', subTitle: '03 Addresses'),
-            ),
-            Padding(
-              padding: kSymmetricPaddingVer,
-              child: CustomCard(
-                  title: 'Payment Method', subTitle: 'You have 2 cards'),
-            ),
-            Padding(
-              padding: kSymmetricPaddingVer,
-              child: CustomCard(
-                  title: 'My Reviews', subTitle: 'Reviews for 5 items'),
-            ),
-            Padding(
-              padding: kSymmetricPaddingVer,
-              child: CustomCard(
-                  title: 'Settings',
-                  subTitle: 'Notification, Password, FAQs, Contact'),
-            ),
-          ],
+              Padding(
+                padding: kSymmetricPaddingVer,
+                child: CustomCard(
+                    title: 'My Order', subTitle: 'Already have 10 orders'),
+              ),
+              Padding(
+                padding: kSymmetricPaddingVer,
+                child: CustomCard(
+                    title: 'Shipping Addresses', subTitle: '03 Addresses'),
+              ),
+              Padding(
+                padding: kSymmetricPaddingVer,
+                child: CustomCard(
+                    title: 'Payment Method', subTitle: 'You have 2 cards'),
+              ),
+              Padding(
+                padding: kSymmetricPaddingVer,
+                child: CustomCard(
+                    title: 'My Reviews', subTitle: 'Reviews for 5 items'),
+              ),
+              Padding(
+                padding: kSymmetricPaddingVer,
+                child: CustomCard(
+                    title: 'Settings',
+                    subTitle: 'Notification, Password, FAQs, Contact'),
+              ),
+            ],
+          ),
         ),
       ),
     );

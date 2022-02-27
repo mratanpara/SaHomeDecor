@@ -1,25 +1,31 @@
 import 'package:decor/components/custom_app_bar.dart';
+import 'package:decor/components/custom_button.dart';
 import 'package:decor/constants.dart';
+import 'package:decor/screens/cart/cart_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class FavoriteScreen extends StatefulWidget {
+class FavouriteScreen extends StatefulWidget {
   static const String id = 'favorite_screen';
-  const FavoriteScreen({Key? key}) : super(key: key);
+  const FavouriteScreen({Key? key}) : super(key: key);
 
   @override
-  _FavoriteScreenState createState() => _FavoriteScreenState();
+  _FavouriteScreenState createState() => _FavouriteScreenState();
 }
 
-class _FavoriteScreenState extends State<FavoriteScreen> {
+class _FavouriteScreenState extends State<FavouriteScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppBar(
         leadingIcon: CupertinoIcons.search,
-        title: 'Favorites',
+        title: 'Favourites',
         actionIcon: CupertinoIcons.cart,
+        onActionIconPressed: () {
+          Navigator.pushNamed(context, CartScreen.id);
+        },
+        onLeadingIconPressed: () {},
       ),
       body: ListView.separated(
         physics: const BouncingScrollPhysics(
@@ -32,7 +38,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  'assets/images/category/chair-1.jpg',
+                  'assets/images/category/armchair.jpg',
                   fit: BoxFit.cover,
                   height: size.height * 0.15,
                   width: size.width * 0.3,
@@ -84,6 +90,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           );
         },
         separatorBuilder: (BuildContext context, int index) => const Divider(),
+      ),
+      bottomNavigationBar: Padding(
+        padding: kSymmetricPaddingHor,
+        child: CustomButton(
+          label: 'Add all to my cart',
+          onPressed: () {},
+        ),
       ),
     );
   }

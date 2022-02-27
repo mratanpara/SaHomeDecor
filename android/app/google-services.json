@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "509293462989",
+    "project_id": "sahomedecor-794d8",
+    "storage_bucket": "sahomedecor-794d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509293462989:android:b85c6401001f5dd2813084",
+        "android_client_info": {
+          "package_name": "com.sa.decor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "509293462989-l1d5sdhcmfu5i48qeuranmhjjrmkum7k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sa.decor",
+            "certificate_hash": "e843715ee410770658f0a4a384842845151f4ffb"
+          }
+        },
+        {
+          "client_id": "509293462989-pf2v92pvkbm3isa100a0vthdmt20bmo4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBMo16BbvFXv_KOdXmZ4PQTXh9-ms8P48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "509293462989-pf2v92pvkbm3isa100a0vthdmt20bmo4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

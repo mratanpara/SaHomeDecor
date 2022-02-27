@@ -1,19 +1,27 @@
 import 'package:decor/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final IconData leadingIcon;
   final String title;
   final IconData? actionIcon;
+  final VoidCallback? onLeadingIconPressed;
+  final VoidCallback? onActionIconPressed;
 
-  CustomAppBar(
-      {required this.title,
-      required this.actionIcon,
-      required this.leadingIcon});
+  CustomAppBar({
+    required this.title,
+    required this.actionIcon,
+    required this.leadingIcon,
+    required this.onActionIconPressed,
+    required this.onLeadingIconPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      systemOverlayStyle:
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       leading: _leadingIcon(),
       centerTitle: true,
       title: _title(),
@@ -23,10 +31,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   List<Widget> _actions() => [
         IconButton(
-          onPressed: null,
+          onPressed: onActionIconPressed,
           icon: Icon(
             actionIcon,
             size: kIconSize,
+            color: Colors.grey,
           ),
         ),
       ];
@@ -46,10 +55,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
 
   IconButton _leadingIcon() => IconButton(
-        onPressed: null,
+        onPressed: onLeadingIconPressed,
         icon: Icon(
           leadingIcon,
           size: kIconSize,
+          color: Colors.grey,
         ),
       );
 

@@ -2,7 +2,7 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_bottom_navigation_bar.dart';
 import 'package:decor/constants.dart';
 import 'package:decor/models/bottom_nav_bar_index.dart';
-import 'package:decor/screens/favorite/favorite_screen.dart';
+import 'package:decor/screens/favourite/favourite_screen.dart';
 import 'package:decor/screens/home/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
 import 'package:decor/screens/profile/profile_screen.dart';
@@ -22,7 +22,7 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
-    const FavoriteScreen(),
+    const FavouriteScreen(),
     const NotificationScreen(),
     const ProfileScreen(),
   ];

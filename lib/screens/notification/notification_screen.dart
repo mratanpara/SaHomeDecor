@@ -20,6 +20,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         leadingIcon: CupertinoIcons.search,
         title: 'Notification',
         actionIcon: null,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () {},
       ),
       body: ListView.separated(
         physics: const BouncingScrollPhysics(
