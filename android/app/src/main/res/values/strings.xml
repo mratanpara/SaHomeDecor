@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="facebook_app_id">958471548367955</string>
+    <string name="app_name">SAHomeDecor</string>
+    <string name="facebook_client_token">90b1b1ff3bcb223bb9fd6c2247b10fb2</string>
+    <string name="fb_login_protocol_scheme">fb958471548367955</string>
+</resources>

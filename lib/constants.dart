@@ -92,3 +92,10 @@ const kProfileTileTitleTextStyle = TextStyle(
   fontSize: 20,
 );
 const kProfileTileSubTitleTextStyle = TextStyle(fontSize: kNormalFontSize);
+
+//change the focus of text field
+void fieldFocusChange(
+    BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+  currentFocus.unfocus();
+  FocusScope.of(context).requestFocus(nextFocus);
+}

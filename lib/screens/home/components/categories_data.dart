@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/constants.dart';
 import 'package:decor/screens/details/detail_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,12 +28,7 @@ class CategoriesData extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Colors.black,
-              strokeWidth: 2,
-            ),
-          );
+          return const CustomProgressIndicator();
         }
 
         final data = snapshot.data?.docs;
@@ -43,51 +39,55 @@ class CategoriesData extends StatelessWidget {
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 20,
-            mainAxisExtent: size.height * 0.40,
+            mainAxisSpacing: 20,
+            mainAxisExtent: size.height * 0.35,
           ),
           itemCount: data?.length,
           itemBuilder: (BuildContext context, int index) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DetailScreen(data![index])));
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
-                      data![index]['url'],
-                      fit: BoxFit.fill,
-                      height: size.height * 0.3,
-                      width: size.width * 0.47,
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DetailScreen(data![index])));
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Flexible(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        data![index]['url'],
+                        fit: BoxFit.fill,
+                        // height: size.height * 0.3,
+                        // width: size.width * 0.47,
+                        // height: 200,
+                        // width: 200,
+                      ),
                     ),
                   ),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  minVerticalPadding: size.width * 0.01,
-                  dense: true,
-                  title: Text(
-                    data[index]['name'],
-                    style: kGridViewTitleStyle,
-                  ),
-                  subtitle: Text(
-                    '\$ ${data[index]['price']}',
-                    style: kGridViewSubTitleStyle,
-                  ),
-                  trailing: const IconButton(
-                    onPressed: null,
-                    icon: Icon(
-                      CupertinoIcons.bag,
-                      size: 22,
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                    title: Text(
+                      data[index]['name'],
+                      style: kGridViewTitleStyle,
+                    ),
+                    subtitle: Text(
+                      '\$ ${data[index]['price']}',
+                      style: kGridViewSubTitleStyle,
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        CupertinoIcons.bag,
+                        size: 22,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         );

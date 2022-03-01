@@ -6,6 +6,7 @@ import 'package:decor/screens/favourite/favourite_screen.dart';
 import 'package:decor/screens/home/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
 import 'package:decor/screens/profile/profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,6 +27,11 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
     const NotificationScreen(),
     const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

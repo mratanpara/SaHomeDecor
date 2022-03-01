@@ -4,9 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class CustomTextField extends StatefulWidget {
-  CustomTextField({required this.label});
+  CustomTextField({
+    required this.label,
+    required this.controller,
+    required this.focusNode,
+    required this.onSubmitted,
+    required this.type,
+  });
 
   final String label;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final Function(String) onSubmitted;
+  final TextInputType type;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -14,6 +24,7 @@ class CustomTextField extends StatefulWidget {
 
 class _CustomTextFieldState extends State<CustomTextField> {
   bool isSecure = false;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -29,6 +40,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
       children: [
         Text(widget.label, style: kTextFieldLabelStyle),
         TextFormField(
+          onFieldSubmitted: widget.onSubmitted,
+          focusNode: widget.focusNode,
+          controller: widget.controller,
+          keyboardType: widget.type,
           obscureText: _isObscureText(),
           cursorColor: Colors.black,
           decoration: InputDecoration(

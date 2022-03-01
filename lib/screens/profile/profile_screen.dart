@@ -1,6 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants.dart';
+import 'package:decor/models/users_model.dart';
+import 'package:decor/screens/auth/login/screen/login_screen.dart';
 import 'package:decor/screens/profile/components/custom_card.dart';
+import 'package:decor/services/auth_services.dart';
+import 'package:decor/services/database_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +19,34 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final _auth = AuthServices();
+  final _databaseService = DatabaseService();
+  final _currentUser = FirebaseAuth.instance.currentUser;
+  final _usersCollection = FirebaseFirestore.instance.collection('users');
+
+  String displayName = "";
+  String email = "";
+  String photoURL = "";
+
+  void getData() async {
+    if (_currentUser != null) {
+      var docSnapshot = await _usersCollection.doc(_currentUser!.uid).get();
+      if (docSnapshot.exists) {
+        setState(() {
+          displayName = docSnapshot.get("displayName");
+          email = docSnapshot.get("email");
+          photoURL = docSnapshot.get("photoURL");
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -21,7 +55,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         leadingIcon: CupertinoIcons.search,
         title: 'Profile',
         actionIcon: Icons.logout,
-        onActionIconPressed: null,
+        onActionIconPressed: () async {
+          await _auth.signoutUser();
+          Navigator.pushReplacementNamed(context, LoginScreen.id);
+        },
         onLeadingIconPressed: () {},
       ),
       body: SingleChildScrollView(
@@ -38,21 +75,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundImage:
-                          const AssetImage('assets/images/thumbnail.jpeg'),
+                      backgroundImage: NetworkImage(photoURL),
                       radius: size.width * 0.1,
                     ),
-                    const Flexible(
+                    Flexible(
                       child: ListTile(
                         title: Padding(
                           padding: kBottomPadding,
                           child: Text(
-                            'Mohit Ratanpara',
+                            displayName,
                             style: kProfileTileTitleTextStyle,
                           ),
                         ),
                         subtitle: Text(
-                          'mratanpara@gmail.com',
+                          email,
                           style: kProfileTileSubTitleTextStyle,
                         ),
                       ),

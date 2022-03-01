@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'SaHomeDecor',
         debugShowCheckedModeBanner: false,
-        initialRoute: DashBoard.id,
+        initialRoute: LoginScreen.id,
         routes: {
           DashBoard.id: (context) => const DashBoard(),
           HomeScreen.id: (context) => const HomeScreen(),
