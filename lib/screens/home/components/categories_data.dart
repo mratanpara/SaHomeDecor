@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/constants.dart';
+import 'package:decor/models/category_model.dart';
 import 'package:decor/screens/details/detail_screen.dart';
+import 'package:decor/services/database_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesData extends StatelessWidget {
-  const CategoriesData({
+  final _databaseService = DatabaseService();
+  CategoriesData({
     Key? key,
     required this.size,
     required this.collection,
@@ -60,10 +63,6 @@ class CategoriesData extends StatelessWidget {
                       child: Image.asset(
                         data![index]['url'],
                         fit: BoxFit.fill,
-                        // height: size.height * 0.3,
-                        // width: size.width * 0.47,
-                        // height: 200,
-                        // width: 200,
                       ),
                     ),
                   ),
@@ -72,16 +71,25 @@ class CategoriesData extends StatelessWidget {
                     dense: true,
                     title: Text(
                       data[index]['name'],
-                      style: kGridViewTitleStyle,
+                      style: kViewTitleStyle,
                     ),
                     subtitle: Text(
                       '\$ ${data[index]['price']}',
-                      style: kGridViewSubTitleStyle,
+                      style: kViewSubTitleStyle,
                     ),
                     trailing: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        CupertinoIcons.bag,
+                      onPressed: () async {
+                        await _databaseService.addToFavourites(Categories(
+                          name: data[index]['name'],
+                          url: data[index]['url'],
+                          desc: data[index]['desc'],
+                          star: data[index]['star'].toString(),
+                          category: data[index]['category'],
+                          price: data[index]['price'].toString(),
+                        ));
+                      },
+                      icon: const Icon(
+                        CupertinoIcons.bag_fill,
                         size: 22,
                       ),
                     ),

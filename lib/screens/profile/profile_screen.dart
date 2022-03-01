@@ -4,6 +4,7 @@ import 'package:decor/constants.dart';
 import 'package:decor/models/users_model.dart';
 import 'package:decor/screens/auth/login/screen/login_screen.dart';
 import 'package:decor/screens/profile/components/custom_card.dart';
+import 'package:decor/screens/shipping_address/shipping_addresses_screen.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,10 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
         padding: kAllPadding,
-        child: SizedBox(
-          height: size.height * 0.85,
+        child: Expanded(
           child: Column(
-            mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
                 padding: kSymmetricPaddingVer,
@@ -99,28 +98,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: CustomCard(
-                    title: 'My Order', subTitle: 'Already have 10 orders'),
+                    title: 'My Order',
+                    subTitle: 'Already have 10 orders',
+                    onTap: () {}),
               ),
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: CustomCard(
-                    title: 'Shipping Addresses', subTitle: '03 Addresses'),
+                    title: 'Shipping Addresses',
+                    subTitle: '0 Addresses',
+                    onTap: () {
+                      Navigator.pushNamed(context, ShippingAddresses.id);
+                    }),
               ),
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: CustomCard(
-                    title: 'Payment Method', subTitle: 'You have 2 cards'),
+                    title: 'Payment Method',
+                    subTitle: 'You have 2 cards',
+                    onTap: () {}),
               ),
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: CustomCard(
-                    title: 'My Reviews', subTitle: 'Reviews for 5 items'),
+                    title: 'My Reviews',
+                    subTitle: 'Reviews for 5 items',
+                    onTap: () {}),
               ),
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: CustomCard(
                     title: 'Settings',
-                    subTitle: 'Notification, Password, FAQs, Contact'),
+                    subTitle: 'Notification, Password, FAQs, Contact',
+                    onTap: () {}),
               ),
             ],
           ),

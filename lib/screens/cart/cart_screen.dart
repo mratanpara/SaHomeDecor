@@ -23,7 +23,7 @@ class _CartScreenState extends State<CartScreen> {
         title: 'Cart',
         actionIcon: null,
         onActionIconPressed: null,
-        onLeadingIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
       ),
       body: ListView.separated(
         physics: const BouncingScrollPhysics(
@@ -38,8 +38,8 @@ class _CartScreenState extends State<CartScreen> {
                 child: Image.asset(
                   'assets/images/category/sofa.jpg',
                   fit: BoxFit.cover,
-                  height: size.height * 0.15,
-                  width: size.width * 0.3,
+                  height: 150,
+                  width: 150,
                 ),
               ),
               Flexible(
@@ -47,7 +47,7 @@ class _CartScreenState extends State<CartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ListTile(
+                    const ListTile(
                       contentPadding: kAllPadding,
                       dense: true,
                       title: Text(

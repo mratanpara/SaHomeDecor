@@ -1,7 +1,8 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_bottom_navigation_bar.dart';
 import 'package:decor/constants.dart';
-import 'package:decor/models/bottom_nav_bar_index.dart';
+import 'package:decor/providers/bottom_nav_bar_index.dart';
+import 'package:decor/screens/auth/login/screen/login_screen.dart';
 import 'package:decor/screens/favourite/favourite_screen.dart';
 import 'package:decor/screens/home/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
@@ -35,7 +36,6 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: _widgetOptions
           .elementAt(Provider.of<BottomNavBarIndex>(context).selectedIndex),

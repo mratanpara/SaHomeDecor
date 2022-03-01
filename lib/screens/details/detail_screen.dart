@@ -21,6 +21,8 @@ class _DetailScreenState extends State<DetailScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

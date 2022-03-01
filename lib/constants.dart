@@ -74,13 +74,13 @@ BoxDecoration kBoxShadow = BoxDecoration(
 );
 
 //gridview text style
-const kGridViewTitleStyle = TextStyle(
+const kViewTitleStyle = TextStyle(
   color: Colors.grey,
   fontSize: 18,
   letterSpacing: 2,
   fontWeight: FontWeight.bold,
 );
-const kGridViewSubTitleStyle = TextStyle(
+const kViewSubTitleStyle = TextStyle(
   fontSize: kNormalFontSize,
   color: Colors.black,
   fontWeight: FontWeight.bold,
