@@ -1,21 +1,22 @@
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
 import 'package:decor/screens/auth/components/custom_text_field.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class AddShippingAddress extends StatefulWidget {
-  AddShippingAddress({required this.data});
+class BottomAddShippingAddress extends StatefulWidget {
+  BottomAddShippingAddress({required this.data});
 
   dynamic? data;
 
   @override
-  _AddShippingAddressState createState() => _AddShippingAddressState();
+  _BottomAddShippingAddressState createState() =>
+      _BottomAddShippingAddressState();
 }
 
-class _AddShippingAddressState extends State<AddShippingAddress> {
+class _BottomAddShippingAddressState extends State<BottomAddShippingAddress> {
   final _databaseService = DatabaseService();
   final _currentUser = FirebaseAuth.instance.currentUser;
   bool isProgressing = false;
@@ -61,6 +62,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
         children: [
           CustomTextField(
             label: 'Title',
+            hintText: 'Enter Title',
             controller: _addressTitleController,
             focusNode: _addressTitleFocusNode,
             onSubmitted: (value) {
@@ -71,6 +73,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
           ),
           CustomTextField(
             label: 'Address',
+            hintText: 'Enter Address',
             controller: _addressController,
             focusNode: _addressFocusNode,
             onSubmitted: (value) {

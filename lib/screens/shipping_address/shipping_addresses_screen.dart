@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
+import 'package:decor/constants/refresh_indicator.dart';
+import 'package:decor/screens/shipping_address/components/add_sipping_address.dart';
 import 'package:decor/screens/shipping_address/components/botto_sheet.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +22,6 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _databaseService = DatabaseService();
   dynamic addressData;
-  int len = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,116 +33,128 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
         onActionIconPressed: null,
         onLeadingIconPressed: () => Navigator.pop(context),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .doc(_currentUser!.uid)
-            .collection('shipping_address')
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }
+      body: CommonRefreshIndicator(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(_currentUser!.uid)
+              .collection('shipping_address')
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
+            }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CustomProgressIndicator());
-          }
-          final data = snapshot.data!.docs;
-          len = data.length;
-          addressData = data;
-          return ListView.builder(
-            physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics()),
-            itemCount: data.length,
-            padding: EdgeInsets.all(10),
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: true,
-                        onChanged: (value) {},
-                      ),
-                      const Text(
-                        'Use as the shipping address',
-                        style: TextStyle(fontSize: 22, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    decoration: kBoxShadow,
-                    child: Card(
-                      elevation: 0,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15.0),
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CustomProgressIndicator());
+            }
+            final data = snapshot.data!.docs;
+            addressData = data;
+            return ListView.builder(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              itemCount: data.length,
+              padding: EdgeInsets.all(10),
+              itemBuilder: (BuildContext context, int index) {
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: true,
+                          onChanged: (value) {},
                         ),
-                      ),
-                      child: Padding(
-                        padding: kAllPadding,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(data[index]['addressTitle'],
-                                    style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold)),
-                                Row(children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      _addShippingAddressBottomSheet(
-                                          context, addressData[index]);
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.lightGreen,
+                        const Text(
+                          'Use as the shipping address',
+                          style: TextStyle(fontSize: 22, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      decoration: kBoxShadow,
+                      child: Card(
+                        elevation: 0,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15.0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: kAllPadding,
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(data[index]['fullName'],
+                                      style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold)),
+                                  Row(children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddShippingAddress(
+                                                      data: addressData[index],
+                                                    )));
+                                        print(addressData[index]);
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.lightGreen,
+                                      ),
                                     ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _confirmationAlertDialog(
-                                          context, data[index].id);
-                                    },
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.redAccent,
+                                    IconButton(
+                                      onPressed: () {
+                                        _confirmationAlertDialog(
+                                            context, data[index].id);
+                                      },
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        color: Colors.redAccent,
+                                      ),
                                     ),
-                                  ),
-                                ]),
-                              ],
-                            ),
-                            const Divider(
-                              thickness: 1,
-                            ),
-                            Padding(
-                              padding: kSymmetricPaddingVer,
-                              child: Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  data[index]['address'],
-                                  style: const TextStyle(
-                                      fontSize: kNormalFontSize,
-                                      color: Colors.grey),
-                                ),
+                                  ]),
+                                ],
                               ),
-                            )
-                          ],
+                              const Divider(
+                                thickness: 1,
+                              ),
+                              Padding(
+                                padding: kSymmetricPaddingVer,
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    '${data[index]['address']}, ${data[index]['city']}, - ${data[index]['zipcode']}',
+                                    style: const TextStyle(
+                                        fontSize: kNormalFontSize,
+                                        color: Colors.grey),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
-          );
-        },
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _addShippingAddressBottomSheet(context, null);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddShippingAddress(data: null)));
         },
         backgroundColor: Colors.white,
         child: const Icon(
@@ -183,7 +196,7 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
           child: Container(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: AddShippingAddress(data: data),
+            child: BottomAddShippingAddress(data: data),
           ),
         ),
         shape: const RoundedRectangleBorder(
@@ -192,6 +205,4 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
           ),
         ),
       );
-
-  int get length => len;
 }

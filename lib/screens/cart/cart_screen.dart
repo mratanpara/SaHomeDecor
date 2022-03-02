@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
+import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/components/custom_rect_button.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
+import 'package:decor/constants/refresh_indicator.dart';
+import 'package:decor/services/database_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +19,16 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  final _currentUser = FirebaseAuth.instance.currentUser;
+  final _databaseService = DatabaseService();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late double totalPrice = 0;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: CustomAppBar(
         leadingIcon: CupertinoIcons.back,
         title: 'Cart',
@@ -25,96 +36,117 @@ class _CartScreenState extends State<CartScreen> {
         onActionIconPressed: null,
         onLeadingIconPressed: () => Navigator.pop(context),
       ),
-      body: ListView.separated(
-        physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics()),
-        padding: kSymmetricPaddingHor,
-        itemCount: 3,
-        itemBuilder: (BuildContext context, int index) {
-          return Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  'assets/images/category/sofa.jpg',
-                  fit: BoxFit.cover,
-                  height: 150,
-                  width: 150,
-                ),
-              ),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: CommonRefreshIndicator(
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(_currentUser!.uid)
+              .collection('cart')
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CustomProgressIndicator();
+            }
+
+            final data = snapshot.data?.docs;
+            return ListView.separated(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              padding: kSymmetricPaddingHor,
+              itemCount: data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Row(
                   children: [
-                    const ListTile(
-                      contentPadding: kAllPadding,
-                      dense: true,
-                      title: Text(
-                        'Chair',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: kNormalFontSize,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                      subtitle: Text(
-                        '\$ 12.00',
-                        style: TextStyle(
-                          fontSize: kNormalFontSize,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      trailing: IconButton(
-                        onPressed: null,
-                        icon: Icon(
-                          CupertinoIcons.clear_circled,
-                          size: 28,
-                        ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        data[index]['url'],
+                        fit: BoxFit.cover,
+                        height: 150,
+                        width: 150,
                       ),
                     ),
-                    Padding(
-                      padding: kAllPadding,
-                      child: Row(
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomRectButton(
-                            width: 48,
-                            height: 48,
-                            icon: CupertinoIcons.plus,
-                            onPressed: () {},
-                            color: Colors.white,
-                            iconColor: Colors.black,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: size.width * 0.04),
-                            child: const Text(
-                              '02',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: kNormalFontSize,
+                          ListTile(
+                            contentPadding: kAllPadding,
+                            dense: true,
+                            title: Text(
+                              data[index]['name'],
+                              style: kViewTitleStyle,
+                            ),
+                            subtitle: Text(
+                              '\$ ${data[index]['price']}',
+                              style: kViewSubTitleStyle,
+                            ),
+                            trailing: IconButton(
+                              onPressed: () async {
+                                await _databaseService
+                                    .deleteFromCart(data[index].id);
+                                _scaffoldKey.currentState!.showSnackBar(
+                                    showSnackBar(
+                                        content:
+                                            "${data[index]['name']} deleted !"));
+                              },
+                              icon: const Icon(
+                                CupertinoIcons.clear_circled,
+                                size: 28,
                               ),
                             ),
                           ),
-                          CustomRectButton(
-                            width: 48,
-                            height: 48,
-                            icon: CupertinoIcons.minus,
-                            onPressed: () {},
-                            color: Colors.white,
-                            iconColor: Colors.black,
+                          Padding(
+                            padding: kAllPadding,
+                            child: Row(
+                              children: [
+                                CustomRectButton(
+                                  width: 48,
+                                  height: 48,
+                                  icon: CupertinoIcons.plus,
+                                  onPressed: () {},
+                                  color: Colors.white,
+                                  iconColor: Colors.black,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: size.width * 0.04),
+                                  child: const Text(
+                                    '01',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: kNormalFontSize,
+                                    ),
+                                  ),
+                                ),
+                                CustomRectButton(
+                                  width: 48,
+                                  height: 48,
+                                  icon: CupertinoIcons.minus,
+                                  onPressed: () {},
+                                  color: Colors.white,
+                                  iconColor: Colors.black,
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ],
-                ),
-              ),
-            ],
-          );
-        },
-        separatorBuilder: (BuildContext context, int index) => const Divider(),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(),
+            );
+          },
+        ),
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(
@@ -165,13 +197,13 @@ class _CartScreenState extends State<CartScreen> {
                   vertical: size.height * 0.02, horizontal: size.width * 0.01),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
+                children: [
                   Text(
                     'Total:',
                     style: TextStyle(color: Colors.grey, fontSize: 22),
                   ),
                   Text(
-                    '\$ 95',
+                    '\$ $totalPrice',
                     style: TextStyle(fontSize: 22),
                   ),
                 ],

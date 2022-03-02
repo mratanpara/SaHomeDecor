@@ -1,6 +1,6 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_bottom_navigation_bar.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
 import 'package:decor/providers/bottom_nav_bar_index.dart';
 import 'package:decor/screens/auth/login/screen/login_screen.dart';
 import 'package:decor/screens/favourite/favourite_screen.dart';

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
+import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/models/users_model.dart';
 import 'package:decor/screens/auth/login/screen/login_screen.dart';
 import 'package:decor/screens/profile/components/custom_card.dart';
@@ -62,77 +63,79 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
         onLeadingIconPressed: () {},
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics()),
-        padding: kAllPadding,
-        child: Expanded(
-          child: Column(
-            children: [
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(photoURL),
-                      radius: size.width * 0.1,
-                    ),
-                    Flexible(
-                      child: ListTile(
-                        title: Padding(
-                          padding: kBottomPadding,
-                          child: Text(
-                            displayName,
-                            style: kProfileTileTitleTextStyle,
+      body: CommonRefreshIndicator(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
+          padding: kAllPadding,
+          child: Expanded(
+            child: Column(
+              children: [
+                Padding(
+                  padding: kSymmetricPaddingVer,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(photoURL),
+                        radius: size.width * 0.1,
+                      ),
+                      Flexible(
+                        child: ListTile(
+                          title: Padding(
+                            padding: kBottomPadding,
+                            child: Text(
+                              displayName,
+                              style: kProfileTileTitleTextStyle,
+                            ),
+                          ),
+                          subtitle: Text(
+                            email,
+                            style: kProfileTileSubTitleTextStyle,
                           ),
                         ),
-                        subtitle: Text(
-                          email,
-                          style: kProfileTileSubTitleTextStyle,
-                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'My Order',
-                    subTitle: 'Already have 10 orders',
-                    onTap: () {}),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'Shipping Addresses',
-                    subTitle: '0 Addresses',
-                    onTap: () {
-                      Navigator.pushNamed(context, ShippingAddresses.id);
-                    }),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'Payment Method',
-                    subTitle: 'You have 2 cards',
-                    onTap: () {}),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'My Reviews',
-                    subTitle: 'Reviews for 5 items',
-                    onTap: () {}),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'Settings',
-                    subTitle: 'Notification, Password, FAQs, Contact',
-                    onTap: () {}),
-              ),
-            ],
+                Padding(
+                  padding: kSymmetricPaddingVer,
+                  child: CustomCard(
+                      title: 'My Order',
+                      subTitle: 'Already have 10 orders',
+                      onTap: () {}),
+                ),
+                Padding(
+                  padding: kSymmetricPaddingVer,
+                  child: CustomCard(
+                      title: 'Shipping Addresses',
+                      subTitle: '0 Addresses',
+                      onTap: () {
+                        Navigator.pushNamed(context, ShippingAddresses.id);
+                      }),
+                ),
+                Padding(
+                  padding: kSymmetricPaddingVer,
+                  child: CustomCard(
+                      title: 'Payment Method',
+                      subTitle: 'You have 2 cards',
+                      onTap: () {}),
+                ),
+                Padding(
+                  padding: kSymmetricPaddingVer,
+                  child: CustomCard(
+                      title: 'My Reviews',
+                      subTitle: 'Reviews for 5 items',
+                      onTap: () {}),
+                ),
+                Padding(
+                  padding: kSymmetricPaddingVer,
+                  child: CustomCard(
+                      title: 'Settings',
+                      subTitle: 'Notification, Password, FAQs, Contact',
+                      onTap: () {}),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -18,8 +18,8 @@ const kBgColor = Colors.white;
 
 //TextField lable style
 const kTextFieldLabelStyle = TextStyle(
-  color: Colors.grey,
-  fontSize: kNormalFontSize,
+  color: Colors.black,
+  fontSize: 18,
 );
 
 //forgot password style
@@ -98,4 +98,12 @@ void fieldFocusChange(
     BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
   currentFocus.unfocus();
   FocusScope.of(context).requestFocus(nextFocus);
+}
+
+SnackBar showSnackBar({required String content}) {
+  return SnackBar(
+    content: Text(content),
+    duration: const Duration(seconds: 1),
+    behavior: SnackBarBehavior.floating,
+  );
 }

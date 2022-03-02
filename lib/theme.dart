@@ -1,4 +1,4 @@
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 ThemeData lightTheme() {

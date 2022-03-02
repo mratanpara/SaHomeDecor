@@ -1,4 +1,4 @@
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
     required this.focusNode,
     required this.onSubmitted,
     required this.type,
+    required this.hintText,
   });
 
   final String label;
@@ -17,6 +18,7 @@ class CustomTextField extends StatefulWidget {
   final FocusNode focusNode;
   final Function(String) onSubmitted;
   final TextInputType type;
+  final String hintText;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -47,10 +49,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           obscureText: _isObscureText(),
           cursorColor: Colors.black,
           decoration: InputDecoration(
-            suffixIcon: _suffixIcon(),
-            focusedBorder: _underlineInputBorder(),
-            enabledBorder: _underlineInputBorder(),
-          ),
+              suffixIcon: _suffixIcon(),
+              hintText: widget.hintText,
+              focusedBorder: _underlineInputBorder(),
+              enabledBorder: _underlineInputBorder(),
+              hintStyle: const TextStyle(color: Colors.grey)),
         ),
       ],
     );

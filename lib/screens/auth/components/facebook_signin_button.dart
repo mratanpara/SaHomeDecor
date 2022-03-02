@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
 import 'package:decor/models/users_model.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';

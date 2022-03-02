@@ -1,6 +1,8 @@
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_rect_button.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
+import 'package:decor/models/category_model.dart';
+import 'package:decor/services/database_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,10 +18,13 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  final _databaseService = DatabaseService();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
@@ -182,7 +187,17 @@ class _DetailScreenState extends State<DetailScreen> {
                 width: 58,
                 height: 58,
                 icon: CupertinoIcons.bookmark,
-                onPressed: () {},
+                onPressed: () async {
+                  await _databaseService.addToFavourites(Categories(
+                      name: widget.data['name'],
+                      url: widget.data['url'],
+                      desc: widget.data['desc'],
+                      star: widget.data['star'].toString(),
+                      category: widget.data['category'],
+                      price: widget.data['price'].toString()));
+                  _scaffoldKey.currentState!.showSnackBar(showSnackBar(
+                      content: "${widget.data['name']} added to favourites !"));
+                },
                 color: Colors.white,
                 iconColor: Colors.black,
               ),
@@ -192,7 +207,18 @@ class _DetailScreenState extends State<DetailScreen> {
               flex: 6,
               child: CustomButton(
                 label: 'Add to cart',
-                onPressed: () {},
+                onPressed: () async {
+                  await _databaseService.addToCart(Categories(
+                    name: widget.data['name'],
+                    url: widget.data['url'],
+                    desc: widget.data['desc'],
+                    star: widget.data['star'].toString(),
+                    category: widget.data['category'],
+                    price: widget.data['price'].toString(),
+                  ));
+                  _scaffoldKey.currentState!.showSnackBar(showSnackBar(
+                      content: "${widget.data['name']} added to cart !"));
+                },
               ),
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
+import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/screens/cart/cart_screen.dart';
 import 'package:decor/screens/details/detail_screen.dart';
 import 'package:decor/screens/home/components/categories_data.dart';
@@ -32,13 +33,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _tabController = TabController(length: 5, vsync: this);
   }
 
-  String _getCategory() {
-    for (int i = 0; i < _category.length; i++) {
-      return _category[i];
-    }
-    return '';
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -66,18 +60,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-                      SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(
-                            parent: AlwaysScrollableScrollPhysics()),
-                        child: Flexible(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              for (int i = 0; i < _category.length; i++)
-                                CategoriesData(
-                                    size: size,
-                                    collection: _category.elementAt(i)),
-                            ],
+                      CommonRefreshIndicator(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(
+                              parent: AlwaysScrollableScrollPhysics()),
+                          child: Flexible(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                for (int i = 0; i < _category.length; i++)
+                                  CategoriesData(
+                                      size: size,
+                                      collection: _category.elementAt(i)),
+                              ],
+                            ),
                           ),
                         ),
                       ),

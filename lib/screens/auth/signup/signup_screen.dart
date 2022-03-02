@@ -1,6 +1,6 @@
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/constants.dart';
+import 'package:decor/constants/constants.dart';
 import 'package:decor/models/users_model.dart';
 import 'package:decor/screens/auth/components/custom_text_field.dart';
 import 'package:decor/screens/auth/components/facebook_signin_button.dart';
@@ -100,7 +100,8 @@ class _SignupScreenState extends State<SignupScreen> {
               child: Column(
                 children: [
                   CustomTextField(
-                    label: 'Name',
+                    label: 'Full Name',
+                    hintText: 'Enter Full Name',
                     controller: _nameController,
                     focusNode: _nameFocus,
                     type: TextInputType.text,
@@ -110,6 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   CustomTextField(
                     label: 'Email',
+                    hintText: 'Enter Email',
                     controller: _emailController,
                     focusNode: _emailFocus,
                     type: TextInputType.emailAddress,
@@ -119,6 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   CustomTextField(
                     label: 'Password',
+                    hintText: 'Enter Password',
                     controller: _passwordController,
                     focusNode: _passwordFocus,
                     type: TextInputType.visiblePassword,
@@ -129,6 +132,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   CustomTextField(
                     label: 'Confirm Password',
+                    hintText: 'Enter Confirm Password',
                     controller: _confirmPasswordController,
                     type: TextInputType.visiblePassword,
                     focusNode: _confirmPasswordFocus,

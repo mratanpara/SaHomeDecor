@@ -29,6 +29,50 @@ class DatabaseService {
     });
   }
 
+  Future<void> addAddress({
+    required String fullName,
+    required String address,
+    required int zipcode,
+    required String country,
+    required String city,
+    required String district,
+  }) async {
+    await _userCollection
+        .doc(_currentUser!.uid)
+        .collection('shipping_address')
+        .add({
+      'fullName': fullName,
+      'address': address,
+      'zipcode': zipcode,
+      'country': country,
+      'city': city,
+      'district': district,
+    });
+  }
+
+  Future<void> updateAddress({
+    required String doc,
+    required String fullName,
+    required String address,
+    required int zipcode,
+    required String country,
+    required String city,
+    required String district,
+  }) async {
+    await _userCollection
+        .doc(_currentUser!.uid)
+        .collection('shipping_address')
+        .doc(doc)
+        .update({
+      'fullName': fullName,
+      'address': address,
+      'zipcode': zipcode,
+      'country': country,
+      'city': city,
+      'district': district,
+    });
+  }
+
   Future<void> deleteShippingAddress(String doc) async {
     await _userCollection
         .doc(_currentUser!.uid)
@@ -66,6 +110,25 @@ class DatabaseService {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('favourites')
+        .doc(doc)
+        .delete();
+  }
+
+  Future<void> addToCart(Categories cat) async {
+    await _userCollection.doc(_currentUser!.uid).collection('cart').add({
+      'name': cat.name,
+      'url': cat.url,
+      'desc': cat.desc,
+      'category': cat.category,
+      'price': cat.price,
+      'star': cat.star,
+    });
+  }
+
+  Future<void> deleteFromCart(String doc) async {
+    await _userCollection
+        .doc(_currentUser!.uid)
+        .collection('cart')
         .doc(doc)
         .delete();
   }
