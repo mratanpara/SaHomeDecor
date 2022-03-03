@@ -4,11 +4,15 @@ import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/components/custom_rect_button.dart';
 import 'package:decor/constants/constants.dart';
+import 'package:decor/constants/get_counts_data.dart';
 import 'package:decor/constants/refresh_indicator.dart';
+import 'package:decor/providers/common_provider.dart';
+import 'package:decor/screens/success/success_screen.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
   static const String id = 'cart_screen';
@@ -22,7 +26,12 @@ class _CartScreenState extends State<CartScreen> {
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  late double totalPrice = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getTotalAmount(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +100,7 @@ class _CartScreenState extends State<CartScreen> {
                               onPressed: () async {
                                 await _databaseService
                                     .deleteFromCart(data[index].id);
+                                await getTotalAmount(context);
                                 _scaffoldKey.currentState!.showSnackBar(
                                     showSnackBar(
                                         content:
@@ -203,7 +213,7 @@ class _CartScreenState extends State<CartScreen> {
                     style: TextStyle(color: Colors.grey, fontSize: 22),
                   ),
                   Text(
-                    '\$ $totalPrice',
+                    '\$ ${Provider.of<CommonProvider>(context).totalAmount}',
                     style: TextStyle(fontSize: 22),
                   ),
                 ],
@@ -211,7 +221,9 @@ class _CartScreenState extends State<CartScreen> {
             ),
             CustomButton(
               label: 'Check out',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, SuccessScreen.id);
+              },
             ),
           ],
         ),

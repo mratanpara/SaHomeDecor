@@ -18,17 +18,6 @@ class DatabaseService {
     });
   }
 
-  Future<void> addShippingAddress(
-      {required String title, required String address}) async {
-    await _userCollection
-        .doc(_currentUser!.uid)
-        .collection('shipping_address')
-        .add({
-      'addressTitle': title,
-      'address': address,
-    });
-  }
-
   Future<void> addAddress({
     required String fullName,
     required String address,
@@ -81,20 +70,6 @@ class DatabaseService {
         .delete();
   }
 
-  Future<void> updateShippingAddress(
-      {required String doc,
-      required String title,
-      required String address}) async {
-    await _userCollection
-        .doc(_currentUser!.uid)
-        .collection('shipping_address')
-        .doc(doc)
-        .update({
-      'addressTitle': title,
-      'address': address,
-    });
-  }
-
   Future<void> addToFavourites(Categories cat) async {
     await _userCollection.doc(_currentUser!.uid).collection('favourites').add({
       'name': cat.name,
@@ -131,5 +106,13 @@ class DatabaseService {
         .collection('cart')
         .doc(doc)
         .delete();
+  }
+
+  Future<void> changePassword(String newPassword) async {
+    await _currentUser?.updatePassword(newPassword);
+  }
+
+  Future<void> forgotPassword(String email) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 }

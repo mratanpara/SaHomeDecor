@@ -28,7 +28,7 @@ class AuthServices {
   }
 
   //sign out
-  Future<void> signoutUser() async {
+  Future<void> signOutUser() async {
     await FacebookAuth.instance.logOut();
     await _auth.signOut();
   }

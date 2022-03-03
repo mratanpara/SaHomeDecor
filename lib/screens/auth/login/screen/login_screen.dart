@@ -4,6 +4,7 @@ import 'package:decor/constants/constants.dart';
 import 'package:decor/screens/auth/components/custom_text_button.dart';
 import 'package:decor/screens/auth/components/custom_text_field.dart';
 import 'package:decor/screens/auth/components/facebook_signin_button.dart';
+import 'package:decor/screens/auth/forgot_password/forgot_password.dart';
 import 'package:decor/screens/auth/signup/signup_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';
@@ -151,7 +152,9 @@ class _LoginScreenState extends State<LoginScreen> {
         alignment: Alignment.topLeft,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: size.width * 0.01),
-          child: CustomTextButton(text: 'Forgot Password?', onPressed: () {}),
+          child: CustomTextButton(
+              text: 'Forgot Password?',
+              onPressed: () => Navigator.pushNamed(context, ForgotPassword.id)),
         ),
       );
 

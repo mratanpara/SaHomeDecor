@@ -93,6 +93,12 @@ const kProfileTileTitleTextStyle = TextStyle(
 );
 const kProfileTileSubTitleTextStyle = TextStyle(fontSize: kNormalFontSize);
 
+const kSuccessMsgTextStyle = TextStyle(
+  fontSize: 22,
+  color: Colors.black54,
+  fontWeight: FontWeight.w500,
+);
+
 //change the focus of text field
 void fieldFocusChange(
     BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
