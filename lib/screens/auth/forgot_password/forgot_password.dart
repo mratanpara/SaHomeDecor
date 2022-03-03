@@ -2,7 +2,7 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/screens/auth/components/custom_text_field.dart';
-import 'package:decor/screens/auth/login/screen/login_screen.dart';
+import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,75 +43,86 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: _appBar(context),
+      body: _body(context),
+    );
+  }
+
+  Padding _body(BuildContext context) => Padding(
+        padding: kAllPadding,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _headingTextWithIcon(),
+            _image(),
+            _textFieldAndButton(context),
+          ],
+        ),
+      );
+
+  Container _textFieldAndButton(BuildContext context) => Container(
+        decoration: kBoxShadow,
+        child: Card(
+          elevation: 0,
+          child: Padding(
+            padding: kAllPadding,
+            child: Column(
+              children: [
+                _textField(),
+                _button(context),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  CustomButton _button(BuildContext context) => CustomButton(
+        label: 'SEND EMAIL',
+        onPressed: () async {
+          if (_emailController.text.isNotEmpty) {
+            await _databaseService.forgotPassword(_emailController.text.trim());
+            await _authService.signOutUser();
+            Navigator.pushReplacementNamed(context, LoginScreen.id);
+          }
+        },
+      );
+
+  CustomTextField _textField() => CustomTextField(
+        onSubmitted: (val) {
+          _emailFocus.unfocus();
+        },
+        type: TextInputType.text,
+        label: 'Email',
+        hintText: 'Enter email here',
+        controller: _emailController,
+        focusNode: _emailFocus,
+      );
+
+  Stack _image() => Stack(
+        fit: StackFit.passthrough,
+        alignment: Alignment.center,
+        children: [
+          Image.asset('assets/images/success_screen/background.png'),
+          Image.asset('assets/images/success_screen/Group.png'),
+        ],
+      );
+
+  Text _headingTextWithIcon() => const Text(
+        'Forgot Password!',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 44,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
         title: 'Forgot Password',
         actionIcon: null,
         leadingIcon: CupertinoIcons.back,
         onActionIconPressed: null,
         onLeadingIconPressed: () => Navigator.pop(context),
-      ),
-      body: Padding(
-        padding: kAllPadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            const Text(
-              'Forgot Password!',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 44,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Stack(
-              fit: StackFit.passthrough,
-              alignment: Alignment.center,
-              children: [
-                Image.asset('assets/images/success_screen/background.png'),
-                Image.asset('assets/images/success_screen/Group.png'),
-              ],
-            ),
-            Container(
-              decoration: kBoxShadow,
-              child: Card(
-                elevation: 0,
-                child: Padding(
-                  padding: kAllPadding,
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                        onSubmitted: (val) {
-                          _emailFocus.unfocus();
-                        },
-                        type: TextInputType.text,
-                        label: 'Email',
-                        hintText: 'Enter email here',
-                        controller: _emailController,
-                        focusNode: _emailFocus,
-                      ),
-                      CustomButton(
-                        label: 'SEND EMAIL',
-                        onPressed: () async {
-                          if (_emailController.text.isNotEmpty) {
-                            await _databaseService
-                                .forgotPassword(_emailController.text.trim());
-                            await _authService.signOutUser();
-                            Navigator.pushReplacementNamed(
-                                context, LoginScreen.id);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      );
 }

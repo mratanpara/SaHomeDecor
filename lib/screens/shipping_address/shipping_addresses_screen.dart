@@ -45,7 +45,7 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CustomProgressIndicator());
+            return Center(child: CustomProgressIndicator());
           }
           final data = snapshot.data!.docs;
           return ListView.builder(

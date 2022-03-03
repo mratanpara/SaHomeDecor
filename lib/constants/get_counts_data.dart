@@ -15,8 +15,7 @@ Future<void> getAddressCount(BuildContext context) async {
       .get()
       .then((QuerySnapshot querySnapshot) {
     Provider.of<CommonProvider>(context, listen: false)
-        .getCount(querySnapshot.docs.length);
-    return;
+        .setAddressCount(querySnapshot.docs.length);
   });
 }
 
@@ -27,7 +26,7 @@ Future<void> getTotalAmount(BuildContext context) async {
       .get()
       .then((QuerySnapshot querySnapshot) {
     Provider.of<CommonProvider>(context, listen: false)
-        .getTotalAmount(querySnapshot.docs);
+        .setTotalAmount(querySnapshot.docs);
   });
 }
 

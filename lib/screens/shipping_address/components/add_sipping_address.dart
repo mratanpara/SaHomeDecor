@@ -1,9 +1,8 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
+import 'package:decor/components/custom_card_text_field.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/get_counts_data.dart';
-import 'package:decor/screens/auth/components/custom_text_field.dart';
-import 'package:decor/screens/shipping_address/components/custom_card_text_field.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -199,7 +198,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
                     city: _cityController.text,
                     district: _districtController.text);
               }
-              await getAddressCount(context);
+              getAddressCount(context);
               Navigator.pop(context);
             }
           },

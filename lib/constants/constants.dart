@@ -99,6 +99,28 @@ const kSuccessMsgTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
+const kOrderBoldTextStyle = TextStyle(
+  fontSize: 18,
+  color: Colors.black,
+  fontWeight: FontWeight.w600,
+);
+
+const kOrderTextStyle = TextStyle(fontSize: 18, color: Colors.grey);
+
+const kOrderTabTextStyle = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.w600,
+);
+
+const kSettingsHeadingTextStyle = TextStyle(
+  color: Colors.grey,
+  fontSize: 18,
+  fontWeight: FontWeight.w600,
+);
+
+//physics
+const kPhysics = BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+
 //change the focus of text field
 void fieldFocusChange(
     BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {

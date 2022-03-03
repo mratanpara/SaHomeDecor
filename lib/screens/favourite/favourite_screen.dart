@@ -54,7 +54,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CustomProgressIndicator();
+              return CustomProgressIndicator();
             }
 
             final data = snapshot.data!.docs;
@@ -122,15 +122,19 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                   padding: const EdgeInsets.all(20),
                                   child: IconButton(
                                     onPressed: () async {
-                                      await _databaseService
-                                          .addToCart(Categories(
-                                        name: data[index]['name'],
-                                        url: data[index]['url'],
-                                        desc: data[index]['desc'],
-                                        star: data[index]['star'].toString(),
-                                        category: data[index]['category'],
-                                        price: data[index]['price'].toString(),
-                                      ));
+                                      await _databaseService.addToCart(
+                                          Categories(
+                                            name: data[index]['name'],
+                                            url: data[index]['url'],
+                                            desc: data[index]['desc'],
+                                            star:
+                                                data[index]['star'].toString(),
+                                            category: data[index]['category'],
+                                            price:
+                                                data[index]['price'].toString(),
+                                            itemCount: 1,
+                                          ),
+                                          data[index]);
                                       Scaffold.of(context).showSnackBar(
                                           showSnackBar(
                                               content:
@@ -162,13 +166,17 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       label: 'Add all to my cart',
                       onPressed: () {
                         for (int index = 0; index < allData.length; index++) {
-                          _databaseService.addToCart(Categories(
-                              name: allData[index]['name'],
-                              url: allData[index]['url'],
-                              desc: allData[index]['desc'],
-                              star: allData[index]['star'].toString(),
-                              category: allData[index]['category'],
-                              price: allData[index]['price'].toString()));
+                          _databaseService.addToCart(
+                              Categories(
+                                name: allData[index]['name'],
+                                url: allData[index]['url'],
+                                desc: allData[index]['desc'],
+                                star: allData[index]['star'].toString(),
+                                category: allData[index]['category'],
+                                price: allData[index]['price'].toString(),
+                                itemCount: 1,
+                              ),
+                              allData[index]);
                         }
                         _scaffoldKey.currentState!.showSnackBar(showSnackBar(
                             content: 'Add item\'s added into a cart !'));

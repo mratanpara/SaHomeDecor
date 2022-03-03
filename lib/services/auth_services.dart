@@ -19,7 +19,6 @@ class AuthServices {
   //facebook login
   Future<void> signInWithFacebook() async {
     final LoginResult loginResult = await FacebookAuth.instance.login();
-    print(loginResult);
 
     final OAuthCredential facebookAuthCredential =
         FacebookAuthProvider.credential(loginResult.accessToken!.token);

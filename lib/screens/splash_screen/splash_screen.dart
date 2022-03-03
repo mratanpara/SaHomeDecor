@@ -2,7 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/auth/login/screen/login_screen.dart';
+import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,9 +28,9 @@ class _SplashScreenState extends State<SplashScreen> {
       final _currentUser = FirebaseAuth.instance.currentUser;
 
       if (_currentUser?.email != null) {
-        Navigator.pushNamed(context, DashBoard.id);
+        Navigator.pushReplacementNamed(context, DashBoard.id);
       } else {
-        Navigator.pushNamed(context, LoginScreen.id);
+        Navigator.pushReplacementNamed(context, LoginScreen.id);
       }
     });
   }

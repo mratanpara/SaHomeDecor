@@ -34,33 +34,36 @@ class _FacebookSigninButtonState extends State<FacebookSigninButton> {
       width: double.maxFinite,
       child: isPressed
           ? const CustomProgressIndicator()
-          : ElevatedButton.icon(
-              onPressed: () async {
-                _toggleSpinner();
-                try {
-                  await _auth.signInWithFacebook();
-                  final currentUser = FirebaseAuth.instance.currentUser;
-                  _databaseService.addUsers(Users(
-                    displayName: currentUser!.displayName.toString(),
-                    email: currentUser.email.toString(),
-                    photoURL: currentUser.photoURL.toString(),
-                  ));
-                  Navigator.pushReplacementNamed(context, DashBoard.id);
-                } catch (e) {
-                  print(e);
-                }
-              },
-              label: Text(widget.label),
-              icon: const Icon(Icons.facebook, size: 32),
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: kNormalFontSize,
-                ),
-              ),
-            ),
+          : _facebookButton(context),
     );
+  }
+
+  ElevatedButton _facebookButton(BuildContext context) => ElevatedButton.icon(
+        onPressed: _onPressed,
+        label: Text(widget.label),
+        icon: const Icon(Icons.facebook, size: 32),
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: kNormalFontSize,
+          ),
+        ),
+      );
+
+  void _onPressed() async {
+    _toggleSpinner();
+    try {
+      await _auth.signInWithFacebook();
+      final currentUser = FirebaseAuth.instance.currentUser;
+      _databaseService.addUsers(Users(
+        displayName: currentUser!.displayName.toString(),
+        email: currentUser.email.toString(),
+        photoURL: currentUser.photoURL.toString(),
+      ));
+      Navigator.pushReplacementNamed(context, DashBoard.id);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

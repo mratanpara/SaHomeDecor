@@ -10,7 +10,7 @@ class CustomCardTextField extends StatelessWidget {
   final TextInputType type;
   final String hintText;
 
-  const CustomCardTextField({
+  CustomCardTextField({
     required this.controller,
     required this.focusNode,
     required this.label,

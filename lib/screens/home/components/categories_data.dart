@@ -32,7 +32,7 @@ class CategoriesData extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CustomProgressIndicator();
+          return CustomProgressIndicator();
         }
 
         final data = snapshot.data?.docs;
@@ -77,14 +77,17 @@ class CategoriesData extends StatelessWidget {
                             height: 42,
                             icon: CupertinoIcons.cart_fill,
                             onPressed: () async {
-                              await _databaseService.addToCart(Categories(
-                                name: data[index]['name'],
-                                url: data[index]['url'],
-                                desc: data[index]['desc'],
-                                star: data[index]['star'].toString(),
-                                category: data[index]['category'],
-                                price: data[index]['price'].toString(),
-                              ));
+                              await _databaseService.addToCart(
+                                  Categories(
+                                    name: data[index]['name'],
+                                    url: data[index]['url'],
+                                    desc: data[index]['desc'],
+                                    star: data[index]['star'].toString(),
+                                    category: data[index]['category'],
+                                    price: data[index]['price'].toString(),
+                                    itemCount: 1,
+                                  ),
+                                  data[index]);
                               Scaffold.of(context).showSnackBar(showSnackBar(
                                   content:
                                       "${data[index]['name']} added to cart !"));
@@ -118,13 +121,14 @@ class CategoriesData extends StatelessWidget {
                               star: data[index]['star'].toString(),
                               category: data[index]['category'],
                               price: data[index]['price'].toString(),
+                              itemCount: 1,
                             ));
                             Scaffold.of(context).showSnackBar(showSnackBar(
                                 content:
                                     "${data[index]['name']} added to favourites !"));
                           },
                           icon: const Icon(
-                            CupertinoIcons.bag_fill,
+                            CupertinoIcons.heart,
                             size: 22,
                           ),
                         ),

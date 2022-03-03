@@ -8,7 +8,6 @@ import 'package:decor/screens/auth/forgot_password/forgot_password.dart';
 import 'package:decor/screens/auth/signup/signup_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';
-import 'package:decor/services/database_services.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,7 +20,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = AuthServices();
-  final _databaseService = DatabaseService();
 
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
@@ -86,25 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   vertical: size.width * 0.01, horizontal: size.height * 0.01),
               child: Column(
                 children: [
-                  CustomTextField(
-                    label: 'Email',
-                    hintText: 'Enter Email',
-                    controller: _emailController,
-                    focusNode: _emailFocus,
-                    type: TextInputType.emailAddress,
-                    onSubmitted: (term) {
-                      fieldFocusChange(context, _emailFocus, _passwordFocus);
-                    },
-                  ),
-                  CustomTextField(
-                      label: 'Password',
-                      hintText: 'Enter Password',
-                      controller: _passwordController,
-                      focusNode: _passwordFocus,
-                      type: TextInputType.visiblePassword,
-                      onSubmitted: (term) {
-                        _passwordFocus.unfocus();
-                      }),
+                  _emailTextField(context),
+                  _passwordTextField(),
                   _forgotPassword(size),
                   _loginButton(size),
                   _richTextButton(context, size),
@@ -115,6 +96,28 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
+      );
+
+  CustomTextField _passwordTextField() => CustomTextField(
+        label: 'Password',
+        hintText: 'Enter Password',
+        controller: _passwordController,
+        focusNode: _passwordFocus,
+        type: TextInputType.visiblePassword,
+        onSubmitted: (term) {
+          _passwordFocus.unfocus();
+        },
+      );
+
+  CustomTextField _emailTextField(BuildContext context) => CustomTextField(
+        label: 'Email',
+        hintText: 'Enter Email',
+        controller: _emailController,
+        focusNode: _emailFocus,
+        type: TextInputType.emailAddress,
+        onSubmitted: (term) {
+          fieldFocusChange(context, _emailFocus, _passwordFocus);
+        },
       );
 
   Padding _facebookButton(Size size) => Padding(
@@ -190,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Padding _firstHeading(Size size) => Padding(
         padding: EdgeInsets.symmetric(horizontal: size.height * 0.02),
-        child: Text(
+        child: const Text(
           'Hello !',
           style: kFirstHeadingTextStyle,
         ),

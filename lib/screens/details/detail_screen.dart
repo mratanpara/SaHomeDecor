@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class DetailScreen extends StatefulWidget {
   static const String id = 'detail_screen';
 
-  DetailScreen(this.data);
+  const DetailScreen(this.data);
 
   final dynamic data;
 
@@ -28,153 +28,13 @@ class _DetailScreenState extends State<DetailScreen> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: size.height * 0.01),
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(80)),
-                      child: Image.asset(
-                        widget.data['url'],
-                        fit: BoxFit.fill,
-                        height: size.height * 0.65,
-                        width: size.width * 0.85,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: size.width * 0.1,
-                    top: size.height * 0.09,
-                    child: SizedBox(
-                      height: 56.0,
-                      width: 56.0,
-                      child: CustomRectButton(
-                        width: 56,
-                        height: 56,
-                        icon: CupertinoIcons.back,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        color: Colors.white,
-                        iconColor: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.1,
-                vertical: size.height * 0.01,
-              ),
-              child: Text(
-                widget.data['name'],
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.1,
-                vertical: size.height * 0.005,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '\$ ${widget.data['price'].toString()}',
-                    style: TextStyle(fontSize: 24, color: Colors.grey),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomRectButton(
-                        width: 48,
-                        height: 48,
-                        icon: CupertinoIcons.plus,
-                        onPressed: () {},
-                        color: Colors.white,
-                        iconColor: Colors.black,
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                        child: const Text(
-                          '02',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: kNormalFontSize,
-                          ),
-                        ),
-                      ),
-                      CustomRectButton(
-                        width: 48,
-                        height: 48,
-                        icon: CupertinoIcons.minus,
-                        onPressed: () {},
-                        color: Colors.white,
-                        iconColor: Colors.black,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.1,
-                vertical: size.height * 0.005,
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    CupertinoIcons.star_fill,
-                    color: Colors.yellow,
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: size.width * 0.01),
-                    child: Text(
-                      widget.data['star'].toString(),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: kNormalFontSize,
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    '(50 Reviews)',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: size.width * 0.1,
-                vertical: size.height * 0.01,
-              ),
-              child: Text(
-                widget.data['desc'],
-                style: TextStyle(
-                  fontSize: kNormalFontSize,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: _column(size, context),
       ),
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: _bottomButtons(size),
+    );
+  }
+
+  Padding _bottomButtons(Size size) => Padding(
         padding: EdgeInsets.symmetric(
           horizontal: size.width * 0.1,
           vertical: size.height * 0.01,
@@ -182,48 +42,217 @@ class _DetailScreenState extends State<DetailScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: CustomRectButton(
-                width: 58,
-                height: 58,
-                icon: CupertinoIcons.bookmark,
-                onPressed: () async {
-                  await _databaseService.addToFavourites(Categories(
-                      name: widget.data['name'],
-                      url: widget.data['url'],
-                      desc: widget.data['desc'],
-                      star: widget.data['star'].toString(),
-                      category: widget.data['category'],
-                      price: widget.data['price'].toString()));
-                  _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                      content: "${widget.data['name']} added to favourites !"));
-                },
-                color: Colors.white,
-                iconColor: Colors.black,
+            _favButton(),
+            SizedBox(width: size.width * 0.025),
+            _addToCartButton(),
+          ],
+        ),
+      );
+
+  Expanded _addToCartButton() => Expanded(
+        flex: 6,
+        child: CustomButton(
+          label: 'Add to cart',
+          onPressed: onAddToCartPressed,
+        ),
+      );
+
+  Expanded _favButton() => Expanded(
+        child: CustomRectButton(
+          width: 58,
+          height: 58,
+          icon: CupertinoIcons.heart,
+          onPressed: onFavPressed,
+          color: Colors.white,
+          iconColor: Colors.black,
+        ),
+      );
+
+  void onFavPressed() async {
+    await _databaseService.addToFavourites(Categories(
+      name: widget.data['name'],
+      url: widget.data['url'],
+      desc: widget.data['desc'],
+      star: widget.data['star'].toString(),
+      category: widget.data['category'],
+      price: widget.data['price'].toString(),
+      itemCount: 1,
+    ));
+    _scaffoldKey.currentState!.showSnackBar(
+        showSnackBar(content: "${widget.data['name']} added to favourites !"));
+  }
+
+  void onAddToCartPressed() async {
+    await _databaseService.addToCart(
+        Categories(
+          name: widget.data['name'],
+          url: widget.data['url'],
+          desc: widget.data['desc'],
+          star: widget.data['star'].toString(),
+          category: widget.data['category'],
+          price: widget.data['price'].toString(),
+          itemCount: 1,
+        ),
+        widget.data);
+    _scaffoldKey.currentState!.showSnackBar(
+        showSnackBar(content: "${widget.data['name']} added to cart !"));
+  }
+
+  Column _column(Size size, BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _imageWithBackButton(size, context),
+          _nameText(size),
+          _price(size),
+          _reviewsAndRating(size),
+          _desc(size),
+        ],
+      );
+
+  Padding _desc(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.01,
+        ),
+        child: Text(
+          widget.data['desc'],
+          style: const TextStyle(
+            fontSize: kNormalFontSize,
+            color: Colors.grey,
+          ),
+        ),
+      );
+
+  Padding _reviewsAndRating(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.005,
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              CupertinoIcons.star_fill,
+              color: Colors.yellow,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
+              child: Text(
+                widget.data['star'].toString(),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: kNormalFontSize,
+                ),
               ),
             ),
-            SizedBox(width: size.width * 0.02),
-            Expanded(
-              flex: 6,
-              child: CustomButton(
-                label: 'Add to cart',
-                onPressed: () async {
-                  await _databaseService.addToCart(Categories(
-                    name: widget.data['name'],
-                    url: widget.data['url'],
-                    desc: widget.data['desc'],
-                    star: widget.data['star'].toString(),
-                    category: widget.data['category'],
-                    price: widget.data['price'].toString(),
-                  ));
-                  _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                      content: "${widget.data['name']} added to cart !"));
-                },
-              ),
+            const Text(
+              '(50 Reviews)',
+              style: TextStyle(color: Colors.grey),
             ),
           ],
         ),
-      ),
-    );
-  }
+      );
+
+  Padding _price(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.005,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '\$ ${widget.data['price'].toString()}',
+              style: const TextStyle(fontSize: 24, color: Colors.grey),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomRectButton(
+                  width: 48,
+                  height: 48,
+                  icon: CupertinoIcons.plus,
+                  onPressed: () {},
+                  color: Colors.white,
+                  iconColor: Colors.black,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
+                  child: const Text(
+                    '02',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: kNormalFontSize,
+                    ),
+                  ),
+                ),
+                CustomRectButton(
+                  width: 48,
+                  height: 48,
+                  icon: CupertinoIcons.minus,
+                  onPressed: () {},
+                  color: Colors.white,
+                  iconColor: Colors.black,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Padding _nameText(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.01,
+        ),
+        child: Text(
+          widget.data['name'],
+          style: const TextStyle(
+            fontSize: 24,
+            color: Colors.black,
+          ),
+        ),
+      );
+
+  Padding _imageWithBackButton(Size size, BuildContext context) => Padding(
+        padding: EdgeInsets.only(bottom: size.height * 0.01),
+        child: Stack(
+          children: [
+            _image(size),
+            _backButton(size, context),
+          ],
+        ),
+      );
+
+  Positioned _backButton(Size size, BuildContext context) => Positioned(
+        left: size.width * 0.1,
+        top: size.height * 0.09,
+        child: SizedBox(
+          height: 56.0,
+          width: 56.0,
+          child: CustomRectButton(
+            width: 56,
+            height: 56,
+            icon: CupertinoIcons.back,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            color: Colors.white,
+            iconColor: Colors.black,
+          ),
+        ),
+      );
+
+  Align _image(Size size) => Align(
+        alignment: Alignment.topRight,
+        child: ClipRRect(
+          borderRadius:
+              const BorderRadius.only(bottomLeft: Radius.circular(80)),
+          child: Image.asset(
+            widget.data['url'],
+            fit: BoxFit.fill,
+            height: size.height * 0.65,
+            width: size.width * 0.85,
+          ),
+        ),
+      );
 }

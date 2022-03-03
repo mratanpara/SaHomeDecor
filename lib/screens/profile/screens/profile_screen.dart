@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants/constants.dart';
+import 'package:decor/constants/get_counts_data.dart';
 import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/providers/common_provider.dart';
-import 'package:decor/screens/auth/login/screen/login_screen.dart';
+import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/screens/profile/components/custom_card.dart';
 import 'package:decor/screens/profile/screens/change_password.dart';
+import 'package:decor/screens/profile/screens/myorder_screen.dart';
+import 'package:decor/screens/profile/screens/payment_method_screen.dart';
+import 'package:decor/screens/profile/screens/reviews_screen.dart';
+import 'package:decor/screens/profile/screens/settings_screen.dart';
 import 'package:decor/screens/shipping_address/shipping_addresses_screen.dart';
 import 'package:decor/screens/splash_screen/splash_screen.dart';
 import 'package:decor/services/auth_services.dart';
@@ -46,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> getAddressCount(BuildContext context) async {
+  Future<void> getAddressesCount(BuildContext context) async {
     await getAddressCount(context);
   }
 
@@ -54,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     getData();
-    getAddressCount(context);
+    getAddressesCount(context);
   }
 
   @override
@@ -109,14 +114,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CustomCard(
                     title: 'My Order',
                     subTitle: 'Already have 10 orders',
-                    onTap: () {}),
+                    onTap: () => Navigator.pushNamed(context, OrderScreen.id)),
               ),
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: CustomCard(
                     title: 'Shipping Addresses',
                     subTitle:
-                        '${Provider.of<CommonProvider>(context).addressCount} Addresses',
+                        '${Provider.of<CommonProvider>(context).getAddressCount} Addresses',
                     onTap: () {
                       Navigator.pushNamed(context, ShippingAddresses.id);
                     }),
@@ -126,29 +131,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CustomCard(
                     title: 'Payment Method',
                     subTitle: 'You have 2 cards',
-                    onTap: () {}),
+                    onTap: () =>
+                        Navigator.pushNamed(context, PaymentMethodScreen.id)),
               ),
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: CustomCard(
                     title: 'My Reviews',
                     subTitle: 'Reviews for 5 items',
-                    onTap: () {}),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'Change Password',
-                    subTitle: 'Set New Password',
                     onTap: () =>
-                        Navigator.pushNamed(context, ChangePassword.id)),
+                        Navigator.pushNamed(context, ReviewsScreen.id)),
               ),
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: CustomCard(
-                    title: 'Settings',
-                    subTitle: 'Notification, Password, FAQs, Contact',
-                    onTap: () {}),
+                  title: 'Settings',
+                  subTitle: 'Notification, Password, FAQs, Contact',
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SettingsScreen(
+                              displayName: displayName, email: email))),
+                ),
               ),
             ],
           ),

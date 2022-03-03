@@ -36,7 +36,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: Image.asset(
-                    'assets/images/category/black-simple-lamp.png',
+                    'assets/images/black-simple-lamp.png',
                     fit: BoxFit.cover,
                     height: size.height * 0.15,
                     width: size.width * 0.3,

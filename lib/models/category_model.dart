@@ -6,6 +6,7 @@ class Categories {
     required this.star,
     required this.category,
     required this.price,
+    required this.itemCount,
   });
 
   final String name;
@@ -14,4 +15,5 @@ class Categories {
   final String category;
   final String price;
   final String star;
+  final int itemCount;
 }

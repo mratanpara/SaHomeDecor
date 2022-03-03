@@ -4,7 +4,7 @@ import 'package:decor/constants/constants.dart';
 import 'package:decor/models/users_model.dart';
 import 'package:decor/screens/auth/components/custom_text_field.dart';
 import 'package:decor/screens/auth/components/facebook_signin_button.dart';
-import 'package:decor/screens/auth/login/screen/login_screen.dart';
+import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +78,7 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 _image(size),
                 _headingText(size),
-                _cardWithShadow(size),
+                _cardWithTextFieldsAndSignUpButton(size),
               ],
             ),
           ),
@@ -87,7 +87,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Padding _cardWithShadow(Size size) => Padding(
+  Padding _cardWithTextFieldsAndSignUpButton(Size size) => Padding(
         padding: EdgeInsets.symmetric(
             vertical: size.width * 0.01, horizontal: size.height * 0.01),
         child: Container(
@@ -99,47 +99,10 @@ class _SignupScreenState extends State<SignupScreen> {
               padding: kCardPadding,
               child: Column(
                 children: [
-                  CustomTextField(
-                    label: 'Full Name',
-                    hintText: 'Enter Full Name',
-                    controller: _nameController,
-                    focusNode: _nameFocus,
-                    type: TextInputType.text,
-                    onSubmitted: (term) {
-                      fieldFocusChange(context, _nameFocus, _emailFocus);
-                    },
-                  ),
-                  CustomTextField(
-                    label: 'Email',
-                    hintText: 'Enter Email',
-                    controller: _emailController,
-                    focusNode: _emailFocus,
-                    type: TextInputType.emailAddress,
-                    onSubmitted: (term) {
-                      fieldFocusChange(context, _emailFocus, _passwordFocus);
-                    },
-                  ),
-                  CustomTextField(
-                    label: 'Password',
-                    hintText: 'Enter Password',
-                    controller: _passwordController,
-                    focusNode: _passwordFocus,
-                    type: TextInputType.visiblePassword,
-                    onSubmitted: (term) {
-                      fieldFocusChange(
-                          context, _passwordFocus, _confirmPasswordFocus);
-                    },
-                  ),
-                  CustomTextField(
-                    label: 'Confirm Password',
-                    hintText: 'Enter Confirm Password',
-                    controller: _confirmPasswordController,
-                    type: TextInputType.visiblePassword,
-                    focusNode: _confirmPasswordFocus,
-                    onSubmitted: (term) {
-                      _confirmPasswordFocus.unfocus();
-                    },
-                  ),
+                  _fullNameTextField(),
+                  _emailTextField(),
+                  _passwordTextField(),
+                  _confirmPasswordTextField(),
                   _signupButton(size),
                   _richTextButton(size),
                   const Divider(thickness: 1),
@@ -149,6 +112,50 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
         ),
+      );
+
+  CustomTextField _confirmPasswordTextField() => CustomTextField(
+        label: 'Confirm Password',
+        hintText: 'Enter Confirm Password',
+        controller: _confirmPasswordController,
+        type: TextInputType.visiblePassword,
+        focusNode: _confirmPasswordFocus,
+        onSubmitted: (term) {
+          _confirmPasswordFocus.unfocus();
+        },
+      );
+
+  CustomTextField _passwordTextField() => CustomTextField(
+        label: 'Password',
+        hintText: 'Enter Password',
+        controller: _passwordController,
+        focusNode: _passwordFocus,
+        type: TextInputType.visiblePassword,
+        onSubmitted: (term) {
+          fieldFocusChange(context, _passwordFocus, _confirmPasswordFocus);
+        },
+      );
+
+  CustomTextField _emailTextField() => CustomTextField(
+        label: 'Email',
+        hintText: 'Enter Email',
+        controller: _emailController,
+        focusNode: _emailFocus,
+        type: TextInputType.emailAddress,
+        onSubmitted: (term) {
+          fieldFocusChange(context, _emailFocus, _passwordFocus);
+        },
+      );
+
+  CustomTextField _fullNameTextField() => CustomTextField(
+        label: 'Full Name',
+        hintText: 'Enter Full Name',
+        controller: _nameController,
+        focusNode: _nameFocus,
+        type: TextInputType.text,
+        onSubmitted: (term) {
+          fieldFocusChange(context, _nameFocus, _emailFocus);
+        },
       );
 
   Padding _facebookButton(Size size) => Padding(

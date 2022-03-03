@@ -1,7 +1,6 @@
 import 'package:decor/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CustomTextField extends StatefulWidget {
   CustomTextField({
@@ -32,32 +31,32 @@ class _CustomTextFieldState extends State<CustomTextField> {
     final size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-      child: _textField(),
+      child: _cardWithLabelAndTextField(),
     );
   }
 
-  Column _textField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(widget.label, style: kTextFieldLabelStyle),
-        TextFormField(
-          onFieldSubmitted: widget.onSubmitted,
-          focusNode: widget.focusNode,
-          controller: widget.controller,
-          keyboardType: widget.type,
-          obscureText: _isObscureText(),
-          cursorColor: Colors.black,
-          decoration: InputDecoration(
-              suffixIcon: _suffixIcon(),
-              hintText: widget.hintText,
-              focusedBorder: _underlineInputBorder(),
-              enabledBorder: _underlineInputBorder(),
-              hintStyle: const TextStyle(color: Colors.grey)),
-        ),
-      ],
-    );
-  }
+  Column _cardWithLabelAndTextField() => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(widget.label, style: kTextFieldLabelStyle),
+          _textFormField(),
+        ],
+      );
+
+  TextFormField _textFormField() => TextFormField(
+        onFieldSubmitted: widget.onSubmitted,
+        focusNode: widget.focusNode,
+        controller: widget.controller,
+        keyboardType: widget.type,
+        obscureText: _isObscureText(),
+        cursorColor: Colors.black,
+        decoration: InputDecoration(
+            suffixIcon: _suffixIcon(),
+            hintText: widget.hintText,
+            focusedBorder: _underlineInputBorder(),
+            enabledBorder: _underlineInputBorder(),
+            hintStyle: const TextStyle(color: Colors.grey)),
+      );
 
   bool _isObscureText() {
     if (!isSecure) {

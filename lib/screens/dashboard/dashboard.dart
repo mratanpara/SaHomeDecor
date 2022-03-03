@@ -1,16 +1,10 @@
-import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_bottom_navigation_bar.dart';
-import 'package:decor/constants/constants.dart';
 import 'package:decor/providers/common_provider.dart';
-import 'package:decor/screens/auth/login/screen/login_screen.dart';
 import 'package:decor/screens/favourite/favourite_screen.dart';
 import 'package:decor/screens/home/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
 import 'package:decor/screens/profile/screens/profile_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class DashBoard extends StatefulWidget {
@@ -38,7 +32,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions
-          .elementAt(Provider.of<CommonProvider>(context).selectedIndex),
+          .elementAt(Provider.of<CommonProvider>(context).getSelectedIndex),
       bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }

@@ -18,42 +18,54 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     return Consumer<CommonProvider>(
       builder: (context, selectedIndex, child) {
         return BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              activeIcon: Icon(CupertinoIcons.house_fill),
-              icon: Icon(CupertinoIcons.house),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(CupertinoIcons.bookmark_fill),
-              icon: Icon(CupertinoIcons.bookmark),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(CupertinoIcons.bell_fill),
-              icon: Icon(CupertinoIcons.bell),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(CupertinoIcons.person_fill),
-              icon: Icon(CupertinoIcons.person),
-              label: 'Home',
-            ),
+          items: <BottomNavigationBarItem>[
+            _homeNavigationBarItem(),
+            _favouritesNavigationBarItem(),
+            _notificationNavigationBarItem(),
+            _accountNavigationBarItem(),
           ],
           backgroundColor: Colors.white,
           elevation: 2,
           iconSize: kIconSize,
           showSelectedLabels: false,
-          currentIndex: selectedIndex.selectedIndex,
+          currentIndex: selectedIndex.getSelectedIndex,
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.grey,
           showUnselectedLabels: false,
           type: BottomNavigationBarType.fixed,
           onTap: (index) {
-            selectedIndex.updateIndex(index);
+            selectedIndex.setUpdatedIndex(index);
           },
         );
       },
     );
   }
+
+  BottomNavigationBarItem _accountNavigationBarItem() =>
+      const BottomNavigationBarItem(
+        activeIcon: Icon(CupertinoIcons.person_fill),
+        icon: Icon(CupertinoIcons.person),
+        label: 'Account',
+      );
+
+  BottomNavigationBarItem _notificationNavigationBarItem() =>
+      const BottomNavigationBarItem(
+        activeIcon: Icon(CupertinoIcons.bell_fill),
+        icon: Icon(CupertinoIcons.bell),
+        label: 'Notification',
+      );
+
+  BottomNavigationBarItem _favouritesNavigationBarItem() =>
+      const BottomNavigationBarItem(
+        activeIcon: Icon(CupertinoIcons.heart_fill),
+        icon: Icon(CupertinoIcons.heart),
+        label: 'Favourites',
+      );
+
+  BottomNavigationBarItem _homeNavigationBarItem() =>
+      const BottomNavigationBarItem(
+        activeIcon: Icon(CupertinoIcons.house_fill),
+        icon: Icon(CupertinoIcons.house),
+        label: 'Home',
+      );
 }
