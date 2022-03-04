@@ -1,6 +1,7 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/refresh_indicator.dart';
+import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         title: 'Notification',
         actionIcon: null,
         onActionIconPressed: null,
-        onLeadingIconPressed: () {},
+        onLeadingIconPressed: () =>
+            Navigator.pushNamed(context, SearchScreen.id),
       ),
       body: CommonRefreshIndicator(
         child: ListView.separated(

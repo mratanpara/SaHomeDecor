@@ -1,7 +1,7 @@
 import 'package:decor/components/custom_bottom_navigation_bar.dart';
 import 'package:decor/providers/common_provider.dart';
 import 'package:decor/screens/favourite/favourite_screen.dart';
-import 'package:decor/screens/home/home_screen.dart';
+import 'package:decor/screens/home/screens/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
 import 'package:decor/screens/profile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';

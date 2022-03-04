@@ -2,7 +2,7 @@ import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/screens/auth/components/custom_text_button.dart';
-import 'package:decor/screens/auth/components/custom_text_field.dart';
+import 'package:decor/components/custom_text_field.dart';
 import 'package:decor/screens/auth/components/facebook_signin_button.dart';
 import 'package:decor/screens/auth/forgot_password/forgot_password.dart';
 import 'package:decor/screens/auth/signup/signup_screen.dart';

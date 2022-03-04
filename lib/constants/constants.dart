@@ -86,19 +86,21 @@ const kViewSubTitleStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
-//profile
+//profile page
 const kProfileTileTitleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 20,
 );
 const kProfileTileSubTitleTextStyle = TextStyle(fontSize: kNormalFontSize);
 
+//success page
 const kSuccessMsgTextStyle = TextStyle(
   fontSize: 22,
   color: Colors.black54,
   fontWeight: FontWeight.w500,
 );
 
+//order page
 const kOrderBoldTextStyle = TextStyle(
   fontSize: 18,
   color: Colors.black,
@@ -112,10 +114,33 @@ const kOrderTabTextStyle = TextStyle(
   fontWeight: FontWeight.w600,
 );
 
+//settings page
 const kSettingsHeadingTextStyle = TextStyle(
   color: Colors.grey,
   fontSize: 18,
   fontWeight: FontWeight.w600,
+);
+
+//welcome page
+
+const kWelcomeFirstHeading = TextStyle(
+  fontSize: 24,
+  letterSpacing: 2,
+  color: Colors.grey,
+  fontWeight: FontWeight.w500,
+);
+
+const kWelcomeSecondHeading = TextStyle(
+  fontSize: 26,
+  letterSpacing: 2,
+  color: Colors.black,
+  fontWeight: FontWeight.w700,
+);
+
+var kWelcomeContentStyle = TextStyle(
+  color: Colors.grey.shade600,
+  letterSpacing: 2,
+  fontSize: 20,
 );
 
 //physics

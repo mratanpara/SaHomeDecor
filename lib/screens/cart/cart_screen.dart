@@ -62,7 +62,7 @@ class _CartScreenState extends State<CartScreen> {
   CustomButton _checkOutButton(BuildContext context) => CustomButton(
         label: 'Check out',
         onPressed: () {
-          Navigator.pushNamed(context, SuccessScreen.id);
+          Navigator.pushReplacementNamed(context, SuccessScreen.id);
         },
       );
 

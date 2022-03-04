@@ -2,7 +2,10 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_card_text_field.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/refresh_indicator.dart';
-import 'package:decor/screens/profile/screens/change_password.dart';
+import 'package:decor/screens/profile/screens/change_password/change_password.dart';
+import 'package:decor/screens/profile/screens/settings/screens/faqs_screen.dart';
+import 'package:decor/screens/profile/screens/settings/screens/privacy_policy.dart';
+import 'package:decor/screens/profile/screens/settings/screens/terms_and_conditions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -108,16 +111,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     text: 'Delivery status changes'),
                 _heading('Help Center'),
                 _customListTile(
-                    trailing: Icon(CupertinoIcons.forward),
-                    onTap: () {},
-                    text: 'FAQs'),
+                  trailing: Icon(CupertinoIcons.forward),
+                  onTap: () => Navigator.pushNamed(context, FAQsScreen.id),
+                  text: 'FAQs',
+                ),
                 _customListTile(
                     trailing: Icon(CupertinoIcons.forward),
-                    onTap: () {},
+                    onTap: () =>
+                        Navigator.pushNamed(context, PrivacyPolicyScreen.id),
                     text: 'Privacy Policy'),
                 _customListTile(
                     trailing: Icon(CupertinoIcons.forward),
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(
+                          context,
+                          TermsAndConditionsScreen.id,
+                        ),
                     text: 'Terms & Condition'),
               ],
             ),

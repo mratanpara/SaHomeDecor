@@ -5,19 +5,24 @@ import 'package:decor/screens/auth/signup/signup_screen.dart';
 import 'package:decor/screens/cart/cart_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/screens/favourite/favourite_screen.dart';
-import 'package:decor/screens/home/home_screen.dart';
+import 'package:decor/screens/home/screens/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
 import 'package:decor/screens/profile/components/add_payment_method.dart';
-import 'package:decor/screens/profile/screens/change_password.dart';
-import 'package:decor/screens/profile/screens/myorder_screen.dart';
-import 'package:decor/screens/profile/screens/payment_method_screen.dart';
+import 'package:decor/screens/profile/screens/change_password/change_password.dart';
+import 'package:decor/screens/profile/screens/myorder/myorder_screen.dart';
+import 'package:decor/screens/profile/screens/pyment_method/payment_method_screen.dart';
 import 'package:decor/screens/profile/screens/profile_screen.dart';
-import 'package:decor/screens/profile/screens/reviews_screen.dart';
-import 'package:decor/screens/profile/screens/settings_screen.dart';
-import 'package:decor/screens/shipping_address/shipping_addresses_screen.dart';
+import 'package:decor/screens/profile/screens/myreviews/reviews_screen.dart';
+import 'package:decor/screens/profile/screens/settings/screens/faqs_screen.dart';
+import 'package:decor/screens/profile/screens/settings/screens/privacy_policy.dart';
+import 'package:decor/screens/profile/screens/settings/settings_screen.dart';
+import 'package:decor/screens/profile/screens/settings/screens/terms_and_conditions.dart';
+import 'package:decor/screens/search_screen/search_screen.dart';
+import 'package:decor/screens/shipping_address/screens/shipping_addresses_screen.dart';
 import 'package:decor/screens/splash_screen/splash_screen.dart';
 import 'package:decor/screens/success/success_screen.dart';
-import 'package:decor/theme.dart';
+import 'package:decor/screens/welcome/welcome_screen.dart';
+import 'package:decor/themes/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,11 +49,16 @@ class MyApp extends StatelessWidget {
     PaymentMethodScreen.id: (context) => const PaymentMethodScreen(),
     AddPaymentMethod.id: (context) => AddPaymentMethod(),
     ReviewsScreen.id: (context) => const ReviewsScreen(),
+    SearchScreen.id: (context) => const SearchScreen(),
     SplashScreen.id: (context) => SplashScreen(),
     CartScreen.id: (context) => const CartScreen(),
     ShippingAddresses.id: (context) => const ShippingAddresses(),
     LoginScreen.id: (context) => const LoginScreen(),
     SignupScreen.id: (context) => const SignupScreen(),
+    WelcomeScreen.id: (context) => const WelcomeScreen(),
+    FAQsScreen.id: (context) => FAQsScreen(),
+    TermsAndConditionsScreen.id: (context) => TermsAndConditionsScreen(),
+    PrivacyPolicyScreen.id: (context) => PrivacyPolicyScreen(),
   };
 
   @override

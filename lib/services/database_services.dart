@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:decor/constants/constants.dart';
 import 'package:decor/models/category_model.dart';
 import 'package:decor/models/users_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DatabaseService {
@@ -70,14 +73,48 @@ class DatabaseService {
         .delete();
   }
 
-  Future<void> addToFavourites(Categories cat) async {
-    await _userCollection.doc(_currentUser!.uid).collection('favourites').add({
-      'name': cat.name,
-      'url': cat.url,
-      'desc': cat.desc,
-      'category': cat.category,
-      'price': cat.price,
-      'star': cat.star,
+  Future<void> addToFavourites(
+      Categories cat, GlobalKey<ScaffoldState> _scaffoldKey) async {
+    await _userCollection
+        .doc(_currentUser!.uid)
+        .collection('favourites')
+        .get()
+        .then((QuerySnapshot querySnapshot) async {
+      if (querySnapshot.docs.isNotEmpty) {
+        for (var element in querySnapshot.docs) {
+          if (element['name'] == cat.name) {
+            _scaffoldKey.currentState
+                ?.showSnackBar(showSnackBar(content: 'Already in favourites!'));
+            return;
+          }
+        }
+        if (querySnapshot.docs.isNotEmpty) {
+          await _userCollection
+              .doc(_currentUser!.uid)
+              .collection('favourites')
+              .add({
+            'name': cat.name,
+            'url': cat.url,
+            'desc': cat.desc,
+            'category': cat.category,
+            'price': cat.price,
+            'star': cat.star,
+          });
+        }
+      }
+      if (querySnapshot.docs.isEmpty) {
+        await _userCollection
+            .doc(_currentUser!.uid)
+            .collection('favourites')
+            .add({
+          'name': cat.name,
+          'url': cat.url,
+          'desc': cat.desc,
+          'category': cat.category,
+          'price': cat.price,
+          'star': cat.star,
+        });
+      }
     });
   }
 
@@ -89,7 +126,7 @@ class DatabaseService {
         .delete();
   }
 
-  Future<void> addToCart(Categories cat, dynamic data) async {
+  Future<void> addToCart(Categories cat) async {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('cart')

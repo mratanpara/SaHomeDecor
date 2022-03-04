@@ -63,9 +63,10 @@ class SuccessScreen extends StatelessWidget {
               Padding(
                 padding: kAllPadding,
                 child: CustomButton(
-                    label: 'BACK TO HOME',
-                    onPressed: () =>
-                        Navigator.pushNamed(context, DashBoard.id)),
+                  label: 'BACK TO HOME',
+                  onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                      context, DashBoard.id, (route) => false),
+                ),
               ),
             ],
           ),

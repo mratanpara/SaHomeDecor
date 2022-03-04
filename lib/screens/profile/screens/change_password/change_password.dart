@@ -1,7 +1,7 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/auth/components/custom_text_field.dart';
+import 'package:decor/components/custom_text_field.dart';
 import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
@@ -68,6 +68,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(height: 40),
               Padding(
                 padding: kSymmetricPaddingVer,
                 child: Stack(
@@ -79,6 +80,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ],
                 ),
               ),
+              const SizedBox(height: 40),
               Container(
                 decoration: kBoxShadow,
                 child: Card(

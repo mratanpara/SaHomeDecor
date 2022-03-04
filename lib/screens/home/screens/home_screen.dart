@@ -5,6 +5,7 @@ import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/screens/cart/cart_screen.dart';
 import 'package:decor/screens/details/detail_screen.dart';
 import 'package:decor/screens/home/components/categories_data.dart';
+import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _tabController;
 
   final List<String> _category = [
@@ -37,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: CustomAppBar(
         title: 'Beautiful',
         actionIcon: CupertinoIcons.cart,
@@ -44,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         onActionIconPressed: () {
           Navigator.pushNamed(context, CartScreen.id);
         },
-        onLeadingIconPressed: null,
+        onLeadingIconPressed: () =>
+            Navigator.pushNamed(context, SearchScreen.id),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -62,8 +66,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     children: [
                       CommonRefreshIndicator(
                         child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(
-                              parent: AlwaysScrollableScrollPhysics()),
+                          physics: kPhysics,
                           child: Flexible(
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
@@ -71,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 for (int i = 0; i < _category.length; i++)
                                   CategoriesData(
                                       size: size,
-                                      collection: _category.elementAt(i)),
+                                      collection: _category.elementAt(i),
+                                      scaffoldKey: _scaffoldKey),
                               ],
                             ),
                           ),
@@ -99,9 +103,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   SingleChildScrollView _getCategories(
       {required Size size, required String category}) {
     return SingleChildScrollView(
-      physics:
-          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-      child: CategoriesData(size: size, collection: category),
+      physics: kPhysics,
+      child: CategoriesData(
+          size: size, collection: category, scaffoldKey: _scaffoldKey),
     );
   }
 

@@ -23,6 +23,7 @@ dependencies:
   flutter_facebook_auth: ^4.1.1
   animated_text_kit: ^4.2.1
   animated_widgets: ^1.1.0
+  webview_flutter: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +36,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/category/
+    - assets/images/pageview/
     - assets/images/success_screen/
     - assets/images/
     - assets/icons/

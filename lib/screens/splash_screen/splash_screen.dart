@@ -4,6 +4,7 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
+import 'package:decor/screens/welcome/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (_currentUser?.email != null) {
         Navigator.pushReplacementNamed(context, DashBoard.id);
       } else {
-        Navigator.pushReplacementNamed(context, LoginScreen.id);
+        Navigator.pushReplacementNamed(context, WelcomeScreen.id);
       }
     });
   }

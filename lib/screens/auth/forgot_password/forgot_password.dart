@@ -1,7 +1,7 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/auth/components/custom_text_field.dart';
+import 'package:decor/components/custom_text_field.dart';
 import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
@@ -52,13 +52,18 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   Padding _body(BuildContext context) => Padding(
         padding: kAllPadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _headingTextWithIcon(),
-            _image(),
-            _textFieldAndButton(context),
-          ],
+        child: SingleChildScrollView(
+          physics: kPhysics,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _headingTextWithIcon(),
+              const SizedBox(height: 40),
+              _image(),
+              const SizedBox(height: 40),
+              _textFieldAndButton(context),
+            ],
+          ),
         ),
       );
 

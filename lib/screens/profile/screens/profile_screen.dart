@@ -6,12 +6,13 @@ import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/providers/common_provider.dart';
 import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/screens/profile/components/custom_card.dart';
-import 'package:decor/screens/profile/screens/change_password.dart';
-import 'package:decor/screens/profile/screens/myorder_screen.dart';
-import 'package:decor/screens/profile/screens/payment_method_screen.dart';
-import 'package:decor/screens/profile/screens/reviews_screen.dart';
-import 'package:decor/screens/profile/screens/settings_screen.dart';
-import 'package:decor/screens/shipping_address/shipping_addresses_screen.dart';
+import 'package:decor/screens/profile/screens/change_password/change_password.dart';
+import 'package:decor/screens/profile/screens/myorder/myorder_screen.dart';
+import 'package:decor/screens/profile/screens/pyment_method/payment_method_screen.dart';
+import 'package:decor/screens/profile/screens/myreviews/reviews_screen.dart';
+import 'package:decor/screens/profile/screens/settings/settings_screen.dart';
+import 'package:decor/screens/search_screen/search_screen.dart';
+import 'package:decor/screens/shipping_address/screens/shipping_addresses_screen.dart';
 import 'package:decor/screens/splash_screen/splash_screen.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
@@ -74,7 +75,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           await _auth.signOutUser();
           Navigator.pushReplacementNamed(context, LoginScreen.id);
         },
-        onLeadingIconPressed: () {},
+        onLeadingIconPressed: () =>
+            Navigator.pushNamed(context, SearchScreen.id),
       ),
       body: CommonRefreshIndicator(
         child: SingleChildScrollView(

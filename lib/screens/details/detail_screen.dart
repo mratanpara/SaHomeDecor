@@ -20,6 +20,7 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -69,21 +70,7 @@ class _DetailScreenState extends State<DetailScreen> {
       );
 
   void onFavPressed() async {
-    await _databaseService.addToFavourites(Categories(
-      name: widget.data['name'],
-      url: widget.data['url'],
-      desc: widget.data['desc'],
-      star: widget.data['star'].toString(),
-      category: widget.data['category'],
-      price: widget.data['price'].toString(),
-      itemCount: 1,
-    ));
-    _scaffoldKey.currentState!.showSnackBar(
-        showSnackBar(content: "${widget.data['name']} added to favourites !"));
-  }
-
-  void onAddToCartPressed() async {
-    await _databaseService.addToCart(
+    await _databaseService.addToFavourites(
         Categories(
           name: widget.data['name'],
           url: widget.data['url'],
@@ -93,7 +80,23 @@ class _DetailScreenState extends State<DetailScreen> {
           price: widget.data['price'].toString(),
           itemCount: 1,
         ),
-        widget.data);
+        _scaffoldKey);
+    _scaffoldKey.currentState!.showSnackBar(
+        showSnackBar(content: "${widget.data['name']} added to favourites !"));
+  }
+
+  void onAddToCartPressed() async {
+    await _databaseService.addToCart(
+      Categories(
+        name: widget.data['name'],
+        url: widget.data['url'],
+        desc: widget.data['desc'],
+        star: widget.data['star'].toString(),
+        category: widget.data['category'],
+        price: widget.data['price'].toString(),
+        itemCount: 1,
+      ),
+    );
     _scaffoldKey.currentState!.showSnackBar(
         showSnackBar(content: "${widget.data['name']} added to cart !"));
   }
@@ -157,45 +160,9 @@ class _DetailScreenState extends State<DetailScreen> {
           horizontal: size.width * 0.1,
           vertical: size.height * 0.005,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '\$ ${widget.data['price'].toString()}',
-              style: const TextStyle(fontSize: 24, color: Colors.grey),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomRectButton(
-                  width: 48,
-                  height: 48,
-                  icon: CupertinoIcons.plus,
-                  onPressed: () {},
-                  color: Colors.white,
-                  iconColor: Colors.black,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-                  child: const Text(
-                    '02',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: kNormalFontSize,
-                    ),
-                  ),
-                ),
-                CustomRectButton(
-                  width: 48,
-                  height: 48,
-                  icon: CupertinoIcons.minus,
-                  onPressed: () {},
-                  color: Colors.white,
-                  iconColor: Colors.black,
-                ),
-              ],
-            ),
-          ],
+        child: Text(
+          '\$ ${widget.data['price'].toString()}',
+          style: const TextStyle(fontSize: 24, color: Colors.grey),
         ),
       );
 

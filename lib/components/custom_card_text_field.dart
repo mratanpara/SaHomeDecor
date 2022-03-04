@@ -1,5 +1,5 @@
 import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/auth/components/custom_text_field.dart';
+import 'package:decor/components/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class CustomCardTextField extends StatelessWidget {
