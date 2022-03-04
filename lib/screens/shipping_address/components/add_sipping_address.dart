@@ -90,120 +90,143 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: _appBar(context),
+      body: SingleChildScrollView(
+        physics: kPhysics,
+        padding: kAllPadding,
+        child: _column(context),
+      ),
+      bottomNavigationBar: _saveAddressButton(context),
+    );
+  }
+
+  Padding _saveAddressButton(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(20),
+        child: CustomButton(
+          label: 'SAVE ADDRESS',
+          onPressed: onSave,
+        ),
+      );
+
+  void onSave() async {
+    if (_addressController.text.isNotEmpty &&
+        _fullNameController.text.isNotEmpty &&
+        _zipcodeController.text.isNotEmpty &&
+        _countryController.text.isNotEmpty &&
+        _cityController.text.isNotEmpty &&
+        _districtController.text.isNotEmpty) {
+      if (widget.data != null) {
+        await _databaseService.updateAddress(
+            doc: widget.data.id,
+            fullName: _fullNameController.text,
+            address: _addressController.text,
+            zipcode: int.parse(_zipcodeController.text),
+            country: _countryController.text,
+            city: _cityController.text,
+            district: _districtController.text);
+      } else {
+        await _databaseService.addAddress(
+            fullName: _fullNameController.text,
+            address: _addressController.text,
+            zipcode: int.parse(_zipcodeController.text),
+            country: _countryController.text,
+            city: _cityController.text,
+            district: _districtController.text);
+      }
+      getAddressCount(context);
+      Navigator.pop(context);
+    }
+  }
+
+  Column _column(BuildContext context) => Column(
+        children: [
+          _fullNameTextField(context),
+          _addressTextField(context),
+          _zipcodeTextField(context),
+          _countryTextField(context),
+          _cityTextField(context),
+          _districtTextField(),
+        ],
+      );
+
+  CustomCardTextField _districtTextField() => CustomCardTextField(
+        type: TextInputType.text,
+        label: 'District',
+        hintText: 'Enter District',
+        controller: _districtController,
+        focusNode: _districtFocus,
+        onPressed: (t) {
+          _districtFocus.unfocus();
+        },
+      );
+
+  CustomCardTextField _cityTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.text,
+        label: 'City',
+        hintText: 'Enter City',
+        controller: _cityController,
+        focusNode: _cityFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _cityFocus, _districtFocus);
+        },
+      );
+
+  CustomCardTextField _countryTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.text,
+        label: 'Country',
+        hintText: 'Enter Country',
+        controller: _countryController,
+        focusNode: _countryFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _countryFocus, _cityFocus);
+        },
+      );
+
+  CustomCardTextField _zipcodeTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.number,
+        label: 'Zipcode (Postal Code)',
+        hintText: 'Enter Zipcode (Postal Code)',
+        controller: _zipcodeController,
+        focusNode: _zipcodeFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _zipcodeFocus, _countryFocus);
+        },
+      );
+
+  CustomCardTextField _addressTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.text,
+        label: 'Address',
+        hintText: 'Enter Address',
+        controller: _addressController,
+        focusNode: _addressFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _addressFocus, _zipcodeFocus);
+        },
+      );
+
+  CustomCardTextField _fullNameTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.text,
+        label: 'Full Name',
+        hintText: 'Enter Full Name',
+        controller: _fullNameController,
+        focusNode: _fullNameFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _fullNameFocus, _addressFocus);
+        },
+      );
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
         title: 'Add Shipping Address',
         actionIcon: null,
         leadingIcon: CupertinoIcons.back,
         onActionIconPressed: null,
         onLeadingIconPressed: () => Navigator.pop(context),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics()),
-        padding: kAllPadding,
-        child: Column(
-          children: [
-            CustomCardTextField(
-              type: TextInputType.text,
-              label: 'Full Name',
-              hintText: 'Enter Full Name',
-              controller: _fullNameController,
-              focusNode: _fullNameFocus,
-              onPressed: (t) {
-                fieldFocusChange(context, _fullNameFocus, _addressFocus);
-              },
-            ),
-            CustomCardTextField(
-              type: TextInputType.text,
-              label: 'Address',
-              hintText: 'Enter Address',
-              controller: _addressController,
-              focusNode: _addressFocus,
-              onPressed: (t) {
-                fieldFocusChange(context, _addressFocus, _zipcodeFocus);
-              },
-            ),
-            CustomCardTextField(
-              type: TextInputType.number,
-              label: 'Zipcode (Postal Code)',
-              hintText: 'Enter Zipcode (Postal Code)',
-              controller: _zipcodeController,
-              focusNode: _zipcodeFocus,
-              onPressed: (t) {
-                fieldFocusChange(context, _zipcodeFocus, _countryFocus);
-              },
-            ),
-            CustomCardTextField(
-              type: TextInputType.text,
-              label: 'Country',
-              hintText: 'Enter Country',
-              controller: _countryController,
-              focusNode: _countryFocus,
-              onPressed: (t) {
-                fieldFocusChange(context, _countryFocus, _cityFocus);
-              },
-            ),
-            CustomCardTextField(
-              type: TextInputType.text,
-              label: 'City',
-              hintText: 'Enter City',
-              controller: _cityController,
-              focusNode: _cityFocus,
-              onPressed: (t) {
-                fieldFocusChange(context, _cityFocus, _districtFocus);
-              },
-            ),
-            CustomCardTextField(
-              type: TextInputType.text,
-              label: 'District',
-              hintText: 'Enter District',
-              controller: _districtController,
-              focusNode: _districtFocus,
-              onPressed: (t) {
-                _districtFocus.unfocus();
-              },
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(20),
-        child: CustomButton(
-          label: 'SAVE ADDRESS',
-          onPressed: () async {
-            if (_addressController.text.isNotEmpty &&
-                _fullNameController.text.isNotEmpty &&
-                _zipcodeController.text.isNotEmpty &&
-                _countryController.text.isNotEmpty &&
-                _cityController.text.isNotEmpty &&
-                _districtController.text.isNotEmpty) {
-              if (widget.data != null) {
-                await _databaseService.updateAddress(
-                    doc: widget.data.id,
-                    fullName: _fullNameController.text,
-                    address: _addressController.text,
-                    zipcode: int.parse(_zipcodeController.text),
-                    country: _countryController.text,
-                    city: _cityController.text,
-                    district: _districtController.text);
-              } else {
-                await _databaseService.addAddress(
-                    fullName: _fullNameController.text,
-                    address: _addressController.text,
-                    zipcode: int.parse(_zipcodeController.text),
-                    country: _countryController.text,
-                    city: _cityController.text,
-                    district: _districtController.text);
-              }
-              getAddressCount(context);
-              Navigator.pop(context);
-            }
-          },
-        ),
-      ),
-    );
-  }
+      );
 }

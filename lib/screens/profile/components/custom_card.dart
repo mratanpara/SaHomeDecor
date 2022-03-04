@@ -14,27 +14,31 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: kBoxShadow,
-      child: Card(
+      child: _card(),
+    );
+  }
+
+  Card _card() => Card(
         elevation: 0,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ListTile(
-            onTap: onTap,
-            title: Padding(
-              padding: kBottomPadding,
-              child: Text(
-                title,
-                style: kProfileTileTitleTextStyle,
-              ),
-            ),
-            subtitle: Text(
-              subTitle,
-              style: kProfileTileSubTitleTextStyle,
-            ),
-            trailing: const Icon(CupertinoIcons.forward),
+          child: _listTile(),
+        ),
+      );
+
+  ListTile _listTile() => ListTile(
+        onTap: onTap,
+        title: Padding(
+          padding: kBottomPadding,
+          child: Text(
+            title,
+            style: kProfileTileTitleTextStyle,
           ),
         ),
-      ),
-    );
-  }
+        subtitle: Text(
+          subTitle,
+          style: kProfileTileSubTitleTextStyle,
+        ),
+        trailing: const Icon(CupertinoIcons.forward),
+      );
 }

@@ -1,5 +1,6 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants/constants.dart';
+import 'package:decor/models/question_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,42 +14,48 @@ class _FAQsScreenState extends State<FAQsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: _appBar(context),
+      body: ListView.builder(
+        itemCount: _question.length,
+        itemBuilder: (context, i) {
+          return _questionListView(i);
+        },
+      ),
+    );
+  }
+
+  Padding _questionListView(int i) => Padding(
+        padding: kSymmetricPaddingHor,
+        child: Container(
+          decoration: kBoxShadow,
+          child: Card(
+            elevation: 0,
+            child: _expansionQuestionTile(i),
+          ),
+        ),
+      );
+
+  ExpansionTile _expansionQuestionTile(int i) => ExpansionTile(
+        title: Text(
+          _question[i].que,
+          style: const TextStyle(
+            fontSize: 18.0,
+          ),
+        ),
+        children: <Widget>[
+          Column(
+            children: _buildExpandableContent(_question[i]),
+          ),
+        ],
+      );
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
         title: 'FAQs',
         actionIcon: null,
         leadingIcon: CupertinoIcons.back,
         onActionIconPressed: null,
         onLeadingIconPressed: () => Navigator.pop(context),
-      ),
-      body: ListView.builder(
-        itemCount: _question.length,
-        itemBuilder: (context, i) {
-          return Padding(
-            padding: kSymmetricPaddingHor,
-            child: Container(
-              decoration: kBoxShadow,
-              child: Card(
-                elevation: 0,
-                child: ExpansionTile(
-                  title: Text(
-                    _question[i].que,
-                    style: const TextStyle(
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  children: <Widget>[
-                    Column(
-                      children: _buildExpandableContent(_question[i]),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
+      );
 
   _buildExpandableContent(Question question) {
     List<Widget> columnContent = [];
@@ -57,20 +64,13 @@ class _FAQsScreenState extends State<FAQsScreen> {
         padding: kAllPadding,
         child: Text(
           question.ans,
-          style: TextStyle(fontSize: 18.0),
+          style: const TextStyle(fontSize: 16.0),
         ),
       ),
     );
 
     return columnContent;
   }
-}
-
-class Question {
-  final String que;
-  final String ans;
-
-  Question({required this.que, required this.ans});
 }
 
 List<Question> _question = [

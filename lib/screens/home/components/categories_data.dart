@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/components/custom_rect_button.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/models/category_model.dart';
@@ -25,7 +24,6 @@ class CategoriesData extends StatefulWidget {
 }
 
 class _CategoriesDataState extends State<CategoriesData> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _databaseService = DatabaseService();
   List _categoryList = [];
 
@@ -68,99 +66,117 @@ class _CategoriesDataState extends State<CategoriesData> {
       ),
       itemCount: _categoryList.length,
       itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => DetailScreen(_categoryList[index])));
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Flexible(
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.asset(
-                        _categoryList[index]['url'],
-                        fit: BoxFit.fill,
-                        width: double.maxFinite,
-                      ),
-                    ),
-                    Positioned(
-                      right: 4,
-                      bottom: 4,
-                      child: CustomRectButton(
-                        width: 42,
-                        height: 42,
-                        icon: CupertinoIcons.cart_fill,
-                        onPressed: () async {
-                          await _databaseService.addToCart(
-                            Categories(
-                              name: _categoryList[index]['name'],
-                              url: _categoryList[index]['url'],
-                              desc: _categoryList[index]['desc'],
-                              star: _categoryList[index]['star'].toString(),
-                              category: _categoryList[index]['category'],
-                              price: _categoryList[index]['price'].toString(),
-                              itemCount: 1,
-                            ),
-                          );
-                          Scaffold.of(context).showSnackBar(showSnackBar(
-                              content:
-                                  "${_categoryList[index]['name']} added to cart !"));
-                        },
-                        color: Colors.black38,
-                        iconColor: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    dense: true,
-                    title: Text(
-                      _categoryList[index]['name'],
-                      style: kViewTitleStyle,
-                    ),
-                    subtitle: Text(
-                      '\$ ${_categoryList[index]['price']}',
-                      style: kViewSubTitleStyle,
-                    ),
-                    trailing: IconButton(
-                      onPressed: () async {
-                        await _databaseService.addToFavourites(
-                            Categories(
-                              name: _categoryList[index]['name'],
-                              url: _categoryList[index]['url'],
-                              desc: _categoryList[index]['desc'],
-                              star: _categoryList[index]['star'].toString(),
-                              category: _categoryList[index]['category'],
-                              price: _categoryList[index]['price'].toString(),
-                              itemCount: 1,
-                            ),
-                            widget.scaffoldKey);
-                        Scaffold.of(context).showSnackBar(showSnackBar(
-                            content:
-                                "${_categoryList[index]['name']} added to favourites !"));
-                      },
-                      icon: const Icon(
-                        CupertinoIcons.heart,
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
+        return _categoryItemView(context, index);
       },
     );
   }
+
+  GestureDetector _categoryItemView(BuildContext context, int index) =>
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailScreen(_categoryList[index])));
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _categoryImageAndCartButton(index, context),
+            _categoryDetailsAndFavouriteButton(index, context),
+          ],
+        ),
+      );
+
+  Column _categoryDetailsAndFavouriteButton(int index, BuildContext context) =>
+      Column(
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            title: _nameText(index),
+            subtitle: _priceText(index),
+            trailing: _favButton(index, context),
+          ),
+        ],
+      );
+
+  IconButton _favButton(int index, BuildContext context) => IconButton(
+        onPressed: () async {
+          await _databaseService.addToFavourites(
+              Categories(
+                name: _categoryList[index]['name'],
+                url: _categoryList[index]['url'],
+                desc: _categoryList[index]['desc'],
+                star: _categoryList[index]['star'].toString(),
+                category: _categoryList[index]['category'],
+                price: _categoryList[index]['price'].toString(),
+                itemCount: 1,
+              ),
+              widget.scaffoldKey);
+          Scaffold.of(context).showSnackBar(showSnackBar(
+              content:
+                  "${_categoryList[index]['name']} added to favourites !"));
+        },
+        icon: const Icon(
+          CupertinoIcons.heart,
+          size: 22,
+        ),
+      );
+
+  Text _priceText(int index) => Text(
+        '\$ ${_categoryList[index]['price']}',
+        style: kViewSubTitleStyle,
+      );
+
+  Text _nameText(int index) => Text(
+        _categoryList[index]['name'],
+        style: kViewTitleStyle,
+      );
+
+  Flexible _categoryImageAndCartButton(int index, BuildContext context) =>
+      Flexible(
+        child: Stack(
+          children: [
+            _image(index),
+            _cartButton(index, context),
+          ],
+        ),
+      );
+
+  Positioned _cartButton(int index, BuildContext context) => Positioned(
+        right: 4,
+        bottom: 4,
+        child: CustomRectButton(
+          width: 42,
+          height: 42,
+          icon: CupertinoIcons.cart_fill,
+          onPressed: () async {
+            await _databaseService.addToCart(
+              Categories(
+                name: _categoryList[index]['name'],
+                url: _categoryList[index]['url'],
+                desc: _categoryList[index]['desc'],
+                star: _categoryList[index]['star'].toString(),
+                category: _categoryList[index]['category'],
+                price: _categoryList[index]['price'].toString(),
+                itemCount: 1,
+              ),
+            );
+            Scaffold.of(context).showSnackBar(showSnackBar(
+                content: "${_categoryList[index]['name']} added to cart !"));
+          },
+          color: Colors.black38,
+          iconColor: Colors.white,
+        ),
+      );
+
+  ClipRRect _image(int index) => ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.asset(
+          _categoryList[index]['url'],
+          fit: BoxFit.fill,
+          width: double.maxFinite,
+        ),
+      );
 }

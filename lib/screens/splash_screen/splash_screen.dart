@@ -38,7 +38,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
       body: Padding(
@@ -47,36 +46,40 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Stack(
-                fit: StackFit.passthrough,
-                alignment: Alignment.center,
-                children: [
-                  Image.asset('assets/images/success_screen/background.png'),
-                  Image.asset('assets/images/success_screen/Group.png'),
-                ],
-              ),
-              AnimatedTextKit(
-                repeatForever: false,
-                animatedTexts: [
-                  ColorizeAnimatedText(
-                    'SA Home Decor',
-                    textStyle: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 44,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: [
-                      Colors.black,
-                      Colors.white,
-                      Colors.black,
-                    ],
-                  ),
-                ],
-              ),
+              _image(),
+              _animatedText(),
             ],
           ),
         ),
       ),
     );
   }
+
+  AnimatedTextKit _animatedText() => AnimatedTextKit(
+        repeatForever: false,
+        animatedTexts: [
+          ColorizeAnimatedText(
+            'SA Home Decor',
+            textStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 44,
+              fontWeight: FontWeight.bold,
+            ),
+            colors: [
+              Colors.black,
+              Colors.white,
+              Colors.black,
+            ],
+          ),
+        ],
+      );
+
+  Stack _image() => Stack(
+        fit: StackFit.passthrough,
+        alignment: Alignment.center,
+        children: [
+          Image.asset('assets/images/success_screen/background.png'),
+          Image.asset('assets/images/success_screen/Group.png'),
+        ],
+      );
 }

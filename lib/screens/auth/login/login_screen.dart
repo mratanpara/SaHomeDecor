@@ -20,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = AuthServices();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
@@ -52,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(
         child: Container(
           margin: EdgeInsets.only(top: size.height * 0.02),
@@ -138,14 +140,22 @@ class _LoginScreenState extends State<LoginScreen> {
             : CustomButton(
                 label: 'Log In',
                 onPressed: () async {
-                  _toggleSpinner();
-                  try {
-                    await _auth.signinWithEmailAndPassword(
-                        _emailController.text.trim(),
-                        _passwordController.text.trim());
-                    Navigator.pushReplacementNamed(context, DashBoard.id);
-                  } catch (e) {
-                    debugPrint(e.toString());
+                  if (_emailController.text.isNotEmpty &&
+                      _passwordController.text.isNotEmpty) {
+                    _toggleSpinner();
+                    try {
+                      await _auth.signinWithEmailAndPassword(
+                          _emailController.text.trim(),
+                          _passwordController.text.trim());
+                      Navigator.pushReplacementNamed(context, DashBoard.id);
+                    } catch (e) {
+                      _toggleSpinner();
+                      _scaffoldKey.currentState?.showSnackBar(
+                          showSnackBar(content: 'Invalid credential!'));
+                    }
+                  } else {
+                    _scaffoldKey.currentState?.showSnackBar(
+                        showSnackBar(content: 'Invalid credential!'));
                   }
                 },
               ),

@@ -24,6 +24,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _auth = AuthServices();
   final _databaseService = DatabaseService();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool isPressed = false;
 
@@ -69,6 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(
         child: Container(
           margin: EdgeInsets.only(top: size.height * 0.02),
@@ -176,19 +178,29 @@ class _SignupScreenState extends State<SignupScreen> {
             : CustomButton(
                 label: 'Sign Up',
                 onPressed: () async {
-                  _toggleSpinner();
-                  try {
-                    await _auth.createUserWithEmailAndPassword(
-                        _emailController.text.trim(),
-                        _passwordController.text.trim());
+                  if (_nameController.text.isNotEmpty &&
+                      _emailController.text.isNotEmpty &&
+                      _passwordController.text.isNotEmpty &&
+                      _confirmPasswordController.text.isNotEmpty) {
+                    _toggleSpinner();
+                    try {
+                      await _auth.createUserWithEmailAndPassword(
+                          _emailController.text.trim(),
+                          _passwordController.text.trim());
 
-                    _databaseService.addUsers(Users(
-                        displayName: _nameController.text,
-                        email: _emailController.text,
-                        photoURL: _normalUserPhotoURl));
-                    Navigator.pushReplacementNamed(context, LoginScreen.id);
-                  } catch (e) {
-                    debugPrint(e.toString());
+                      _databaseService.addUsers(Users(
+                          displayName: _nameController.text,
+                          email: _emailController.text,
+                          photoURL: _normalUserPhotoURl));
+                      Navigator.pushReplacementNamed(context, LoginScreen.id);
+                    } catch (e) {
+                      _toggleSpinner();
+                      _scaffoldKey.currentState?.showSnackBar(
+                          showSnackBar(content: 'All field is required!'));
+                    }
+                  } else {
+                    _scaffoldKey.currentState?.showSnackBar(
+                        showSnackBar(content: 'All field is required!'));
                   }
                 },
               ),

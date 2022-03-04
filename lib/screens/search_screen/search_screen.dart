@@ -2,13 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_rect_button.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/components/custom_text_field.dart';
-import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/models/category_model.dart';
 import 'package:decor/screens/details/detail_screen.dart';
-import 'package:decor/screens/home/components/categories_data.dart';
 import 'package:decor/services/database_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -103,183 +99,183 @@ class _SearchScreenState extends State<SearchScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(
-        title: 'Search',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
-      ),
+      appBar: _appBar(context),
       body: Column(
         children: [
           _searchTextField(),
-          Flexible(
-              child: Padding(
-            padding: kSymmetricPaddingHor,
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: kPhysics,
-              scrollDirection: Axis.vertical,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20,
-                mainAxisExtent: size.height * 0.35,
-              ),
-              itemCount: _resultList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                DetailScreen(_resultList[index])));
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Flexible(
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                _resultList[index]['url'],
-                                fit: BoxFit.fill,
-                                width: double.maxFinite,
-                              ),
-                            ),
-                            Positioned(
-                              right: 4,
-                              bottom: 4,
-                              child: CustomRectButton(
-                                width: 42,
-                                height: 42,
-                                icon: CupertinoIcons.cart_fill,
-                                onPressed: () async {
-                                  await _databaseService.addToCart(
-                                    Categories(
-                                      name: _resultList[index]['name'],
-                                      url: _resultList[index]['url'],
-                                      desc: _resultList[index]['desc'],
-                                      star:
-                                          _resultList[index]['star'].toString(),
-                                      category: _resultList[index]['category'],
-                                      price: _resultList[index]['price']
-                                          .toString(),
-                                      itemCount: 1,
-                                    ),
-                                  );
-                                  Scaffold.of(context).showSnackBar(showSnackBar(
-                                      content:
-                                          "${_resultList[index]['name']} added to cart !"));
-                                },
-                                color: Colors.black38,
-                                iconColor: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            dense: true,
-                            title: Text(
-                              _resultList[index]['name'],
-                              style: kViewTitleStyle,
-                            ),
-                            subtitle: Text(
-                              '\$ ${_resultList[index]['price']}',
-                              style: kViewSubTitleStyle,
-                            ),
-                            trailing: IconButton(
-                              onPressed: () async {
-                                await _databaseService.addToFavourites(
-                                  Categories(
-                                    name: _resultList[index]['name'],
-                                    url: _resultList[index]['url'],
-                                    desc: _resultList[index]['desc'],
-                                    star: _resultList[index]['star'].toString(),
-                                    category: _resultList[index]['category'],
-                                    price:
-                                        _resultList[index]['price'].toString(),
-                                    itemCount: 1,
-                                  ),
-                                  _scaffoldKey,
-                                );
-                                Scaffold.of(context).showSnackBar(showSnackBar(
-                                    content:
-                                        "${_resultList[index]['name']} added to favourites !"));
-                              },
-                              icon: const Icon(
-                                CupertinoIcons.heart,
-                                size: 22,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          )),
+          _gridView(size),
         ],
       ),
     );
   }
 
-  // Flexible(
-  // child: SingleChildScrollView(
-  // physics: const BouncingScrollPhysics(
-  // parent: AlwaysScrollableScrollPhysics()),
-  // child: Flexible(
-  // child: Column(
-  // mainAxisSize: MainAxisSize.max,
-  // children: [
-  // for (int i = 0; i < _category.length; i++)
-  // CategoriesData(
-  // size: size, collection: _category.elementAt(i)),
-  // ],
-  // ),
-  // ),
-  // ),
-  // ),
-
-  Padding _searchTextField() {
-    return Padding(
-      padding: kAllPadding,
-      child: Container(
-        decoration: kBoxShadow,
-        child: Card(
-          elevation: 0,
-          child: TextField(
-            controller: _searchController,
-            focusNode: _searchFocus,
-            onSubmitted: (val) {
-              // _searchFocus.unfocus();
-            },
-            cursorColor: Colors.black,
-            decoration: InputDecoration(
-              prefixIcon: const Icon(
-                CupertinoIcons.search,
-                size: kIconSize,
-                color: Colors.grey,
-              ),
-              hintText: 'Search',
-              focusedBorder: _underlineInputBorder(),
-              enabledBorder: _underlineInputBorder(),
-              hintStyle: const TextStyle(color: Colors.grey),
+  Flexible _gridView(Size size) => Flexible(
+        child: Padding(
+          padding: kSymmetricPaddingHor,
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: kPhysics,
+            scrollDirection: Axis.vertical,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              mainAxisExtent: size.height * 0.35,
             ),
+            itemCount: _resultList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _categoryItemGrid(context, index);
+            },
           ),
         ),
-      ),
-    );
-  }
+      );
+
+  GestureDetector _categoryItemGrid(BuildContext context, int index) =>
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailScreen(_resultList[index])));
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _imageAndAddToCartButton(index, context),
+            _categoryDetailsListTile(index, context),
+          ],
+        ),
+      );
+
+  Column _categoryDetailsListTile(int index, BuildContext context) => Column(
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            title: _nameText(index),
+            subtitle: _priceText(index),
+            trailing: _addToFavButton(index, context),
+          ),
+        ],
+      );
+
+  IconButton _addToFavButton(int index, BuildContext context) => IconButton(
+        onPressed: () async {
+          await _databaseService.addToFavourites(
+            Categories(
+              name: _resultList[index]['name'],
+              url: _resultList[index]['url'],
+              desc: _resultList[index]['desc'],
+              star: _resultList[index]['star'].toString(),
+              category: _resultList[index]['category'],
+              price: _resultList[index]['price'].toString(),
+              itemCount: 1,
+            ),
+            _scaffoldKey,
+          );
+          Scaffold.of(context).showSnackBar(showSnackBar(
+              content: "${_resultList[index]['name']} added to favourites !"));
+        },
+        icon: const Icon(
+          CupertinoIcons.heart,
+          size: 22,
+        ),
+      );
+
+  Text _priceText(int index) => Text(
+        '\$ ${_resultList[index]['price']}',
+        style: kViewSubTitleStyle,
+      );
+
+  Text _nameText(int index) => Text(
+        _resultList[index]['name'],
+        style: kViewTitleStyle,
+      );
+
+  Flexible _imageAndAddToCartButton(int index, BuildContext context) =>
+      Flexible(
+        child: Stack(
+          children: [
+            _image(index),
+            _addToCartButton(index, context),
+          ],
+        ),
+      );
+
+  Positioned _addToCartButton(int index, BuildContext context) => Positioned(
+        right: 4,
+        bottom: 4,
+        child: CustomRectButton(
+          width: 42,
+          height: 42,
+          icon: CupertinoIcons.cart_fill,
+          onPressed: () async {
+            await _databaseService.addToCart(
+              Categories(
+                name: _resultList[index]['name'],
+                url: _resultList[index]['url'],
+                desc: _resultList[index]['desc'],
+                star: _resultList[index]['star'].toString(),
+                category: _resultList[index]['category'],
+                price: _resultList[index]['price'].toString(),
+                itemCount: 1,
+              ),
+            );
+            Scaffold.of(context).showSnackBar(showSnackBar(
+                content: "${_resultList[index]['name']} added to cart !"));
+          },
+          color: Colors.black38,
+          iconColor: Colors.white,
+        ),
+      );
+
+  ClipRRect _image(int index) => ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.asset(
+          _resultList[index]['url'],
+          fit: BoxFit.fill,
+          width: double.maxFinite,
+        ),
+      );
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'Search',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
+      );
+
+  Padding _searchTextField() => Padding(
+        padding: kAllPadding,
+        child: Container(
+          decoration: kBoxShadow,
+          child: Card(
+            elevation: 0,
+            child: _textField(),
+          ),
+        ),
+      );
+
+  TextField _textField() => TextField(
+        controller: _searchController,
+        focusNode: _searchFocus,
+        onSubmitted: (val) {
+          _searchFocus.unfocus();
+        },
+        cursorColor: Colors.black,
+        decoration: InputDecoration(
+          prefixIcon: const Icon(
+            CupertinoIcons.search,
+            size: kIconSize,
+            color: Colors.grey,
+          ),
+          hintText: 'Search',
+          focusedBorder: _underlineInputBorder(),
+          enabledBorder: _underlineInputBorder(),
+          hintStyle: const TextStyle(color: Colors.grey),
+        ),
+      );
 
   UnderlineInputBorder _underlineInputBorder() => const UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.black),

@@ -6,14 +6,12 @@ import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/providers/common_provider.dart';
 import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/screens/profile/components/custom_card.dart';
-import 'package:decor/screens/profile/screens/change_password/change_password.dart';
 import 'package:decor/screens/profile/screens/myorder/myorder_screen.dart';
-import 'package:decor/screens/profile/screens/pyment_method/payment_method_screen.dart';
 import 'package:decor/screens/profile/screens/myreviews/reviews_screen.dart';
+import 'package:decor/screens/profile/screens/payment_method/payment_method_screen.dart';
 import 'package:decor/screens/profile/screens/settings/settings_screen.dart';
 import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:decor/screens/shipping_address/screens/shipping_addresses_screen.dart';
-import 'package:decor/screens/splash_screen/splash_screen.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -67,7 +65,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: _appBar(context),
+      body: CommonRefreshIndicator(
+        child: SingleChildScrollView(
+          physics: kPhysics,
+          padding: kAllPadding,
+          child: _column(size, context),
+        ),
+      ),
+    );
+  }
+
+  Column _column(Size size, BuildContext context) => Column(
+        children: [
+          _userDetails(size),
+          _myOrderTile(context),
+          _shippingAddressTile(context),
+          _paymentMethodTile(context),
+          _myReviewsTile(context),
+          _settingsTile(context),
+        ],
+      );
+
+  Padding _settingsTile(BuildContext context) => Padding(
+        padding: kSymmetricPaddingVer,
+        child: CustomCard(
+          title: 'Settings',
+          subTitle: 'Notification, Password, FAQs, Contact',
+          onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      SettingsScreen(displayName: displayName, email: email))),
+        ),
+      );
+
+  Padding _myReviewsTile(BuildContext context) => Padding(
+        padding: kSymmetricPaddingVer,
+        child: CustomCard(
+            title: 'My Reviews',
+            subTitle: 'Reviews for 5 items',
+            onTap: () => Navigator.pushNamed(context, ReviewsScreen.id)),
+      );
+
+  Padding _paymentMethodTile(BuildContext context) => Padding(
+        padding: kSymmetricPaddingVer,
+        child: CustomCard(
+            title: 'Payment Method',
+            subTitle: 'You have 2 cards',
+            onTap: () => Navigator.pushNamed(context, PaymentMethodScreen.id)),
+      );
+
+  Padding _shippingAddressTile(BuildContext context) => Padding(
+        padding: kSymmetricPaddingVer,
+        child: CustomCard(
+            title: 'Shipping Addresses',
+            subTitle:
+                '${Provider.of<CommonProvider>(context).getAddressCount} Addresses',
+            onTap: () {
+              Navigator.pushNamed(context, ShippingAddresses.id);
+            }),
+      );
+
+  Padding _myOrderTile(BuildContext context) => Padding(
+        padding: kSymmetricPaddingVer,
+        child: CustomCard(
+            title: 'My Order',
+            subTitle: 'Already have 10 orders',
+            onTap: () => Navigator.pushNamed(context, OrderScreen.id)),
+      );
+
+  Padding _userDetails(Size size) => Padding(
+        padding: kSymmetricPaddingVer,
+        child: Row(
+          children: [
+            _image(size),
+            _listTile(),
+          ],
+        ),
+      );
+
+  Flexible _listTile() => Flexible(
+        child: ListTile(
+          title: Padding(
+            padding: kBottomPadding,
+            child: Text(
+              displayName,
+              style: kProfileTileTitleTextStyle,
+            ),
+          ),
+          subtitle: Text(
+            email,
+            style: kProfileTileSubTitleTextStyle,
+          ),
+        ),
+      );
+
+  CircleAvatar _image(Size size) => CircleAvatar(
+        backgroundImage: NetworkImage(photoURL),
+        radius: size.width * 0.1,
+      );
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
         leadingIcon: CupertinoIcons.search,
         title: 'Profile',
         actionIcon: Icons.logout,
@@ -77,89 +176,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
         onLeadingIconPressed: () =>
             Navigator.pushNamed(context, SearchScreen.id),
-      ),
-      body: CommonRefreshIndicator(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),
-          padding: kAllPadding,
-          child: Column(
-            children: [
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(photoURL),
-                      radius: size.width * 0.1,
-                    ),
-                    Flexible(
-                      child: ListTile(
-                        title: Padding(
-                          padding: kBottomPadding,
-                          child: Text(
-                            displayName,
-                            style: kProfileTileTitleTextStyle,
-                          ),
-                        ),
-                        subtitle: Text(
-                          email,
-                          style: kProfileTileSubTitleTextStyle,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'My Order',
-                    subTitle: 'Already have 10 orders',
-                    onTap: () => Navigator.pushNamed(context, OrderScreen.id)),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'Shipping Addresses',
-                    subTitle:
-                        '${Provider.of<CommonProvider>(context).getAddressCount} Addresses',
-                    onTap: () {
-                      Navigator.pushNamed(context, ShippingAddresses.id);
-                    }),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'Payment Method',
-                    subTitle: 'You have 2 cards',
-                    onTap: () =>
-                        Navigator.pushNamed(context, PaymentMethodScreen.id)),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                    title: 'My Reviews',
-                    subTitle: 'Reviews for 5 items',
-                    onTap: () =>
-                        Navigator.pushNamed(context, ReviewsScreen.id)),
-              ),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: CustomCard(
-                  title: 'Settings',
-                  subTitle: 'Notification, Password, FAQs, Contact',
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettingsScreen(
-                              displayName: displayName, email: email))),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+      );
 }

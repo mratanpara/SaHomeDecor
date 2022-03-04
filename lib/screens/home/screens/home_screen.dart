@@ -40,7 +40,64 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: _appBar(context),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: size.height * 0.02, horizontal: size.width * 0.02),
+        child: _homeScreenData(size),
+      ),
+    );
+  }
+
+  Column _homeScreenData(Size size) => Column(
+        children: [
+          _categoryTabs(),
+          _categoryTabsAndData(size),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+          //   child:
+          // ),
+        ],
+      );
+
+  Flexible _categoryTabsAndData(Size size) => Flexible(
+        child: SizedBox(
+          height: size.height,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                _getAllCategories(size),
+                _getCategories(size: size, category: 'chairs'),
+                _getCategories(size: size, category: 'sofas'),
+                _getCategories(size: size, category: 'beds'),
+                _getCategories(size: size, category: 'armchairs'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  CommonRefreshIndicator _getAllCategories(Size size) => CommonRefreshIndicator(
+        child: SingleChildScrollView(
+          physics: kPhysics,
+          child: Flexible(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                for (int i = 0; i < _category.length; i++)
+                  CategoriesData(
+                      size: size,
+                      collection: _category.elementAt(i),
+                      scaffoldKey: _scaffoldKey),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
         title: 'Beautiful',
         actionIcon: CupertinoIcons.cart,
         leadingIcon: CupertinoIcons.search,
@@ -49,65 +106,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         },
         onLeadingIconPressed: () =>
             Navigator.pushNamed(context, SearchScreen.id),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: size.height * 0.02, horizontal: size.width * 0.02),
-        child: Column(
-          children: [
-            _categoryTabs(),
-            Flexible(
-              child: SizedBox(
-                height: size.height,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      CommonRefreshIndicator(
-                        child: SingleChildScrollView(
-                          physics: kPhysics,
-                          child: Flexible(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                for (int i = 0; i < _category.length; i++)
-                                  CategoriesData(
-                                      size: size,
-                                      collection: _category.elementAt(i),
-                                      scaffoldKey: _scaffoldKey),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      _getCategories(size: size, category: 'chairs'),
-                      _getCategories(size: size, category: 'sofas'),
-                      _getCategories(size: size, category: 'beds'),
-                      _getCategories(size: size, category: 'armchairs'),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-            //   child:
-            // ),
-          ],
-        ),
-      ),
-    );
-  }
+      );
 
   SingleChildScrollView _getCategories(
-      {required Size size, required String category}) {
-    return SingleChildScrollView(
-      physics: kPhysics,
-      child: CategoriesData(
-          size: size, collection: category, scaffoldKey: _scaffoldKey),
-    );
-  }
+          {required Size size, required String category}) =>
+      SingleChildScrollView(
+        physics: kPhysics,
+        child: CategoriesData(
+            size: size, collection: category, scaffoldKey: _scaffoldKey),
+      );
 
   TabBar _categoryTabs() => TabBar(
         indicator: kTabIndicatorDecoration,

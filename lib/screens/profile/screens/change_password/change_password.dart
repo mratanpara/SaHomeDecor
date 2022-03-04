@@ -29,98 +29,108 @@ class _ChangePasswordState extends State<ChangePassword> {
   void initState() {
     super.initState();
     _newPasswordController = TextEditingController();
-
     _newPasswordFocus = FocusNode();
   }
 
   @override
   void dispose() {
     _newPasswordController.dispose();
-
     _newPasswordFocus.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomAppBar(
+      appBar: _appBar(context),
+      body: Padding(
+        padding: kAllPadding,
+        child: SingleChildScrollView(
+          physics: kPhysics,
+          child: _column(context),
+        ),
+      ),
+    );
+  }
+
+  Column _column(BuildContext context) => Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _headingText(),
+          const SizedBox(height: 40),
+          _image(),
+          const SizedBox(height: 40),
+          _cardWithTextField(context),
+        ],
+      );
+
+  Container _cardWithTextField(BuildContext context) => Container(
+        decoration: kBoxShadow,
+        child: Card(
+          elevation: 0,
+          child: Padding(
+            padding: kAllPadding,
+            child: Column(
+              children: [
+                _newPasswordTextFiled(),
+                _saveButton(context),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  CustomButton _saveButton(BuildContext context) => CustomButton(
+        label: 'SAVE PASSWORD',
+        onPressed: () async {
+          if (_newPasswordController.text.isNotEmpty) {
+            await _databaseService
+                .changePassword(_newPasswordController.text.trim());
+
+            await _authService.signOutUser();
+            Navigator.pushReplacementNamed(context, LoginScreen.id);
+          }
+        },
+      );
+
+  CustomTextField _newPasswordTextFiled() => CustomTextField(
+        onSubmitted: (val) {
+          _newPasswordFocus.unfocus();
+        },
+        type: TextInputType.text,
+        label: 'Password',
+        hintText: 'Enter new password',
+        controller: _newPasswordController,
+        focusNode: _newPasswordFocus,
+      );
+
+  Padding _image() => Padding(
+        padding: kSymmetricPaddingVer,
+        child: Stack(
+          fit: StackFit.passthrough,
+          alignment: Alignment.center,
+          children: [
+            Image.asset('assets/images/success_screen/background.png'),
+            Image.asset('assets/images/success_screen/Group.png'),
+          ],
+        ),
+      );
+
+  Text _headingText() => const Text(
+        'Change Password!',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 44,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
         title: 'Change Password',
         actionIcon: null,
         leadingIcon: CupertinoIcons.back,
         onActionIconPressed: null,
         onLeadingIconPressed: () => Navigator.pop(context),
-      ),
-      body: Padding(
-        padding: kAllPadding,
-        child: SingleChildScrollView(
-          physics: kPhysics,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text(
-                'Change Password!',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 44,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 40),
-              Padding(
-                padding: kSymmetricPaddingVer,
-                child: Stack(
-                  fit: StackFit.passthrough,
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset('assets/images/success_screen/background.png'),
-                    Image.asset('assets/images/success_screen/Group.png'),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 40),
-              Container(
-                decoration: kBoxShadow,
-                child: Card(
-                  elevation: 0,
-                  child: Padding(
-                    padding: kAllPadding,
-                    child: Column(
-                      children: [
-                        CustomTextField(
-                          onSubmitted: (val) {
-                            _newPasswordFocus.unfocus();
-                          },
-                          type: TextInputType.text,
-                          label: 'Password',
-                          hintText: 'Enter new password',
-                          controller: _newPasswordController,
-                          focusNode: _newPasswordFocus,
-                        ),
-                        CustomButton(
-                          label: 'SAVE PASSWORD',
-                          onPressed: () async {
-                            if (_newPasswordController.text.isNotEmpty) {
-                              await _databaseService.changePassword(
-                                  _newPasswordController.text.trim());
-
-                              await _authService.signOutUser();
-                              Navigator.pushReplacementNamed(
-                                  context, LoginScreen.id);
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+      );
 }

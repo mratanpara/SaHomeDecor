@@ -2,7 +2,6 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_card_text_field.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/get_counts_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -54,82 +53,97 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Add Payment Method',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
-      ),
+      appBar: _appBar(context),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics()),
+        physics: kPhysics,
         padding: kAllPadding,
         child: Column(
           children: [
-            Image.asset('assets/images/payment_card-1.png'),
+            _image(),
             const SizedBox(height: 10),
-            CustomCardTextField(
-              type: TextInputType.text,
-              label: 'CardHolder Name',
-              hintText: 'Ex: John Deo',
-              controller: _cardHolderController,
-              focusNode: _cardHolderFocus,
-              onPressed: (t) {
-                fieldFocusChange(context, _cardHolderFocus, _cardNumberFocus);
-              },
-            ),
-            CustomCardTextField(
-              type: TextInputType.text,
-              label: 'Card Number',
-              hintText: '**** **** **** 1234',
-              controller: _cardNumberController,
-              focusNode: _cardNumberFocus,
-              onPressed: (t) {
-                fieldFocusChange(context, _cardNumberFocus, _cvvFocus);
-              },
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomCardTextField(
-                    type: TextInputType.number,
-                    label: 'CVV',
-                    hintText: 'Ex: 123',
-                    controller: _cvvController,
-                    focusNode: _cvvFocus,
-                    onPressed: (t) {
-                      fieldFocusChange(
-                          context, _cvvFocus, _expirationDateFocus);
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: CustomCardTextField(
-                    type: TextInputType.text,
-                    label: 'Expiration Date',
-                    hintText: '03/22',
-                    controller: _expirationDataController,
-                    focusNode: _expirationDateFocus,
-                    onPressed: (t) {
-                      _expirationDateFocus.unfocus();
-                    },
-                  ),
-                ),
-              ],
-            ),
+            _cardHolderTextField(context),
+            _cardNumberTextField(context),
+            _cvvAndExpirationDate(context),
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: _addNewCardButton(),
+    );
+  }
+
+  Padding _addNewCardButton() => Padding(
         padding: const EdgeInsets.all(20),
         child: CustomButton(
           label: 'ADD NEW CARD',
           onPressed: () {},
         ),
-      ),
-    );
-  }
+      );
+
+  Row _cvvAndExpirationDate(BuildContext context) => Row(
+        children: [
+          _cvvTextField(context),
+          _expirationDateTextField(),
+        ],
+      );
+
+  Expanded _expirationDateTextField() => Expanded(
+        child: CustomCardTextField(
+          type: TextInputType.text,
+          label: 'Expiration Date',
+          hintText: '03/22',
+          controller: _expirationDataController,
+          focusNode: _expirationDateFocus,
+          onPressed: (t) {
+            _expirationDateFocus.unfocus();
+          },
+        ),
+      );
+
+  Expanded _cvvTextField(BuildContext context) => Expanded(
+        child: CustomCardTextField(
+          type: TextInputType.number,
+          label: 'CVV',
+          hintText: 'Ex: 123',
+          controller: _cvvController,
+          focusNode: _cvvFocus,
+          onPressed: (t) {
+            fieldFocusChange(context, _cvvFocus, _expirationDateFocus);
+          },
+        ),
+      );
+
+  CustomCardTextField _cardNumberTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.text,
+        label: 'Card Number',
+        hintText: '**** **** **** 1234',
+        controller: _cardNumberController,
+        focusNode: _cardNumberFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _cardNumberFocus, _cvvFocus);
+        },
+      );
+
+  CustomCardTextField _cardHolderTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.text,
+        label: 'CardHolder Name',
+        hintText: 'Ex: John Deo',
+        controller: _cardHolderController,
+        focusNode: _cardHolderFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _cardHolderFocus, _cardNumberFocus);
+        },
+      );
+
+  Image _image() => Image.asset('assets/images/payment_card-1.png');
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'Add Payment Method',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
+      );
 }
