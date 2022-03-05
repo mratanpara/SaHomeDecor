@@ -96,6 +96,7 @@ class _DetailScreenState extends State<DetailScreen> {
         price: widget.data['price'].toString(),
         itemCount: 1,
       ),
+      _scaffoldKey,
     );
     _scaffoldKey.currentState!.showSnackBar(
         showSnackBar(content: "${widget.data['name']} added to cart !"));

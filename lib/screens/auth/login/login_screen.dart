@@ -140,22 +140,27 @@ class _LoginScreenState extends State<LoginScreen> {
             : CustomButton(
                 label: 'Log In',
                 onPressed: () async {
-                  if (_emailController.text.isNotEmpty &&
-                      _passwordController.text.isNotEmpty) {
-                    _toggleSpinner();
-                    try {
-                      await _auth.signinWithEmailAndPassword(
-                          _emailController.text.trim(),
-                          _passwordController.text.trim());
-                      Navigator.pushReplacementNamed(context, DashBoard.id);
-                    } catch (e) {
+                  try {
+                    if (_emailController.text.isNotEmpty &&
+                        _passwordController.text.isNotEmpty) {
                       _toggleSpinner();
+                      try {
+                        await _auth.signinWithEmailAndPassword(
+                            _emailController.text.trim(),
+                            _passwordController.text.trim());
+                        Navigator.pushReplacementNamed(context, DashBoard.id);
+                      } catch (e) {
+                        _toggleSpinner();
+                        _scaffoldKey.currentState?.showSnackBar(
+                            showSnackBar(content: 'Invalid credential!'));
+                      }
+                    } else {
                       _scaffoldKey.currentState?.showSnackBar(
                           showSnackBar(content: 'Invalid credential!'));
                     }
-                  } else {
-                    _scaffoldKey.currentState?.showSnackBar(
-                        showSnackBar(content: 'Invalid credential!'));
+                  } catch (e) {
+                    _scaffoldKey.currentState
+                        ?.showSnackBar(showSnackBar(content: e.toString()));
                   }
                 },
               ),

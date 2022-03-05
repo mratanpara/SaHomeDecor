@@ -220,6 +220,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 price: _resultList[index]['price'].toString(),
                 itemCount: 1,
               ),
+              _scaffoldKey,
             );
             Scaffold.of(context).showSnackBar(showSnackBar(
                 content: "${_resultList[index]['name']} added to cart !"));

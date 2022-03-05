@@ -63,6 +63,7 @@ class _FacebookSigninButtonState extends State<FacebookSigninButton> {
       ));
       Navigator.pushReplacementNamed(context, DashBoard.id);
     } catch (e) {
+      _toggleSpinner();
       debugPrint(e.toString());
     }
   }

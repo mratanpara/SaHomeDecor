@@ -142,8 +142,10 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
   IconButton _deleteButton(BuildContext context,
           List<QueryDocumentSnapshot<Object?>> data, int index) =>
       IconButton(
-        onPressed: () {
-          _confirmationAlertDialog(context, data[index].id);
+        onPressed: () async {
+          await _databaseService.deleteShippingAddress(data[index].id);
+          Navigator.pop(context);
+          await getAddressCount(context);
         },
         icon: const Icon(
           Icons.delete,
@@ -205,13 +207,7 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
               onPressed: () => Navigator.pop(context),
               child: const Text('No'),
             ),
-            TextButton(
-                onPressed: () async {
-                  await _databaseService.deleteShippingAddress(dataId);
-                  Navigator.pop(context);
-                  await getAddressCount(context);
-                },
-                child: const Text('Yes')),
+            TextButton(onPressed: () async {}, child: const Text('Yes')),
           ],
         ),
       );

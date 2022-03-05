@@ -126,7 +126,8 @@ class DatabaseService {
         .delete();
   }
 
-  Future<void> addToCart(Categories cat) async {
+  Future<void> addToCart(
+      Categories cat, GlobalKey<ScaffoldState> scaffoldKey) async {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('cart')

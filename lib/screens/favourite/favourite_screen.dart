@@ -75,16 +75,16 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             onPressed: () {
               for (int index = 0; index < allData.length; index++) {
                 _databaseService.addToCart(
-                  Categories(
-                    name: allData[index]['name'],
-                    url: allData[index]['url'],
-                    desc: allData[index]['desc'],
-                    star: allData[index]['star'].toString(),
-                    category: allData[index]['category'],
-                    price: allData[index]['price'].toString(),
-                    itemCount: 1,
-                  ),
-                );
+                    Categories(
+                      name: allData[index]['name'],
+                      url: allData[index]['url'],
+                      desc: allData[index]['desc'],
+                      star: allData[index]['star'].toString(),
+                      category: allData[index]['category'],
+                      price: allData[index]['price'].toString(),
+                      itemCount: 1,
+                    ),
+                    _scaffoldKey);
               }
               _scaffoldKey.currentState!.showSnackBar(
                   showSnackBar(content: 'Add item\'s added into a cart !'));
@@ -152,6 +152,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                 price: data[index]['price'].toString(),
                 itemCount: 1,
               ),
+              _scaffoldKey,
             );
             Scaffold.of(context).showSnackBar(showSnackBar(
                 content: "${data[index]['name']} added to cart !"));

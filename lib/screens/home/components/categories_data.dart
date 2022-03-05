@@ -28,16 +28,20 @@ class _CategoriesDataState extends State<CategoriesData> {
   List _categoryList = [];
 
   Future getCategoriesStreamSnapShot() async {
-    _categoryList.clear();
-    var data = await FirebaseFirestore.instance
-        .collection('categories')
-        .doc('products')
-        .collection(widget.collection)
-        .get();
-    setState(() {
-      _categoryList += data.docs;
-    });
-    return 'completed';
+    try {
+      _categoryList.clear();
+      var data = await FirebaseFirestore.instance
+          .collection('categories')
+          .doc('products')
+          .collection(widget.collection)
+          .get();
+      setState(() {
+        _categoryList += data.docs;
+      });
+      return 'completed';
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -103,20 +107,25 @@ class _CategoriesDataState extends State<CategoriesData> {
 
   IconButton _favButton(int index, BuildContext context) => IconButton(
         onPressed: () async {
-          await _databaseService.addToFavourites(
-              Categories(
-                name: _categoryList[index]['name'],
-                url: _categoryList[index]['url'],
-                desc: _categoryList[index]['desc'],
-                star: _categoryList[index]['star'].toString(),
-                category: _categoryList[index]['category'],
-                price: _categoryList[index]['price'].toString(),
-                itemCount: 1,
-              ),
-              widget.scaffoldKey);
-          Scaffold.of(context).showSnackBar(showSnackBar(
-              content:
-                  "${_categoryList[index]['name']} added to favourites !"));
+          try {
+            await _databaseService.addToFavourites(
+                Categories(
+                  name: _categoryList[index]['name'],
+                  url: _categoryList[index]['url'],
+                  desc: _categoryList[index]['desc'],
+                  star: _categoryList[index]['star'].toString(),
+                  category: _categoryList[index]['category'],
+                  price: _categoryList[index]['price'].toString(),
+                  itemCount: 1,
+                ),
+                widget.scaffoldKey);
+            Scaffold.of(context).showSnackBar(showSnackBar(
+                content:
+                    "${_categoryList[index]['name']} added to favourites !"));
+          } catch (e) {
+            Scaffold.of(context)
+                .showSnackBar(showSnackBar(content: e.toString()));
+          }
         },
         icon: const Icon(
           CupertinoIcons.heart,
@@ -152,19 +161,24 @@ class _CategoriesDataState extends State<CategoriesData> {
           height: 42,
           icon: CupertinoIcons.cart_fill,
           onPressed: () async {
-            await _databaseService.addToCart(
-              Categories(
-                name: _categoryList[index]['name'],
-                url: _categoryList[index]['url'],
-                desc: _categoryList[index]['desc'],
-                star: _categoryList[index]['star'].toString(),
-                category: _categoryList[index]['category'],
-                price: _categoryList[index]['price'].toString(),
-                itemCount: 1,
-              ),
-            );
-            Scaffold.of(context).showSnackBar(showSnackBar(
-                content: "${_categoryList[index]['name']} added to cart !"));
+            try {
+              await _databaseService.addToCart(
+                  Categories(
+                    name: _categoryList[index]['name'],
+                    url: _categoryList[index]['url'],
+                    desc: _categoryList[index]['desc'],
+                    star: _categoryList[index]['star'].toString(),
+                    category: _categoryList[index]['category'],
+                    price: _categoryList[index]['price'].toString(),
+                    itemCount: 1,
+                  ),
+                  widget.scaffoldKey);
+              Scaffold.of(context).showSnackBar(showSnackBar(
+                  content: "${_categoryList[index]['name']} added to cart !"));
+            } catch (e) {
+              Scaffold.of(context)
+                  .showSnackBar(showSnackBar(content: e.toString()));
+            }
           },
           color: Colors.black38,
           iconColor: Colors.white,

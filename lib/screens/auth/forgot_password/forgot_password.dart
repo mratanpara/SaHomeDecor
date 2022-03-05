@@ -86,10 +86,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   CustomButton _button(BuildContext context) => CustomButton(
         label: 'SEND EMAIL',
         onPressed: () async {
-          if (_emailController.text.isNotEmpty) {
-            await _databaseService.forgotPassword(_emailController.text.trim());
-            await _authService.signOutUser();
-            Navigator.pushReplacementNamed(context, LoginScreen.id);
+          try {
+            if (_emailController.text.isNotEmpty) {
+              await _databaseService
+                  .forgotPassword(_emailController.text.trim());
+              await _authService.signOutUser();
+              Navigator.pushReplacementNamed(context, LoginScreen.id);
+            }
+          } catch (e) {
+            _scaffoldKey.currentState
+                ?.showSnackBar(showSnackBar(content: e.toString()));
           }
         },
       );
