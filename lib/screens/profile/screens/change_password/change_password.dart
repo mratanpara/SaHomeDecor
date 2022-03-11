@@ -84,12 +84,18 @@ class _ChangePasswordState extends State<ChangePassword> {
   CustomButton _saveButton(BuildContext context) => CustomButton(
         label: 'SAVE PASSWORD',
         onPressed: () async {
-          if (_newPasswordController.text.isNotEmpty) {
-            await _databaseService
-                .changePassword(_newPasswordController.text.trim());
-
-            await _authService.signOutUser();
-            Navigator.pushReplacementNamed(context, LoginScreen.id);
+          try {
+            if (_newPasswordController.text.isNotEmpty) {
+              await _databaseService
+                  .changePassword(_newPasswordController.text.trim());
+              _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                  content: 'Password changed !', color: Colors.green));
+              await _authService.signOutUser();
+              Navigator.pushReplacementNamed(context, LoginScreen.id);
+            }
+          } catch (e) {
+            _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                content: 'Failed to change password !', color: Colors.red));
           }
         },
       );

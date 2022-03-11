@@ -3,7 +3,7 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/screens/cart/cart_screen.dart';
-import 'package:decor/screens/details/detail_screen.dart';
+import 'package:decor/screens/home/components/all_categories_data.dart';
 import 'package:decor/screens/home/components/categories_data.dart';
 import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -21,13 +22,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _tabController;
-
-  final List<String> _category = [
-    'armchairs',
-    'beds',
-    'chairs',
-    'sofas',
-  ];
 
   @override
   void initState() {
@@ -53,10 +47,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         children: [
           _categoryTabs(),
           _categoryTabsAndData(size),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-          //   child:
-          // ),
         ],
       );
 
@@ -68,29 +58,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             child: TabBarView(
               controller: _tabController,
               children: [
-                _getAllCategories(size),
-                _getCategories(size: size, category: 'chairs'),
-                _getCategories(size: size, category: 'sofas'),
-                _getCategories(size: size, category: 'beds'),
-                _getCategories(size: size, category: 'armchairs'),
-              ],
-            ),
-          ),
-        ),
-      );
-
-  CommonRefreshIndicator _getAllCategories(Size size) => CommonRefreshIndicator(
-        child: SingleChildScrollView(
-          physics: kPhysics,
-          child: Flexible(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                for (int i = 0; i < _category.length; i++)
-                  CategoriesData(
-                      size: size,
-                      collection: _category.elementAt(i),
-                      scaffoldKey: _scaffoldKey),
+                // _getAllCategories(size),
+                GetAllCategoriesData(size: size, scaffoldKey: _scaffoldKey),
+                CategoriesData(
+                    size: size,
+                    collection: 'chairs',
+                    scaffoldKey: _scaffoldKey),
+                CategoriesData(
+                    size: size, collection: 'sofas', scaffoldKey: _scaffoldKey),
+                CategoriesData(
+                    size: size, collection: 'beds', scaffoldKey: _scaffoldKey),
+                CategoriesData(
+                    size: size,
+                    collection: 'armchairs',
+                    scaffoldKey: _scaffoldKey),
               ],
             ),
           ),
@@ -106,14 +87,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         },
         onLeadingIconPressed: () =>
             Navigator.pushNamed(context, SearchScreen.id),
-      );
-
-  SingleChildScrollView _getCategories(
-          {required Size size, required String category}) =>
-      SingleChildScrollView(
-        physics: kPhysics,
-        child: CategoriesData(
-            size: size, collection: category, scaffoldKey: _scaffoldKey),
       );
 
   TabBar _categoryTabs() => TabBar(

@@ -30,7 +30,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    getTotalAmount(context);
+    getTotalAmount(context, _scaffoldKey);
   }
 
   @override
@@ -148,11 +148,47 @@ class _CartScreenState extends State<CartScreen> {
               padding: kSymmetricPaddingHor,
               itemCount: data!.length,
               itemBuilder: (BuildContext context, int index) {
-                return Row(
-                  children: [
-                    _image(data, index),
-                    _showData(data, index, context, size),
-                  ],
+                return Dismissible(
+                  key: UniqueKey(),
+                  background: Container(
+                    decoration: kSwipeToDeleteDecoration,
+                    padding: kSymmetricPaddingHor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Icon(
+                          CupertinoIcons.trash_fill,
+                          color: Colors.black,
+                          size: kIconSize,
+                        ),
+                        Icon(
+                          CupertinoIcons.trash_fill,
+                          color: Colors.black,
+                          size: kIconSize,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onDismissed: (direction) async {
+                    try {
+                      await _databaseService.deleteFromCart(
+                          data[index].id, _scaffoldKey);
+                      await getTotalAmount(context, _scaffoldKey);
+                      _scaffoldKey.currentState!.showSnackBar(showSnackBar(
+                          content: "${data[index]['name']} deleted !",
+                          color: Colors.red));
+                    } catch (e) {
+                      _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                          content: 'Failed to delete!', color: Colors.red));
+                    }
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _image(data, index),
+                      _showData(data, index, context, size),
+                    ],
+                  ),
                 );
               },
               separatorBuilder: (BuildContext context, int index) =>
@@ -166,8 +202,7 @@ class _CartScreenState extends State<CartScreen> {
           BuildContext context, Size size) =>
       Flexible(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _categoryListTile(data, index, context),
             _incrementDecrementQuantity(data, index, context, size),
@@ -178,8 +213,9 @@ class _CartScreenState extends State<CartScreen> {
   Padding _incrementDecrementQuantity(List<QueryDocumentSnapshot<Object?>> data,
           int index, BuildContext context, Size size) =>
       Padding(
-        padding: kAllPadding,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             _incrementButton(data, index, context),
             _quantityText(size, data, index),
@@ -204,13 +240,17 @@ class _CartScreenState extends State<CartScreen> {
   CustomRectButton _decrementButton(List<QueryDocumentSnapshot<Object?>> data,
           int index, BuildContext context) =>
       CustomRectButton(
-        width: 48,
-        height: 48,
+        width: 38,
+        height: 38,
         icon: CupertinoIcons.minus,
         onPressed: () async {
-          await _databaseService.decreaseItemCount(
-              data[index].id, data[index]['itemCount']);
-          getTotalAmount(context);
+          try {
+            await _databaseService.decreaseItemCount(
+                data[index].id, data[index]['itemCount'], _scaffoldKey);
+            getTotalAmount(context, _scaffoldKey);
+          } catch (e) {
+            debugPrint(e.toString());
+          }
         },
         color: Colors.white,
         iconColor: Colors.black,
@@ -219,13 +259,17 @@ class _CartScreenState extends State<CartScreen> {
   CustomRectButton _incrementButton(List<QueryDocumentSnapshot<Object?>> data,
           int index, BuildContext context) =>
       CustomRectButton(
-        width: 48,
-        height: 48,
+        width: 38,
+        height: 38,
         icon: CupertinoIcons.plus,
         onPressed: () async {
-          await _databaseService.increaseItemCount(
-              data[index].id, data[index]['itemCount']);
-          getTotalAmount(context);
+          try {
+            await _databaseService.increaseItemCount(
+                data[index].id, data[index]['itemCount']);
+            getTotalAmount(context, _scaffoldKey);
+          } catch (e) {
+            debugPrint(e.toString());
+          }
         },
         color: Colors.white,
         iconColor: Colors.black,
@@ -234,7 +278,6 @@ class _CartScreenState extends State<CartScreen> {
   ListTile _categoryListTile(List<QueryDocumentSnapshot<Object?>> data,
           int index, BuildContext context) =>
       ListTile(
-        contentPadding: kAllPadding,
         dense: true,
         title: Text(
           data[index]['name'],
@@ -246,10 +289,16 @@ class _CartScreenState extends State<CartScreen> {
         ),
         trailing: IconButton(
           onPressed: () async {
-            await _databaseService.deleteFromCart(data[index].id);
-            await getTotalAmount(context);
-            _scaffoldKey.currentState!.showSnackBar(
-                showSnackBar(content: "${data[index]['name']} deleted !"));
+            try {
+              await _databaseService.deleteFromCart(
+                  data[index].id, _scaffoldKey);
+              await getTotalAmount(context, _scaffoldKey);
+              _scaffoldKey.currentState!.showSnackBar(showSnackBar(
+                  content: "${data[index]['name']} deleted !",
+                  color: Colors.red));
+            } catch (e) {
+              debugPrint(e.toString());
+            }
           },
           icon: const Icon(
             CupertinoIcons.clear_circled,
@@ -264,8 +313,8 @@ class _CartScreenState extends State<CartScreen> {
         child: Image.asset(
           data[index]['url'],
           fit: BoxFit.cover,
-          height: 150,
-          width: 150,
+          height: 110,
+          width: 110,
         ),
       );
 

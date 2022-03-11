@@ -20,10 +20,12 @@ class ShippingAddresses extends StatefulWidget {
 class _ShippingAddressesState extends State<ShippingAddresses> {
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _databaseService = DatabaseService();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: _appbar(context),
       body: _shippingAddressStreamBuilder(),
       floatingActionButton: _addShippingAddressFAB(context),
@@ -80,7 +82,7 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
           BuildContext context) =>
       Column(
         children: [
-          _setPrimaryAddressCheckBox(),
+          _setPrimaryAddressCheckBox(data, index),
           _card(data, index, context),
         ],
       );
@@ -145,7 +147,7 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
         onPressed: () async {
           await _databaseService.deleteShippingAddress(data[index].id);
           Navigator.pop(context);
-          await getAddressCount(context);
+          await getAddressCount(context, _scaffoldKey);
         },
         icon: const Icon(
           Icons.delete,
@@ -174,11 +176,17 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
       Text(data[index]['fullName'],
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold));
 
-  Row _setPrimaryAddressCheckBox() => Row(
+  Row _setPrimaryAddressCheckBox(
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      Row(
         children: [
           Checkbox(
-            value: true,
-            onChanged: (value) {},
+            activeColor: Colors.black,
+            value: data[index]['isPrimary'],
+            onChanged: (value) {
+              _databaseService.setPrimaryShippingAddress(
+                  doc: data[index].id, isPrimary: value);
+            },
           ),
           const Text(
             'Use as the shipping address',

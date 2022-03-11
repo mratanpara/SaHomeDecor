@@ -124,7 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Padding _facebookButton(Size size) => Padding(
         padding: EdgeInsets.symmetric(vertical: size.width * 0.01),
-        child: FacebookSigninButton(label: 'Sign in with Facebook'),
+        child: FacebookSigninButton(
+            label: 'Sign in with Facebook', scaffoldKey: _scaffoldKey),
       );
 
   void _toggleSpinner() {
@@ -151,16 +152,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pushReplacementNamed(context, DashBoard.id);
                       } catch (e) {
                         _toggleSpinner();
-                        _scaffoldKey.currentState?.showSnackBar(
-                            showSnackBar(content: 'Invalid credential!'));
+                        _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                            content: 'Invalid credential!', color: Colors.red));
                       }
                     } else {
-                      _scaffoldKey.currentState?.showSnackBar(
-                          showSnackBar(content: 'Invalid credential!'));
+                      _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                          content: 'Enter email & password!',
+                          color: Colors.red));
                     }
                   } catch (e) {
-                    _scaffoldKey.currentState
-                        ?.showSnackBar(showSnackBar(content: e.toString()));
+                    _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                        content: 'Failed to login!', color: Colors.red));
                   }
                 },
               ),

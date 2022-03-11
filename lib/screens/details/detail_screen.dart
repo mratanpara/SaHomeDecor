@@ -70,7 +70,27 @@ class _DetailScreenState extends State<DetailScreen> {
       );
 
   void onFavPressed() async {
-    await _databaseService.addToFavourites(
+    try {
+      await _databaseService.addToFavourites(
+          Categories(
+            name: widget.data['name'],
+            url: widget.data['url'],
+            desc: widget.data['desc'],
+            star: widget.data['star'].toString(),
+            category: widget.data['category'],
+            price: widget.data['price'].toString(),
+            itemCount: 1,
+          ),
+          _scaffoldKey);
+    } catch (e) {
+      _scaffoldKey.currentState!.showSnackBar(showSnackBar(
+          content: "Failed to add into favourites!", color: Colors.red));
+    }
+  }
+
+  void onAddToCartPressed() async {
+    try {
+      await _databaseService.addToCart(
         Categories(
           name: widget.data['name'],
           url: widget.data['url'],
@@ -80,26 +100,12 @@ class _DetailScreenState extends State<DetailScreen> {
           price: widget.data['price'].toString(),
           itemCount: 1,
         ),
-        _scaffoldKey);
-    _scaffoldKey.currentState!.showSnackBar(
-        showSnackBar(content: "${widget.data['name']} added to favourites !"));
-  }
-
-  void onAddToCartPressed() async {
-    await _databaseService.addToCart(
-      Categories(
-        name: widget.data['name'],
-        url: widget.data['url'],
-        desc: widget.data['desc'],
-        star: widget.data['star'].toString(),
-        category: widget.data['category'],
-        price: widget.data['price'].toString(),
-        itemCount: 1,
-      ),
-      _scaffoldKey,
-    );
-    _scaffoldKey.currentState!.showSnackBar(
-        showSnackBar(content: "${widget.data['name']} added to cart !"));
+        _scaffoldKey,
+      );
+    } catch (e) {
+      _scaffoldKey.currentState!.showSnackBar(
+          showSnackBar(content: "Failed to add into cart!", color: Colors.red));
+    }
   }
 
   Column _column(Size size, BuildContext context) => Column(

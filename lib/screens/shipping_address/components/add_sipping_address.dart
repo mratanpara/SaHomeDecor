@@ -21,6 +21,7 @@ class AddShippingAddress extends StatefulWidget {
 class _AddShippingAddressState extends State<AddShippingAddress> {
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late bool _isPrimary = false;
 
   late TextEditingController _fullNameController;
   late TextEditingController _addressController;
@@ -60,6 +61,9 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
       _countryController.text = widget.data['country'];
       _cityController.text = widget.data['city'];
       _districtController.text = widget.data['district'];
+      setState(() {
+        _isPrimary = widget.data['isPrimary'];
+      });
     } else {
       _fullNameController.text = '';
       _addressController.text = '';
@@ -118,24 +122,37 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
         _cityController.text.isNotEmpty &&
         _districtController.text.isNotEmpty) {
       if (widget.data != null) {
-        await _databaseService.updateAddress(
+        try {
+          await _databaseService.updateAddress(
             doc: widget.data.id,
             fullName: _fullNameController.text,
             address: _addressController.text,
             zipcode: int.parse(_zipcodeController.text),
             country: _countryController.text,
             city: _cityController.text,
-            district: _districtController.text);
+            district: _districtController.text,
+            isPrimary: _isPrimary,
+          );
+        } catch (e) {
+          _scaffoldKey.currentState?.showSnackBar(
+              showSnackBar(content: 'Update failed!', color: Colors.red));
+        }
       } else {
-        await _databaseService.addAddress(
+        try {
+          await _databaseService.addAddress(
             fullName: _fullNameController.text,
             address: _addressController.text,
             zipcode: int.parse(_zipcodeController.text),
             country: _countryController.text,
             city: _cityController.text,
-            district: _districtController.text);
+            district: _districtController.text,
+          );
+        } catch (e) {
+          _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+              content: 'Failed to add address!', color: Colors.red));
+        }
       }
-      getAddressCount(context);
+      getAddressCount(context, _scaffoldKey);
       Navigator.pop(context);
     }
   }

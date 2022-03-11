@@ -3,9 +3,7 @@ import 'package:decor/constants/constants.dart';
 import 'package:decor/models/category_model.dart';
 import 'package:decor/models/users_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class DatabaseService {
   final _userCollection = FirebaseFirestore.instance.collection('users');
@@ -39,6 +37,7 @@ class DatabaseService {
       'country': country,
       'city': city,
       'district': district,
+      'isPrimary': false,
     });
   }
 
@@ -50,6 +49,7 @@ class DatabaseService {
     required String country,
     required String city,
     required String district,
+    required bool isPrimary,
   }) async {
     await _userCollection
         .doc(_currentUser!.uid)
@@ -62,6 +62,32 @@ class DatabaseService {
       'country': country,
       'city': city,
       'district': district,
+      'isPrimary': isPrimary,
+    });
+  }
+
+  Future<void> setPrimaryShippingAddress(
+      {required String doc, required bool? isPrimary}) async {
+    await _userCollection
+        .doc(_currentUser!.uid)
+        .collection('shipping_address')
+        .get()
+        .then((QuerySnapshot querySnapshot) async {
+      for (var element in querySnapshot.docs) {
+        if (element.id == doc) {
+          _userCollection
+              .doc(_currentUser!.uid)
+              .collection('shipping_address')
+              .doc(doc)
+              .update({'isPrimary': true});
+        } else {
+          _userCollection
+              .doc(_currentUser!.uid)
+              .collection('shipping_address')
+              .doc(element.id)
+              .update({'isPrimary': false});
+        }
+      }
     });
   }
 
@@ -83,8 +109,8 @@ class DatabaseService {
       if (querySnapshot.docs.isNotEmpty) {
         for (var element in querySnapshot.docs) {
           if (element['name'] == cat.name) {
-            _scaffoldKey.currentState
-                ?.showSnackBar(showSnackBar(content: 'Already in favourites!'));
+            _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                content: 'Already in favourites!', color: Colors.black));
             return;
           }
         }
@@ -100,6 +126,9 @@ class DatabaseService {
             'price': cat.price,
             'star': cat.star,
           });
+          _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+              content: "${cat.name} added to favourites !",
+              color: Colors.green));
         }
       }
       if (querySnapshot.docs.isEmpty) {
@@ -114,11 +143,14 @@ class DatabaseService {
           'price': cat.price,
           'star': cat.star,
         });
+        _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+            content: "${cat.name} added to favourites !", color: Colors.green));
       }
     });
   }
 
-  Future<void> deleteFromFavourite(String doc) async {
+  Future<void> deleteFromFavourite(
+      String doc, GlobalKey<ScaffoldState> _scaffoldKey) async {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('favourites')
@@ -127,7 +159,7 @@ class DatabaseService {
   }
 
   Future<void> addToCart(
-      Categories cat, GlobalKey<ScaffoldState> scaffoldKey) async {
+      Categories cat, GlobalKey<ScaffoldState> _scaffoldKey) async {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('cart')
@@ -158,6 +190,8 @@ class DatabaseService {
             'star': cat.star,
             'itemCount': cat.itemCount,
           });
+          _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+              content: "${cat.name} added to cart !", color: Colors.green));
         }
       }
       if (querySnapshot.docs.isEmpty) {
@@ -170,11 +204,14 @@ class DatabaseService {
           'star': cat.star,
           'itemCount': cat.itemCount,
         });
+        _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+            content: "${cat.name} added to cart !", color: Colors.green));
       }
     });
   }
 
-  Future<void> decreaseItemCount(String doc, int currentItemCount) async {
+  Future<void> decreaseItemCount(String doc, int currentItemCount,
+      GlobalKey<ScaffoldState> _scaffoldKey) async {
     if (currentItemCount != 1) {
       await _userCollection
           .doc(_currentUser!.uid)
@@ -186,7 +223,7 @@ class DatabaseService {
         },
       );
     } else {
-      await deleteFromCart(doc);
+      await deleteFromCart(doc, _scaffoldKey);
     }
   }
 
@@ -202,7 +239,8 @@ class DatabaseService {
     );
   }
 
-  Future<void> deleteFromCart(String doc) async {
+  Future<void> deleteFromCart(
+      String doc, GlobalKey<ScaffoldState> _scaffoldKey) async {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('cart')

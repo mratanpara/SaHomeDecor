@@ -7,6 +7,7 @@ import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/screens/favourite/favourite_screen.dart';
 import 'package:decor/screens/home/screens/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
+import 'package:decor/screens/onboarding/onboarding.dart';
 import 'package:decor/screens/profile/components/add_payment_method.dart';
 import 'package:decor/screens/profile/screens/change_password/change_password.dart';
 import 'package:decor/screens/profile/screens/myorder/myorder_screen.dart';
@@ -20,7 +21,6 @@ import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:decor/screens/shipping_address/screens/shipping_addresses_screen.dart';
 import 'package:decor/screens/splash_screen/splash_screen.dart';
 import 'package:decor/screens/success/success_screen.dart';
-import 'package:decor/screens/welcome/welcome_screen.dart';
 import 'package:decor/themes/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -54,10 +54,10 @@ class MyApp extends StatelessWidget {
     ShippingAddresses.id: (context) => const ShippingAddresses(),
     LoginScreen.id: (context) => const LoginScreen(),
     SignupScreen.id: (context) => const SignupScreen(),
-    WelcomeScreen.id: (context) => const WelcomeScreen(),
     FAQsScreen.id: (context) => FAQsScreen(),
     TermsAndConditionsScreen.id: (context) => TermsAndConditionsScreen(),
     PrivacyPolicyScreen.id: (context) => PrivacyPolicyScreen(),
+    OnBoarding.id: (context) => const OnBoarding(),
   };
 
   @override

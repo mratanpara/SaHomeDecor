@@ -95,7 +95,7 @@ class ReviewsScreen extends StatelessWidget {
   Padding _titleText() => const Padding(
         padding: kBottomPadding,
         child: Text(
-          'Minimal Stand',
+          'Sofa',
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -108,7 +108,7 @@ class ReviewsScreen extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: Image.asset(
-            'assets/images/minimal-stand.png',
+            'assets/images/img.png',
             fit: BoxFit.cover,
             height: size.height * 0.12,
             width: size.width * 0.3,

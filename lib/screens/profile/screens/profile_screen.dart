@@ -28,6 +28,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _auth = AuthServices();
   final _databaseService = DatabaseService();
   final _currentUser = FirebaseAuth.instance.currentUser;
@@ -38,20 +39,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String photoURL = "";
 
   void getData() async {
-    if (_currentUser != null) {
-      var docSnapshot = await _usersCollection.doc(_currentUser!.uid).get();
-      if (docSnapshot.exists) {
-        setState(() {
-          displayName = docSnapshot.get("displayName");
-          email = docSnapshot.get("email");
-          photoURL = docSnapshot.get("photoURL");
-        });
+    try {
+      if (_currentUser != null) {
+        var docSnapshot = await _usersCollection.doc(_currentUser!.uid).get();
+        if (docSnapshot.exists) {
+          setState(() {
+            displayName = docSnapshot.get("displayName");
+            email = docSnapshot.get("email");
+            photoURL = docSnapshot.get("photoURL");
+          });
+        }
       }
+    } catch (e) {
+      _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+          content: 'Not getting current user details!', color: Colors.red));
     }
   }
 
   Future<void> getAddressesCount(BuildContext context) async {
-    await getAddressCount(context);
+    await getAddressCount(context, _scaffoldKey);
   }
 
   @override
@@ -65,6 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: _appBar(context),
       body: CommonRefreshIndicator(
         child: SingleChildScrollView(

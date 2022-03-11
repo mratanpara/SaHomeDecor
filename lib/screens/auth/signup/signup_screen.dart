@@ -162,7 +162,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Padding _facebookButton(Size size) => Padding(
         padding: EdgeInsets.symmetric(vertical: size.width * 0.01),
-        child: FacebookSigninButton(label: 'Sign up with Facebook'),
+        child: FacebookSigninButton(
+            label: 'Sign up with Facebook', scaffoldKey: _scaffoldKey),
       );
 
   void _toggleSpinner() {
@@ -195,12 +196,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       Navigator.pushReplacementNamed(context, LoginScreen.id);
                     } catch (e) {
                       _toggleSpinner();
-                      _scaffoldKey.currentState?.showSnackBar(
-                          showSnackBar(content: 'All field is required!'));
+                      _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                          content: 'Failed to signup!', color: Colors.red));
                     }
                   } else {
-                    _scaffoldKey.currentState?.showSnackBar(
-                        showSnackBar(content: 'All field is required!'));
+                    _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                        content: 'Required all the fields!',
+                        color: Colors.red));
                   }
                 },
               ),

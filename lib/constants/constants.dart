@@ -58,7 +58,7 @@ const kSecondTitleTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
-//boxshadow
+//box shadow
 BoxDecoration kBoxShadow = BoxDecoration(
   boxShadow: [
     BoxShadow(
@@ -76,7 +76,7 @@ BoxDecoration kBoxShadow = BoxDecoration(
 //gridview text style
 const kViewTitleStyle = TextStyle(
   color: Colors.grey,
-  fontSize: 18,
+  fontSize: 16,
   letterSpacing: 2,
   fontWeight: FontWeight.bold,
 );
@@ -143,6 +143,20 @@ var kWelcomeContentStyle = TextStyle(
   fontSize: 20,
 );
 
+//onBoarding
+
+const kOnBoardingTitleTextStyle = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  letterSpacing: 2,
+  color: Colors.black,
+);
+const kOnBoardingContentTextStyle = TextStyle(
+  color: Colors.black54,
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+);
+
 //physics
 const kPhysics = BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
 
@@ -153,10 +167,22 @@ void fieldFocusChange(
   FocusScope.of(context).requestFocus(nextFocus);
 }
 
-SnackBar showSnackBar({required String content}) {
+SnackBar showSnackBar({required String content, required Color color}) {
   return SnackBar(
+    backgroundColor: color,
     content: Text(content),
     duration: const Duration(seconds: 1),
     behavior: SnackBarBehavior.floating,
   );
 }
+
+//delete Decoration
+const kSwipeToDeleteDecoration = BoxDecoration(
+  color: Colors.red,
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+);
+
+const kSwipeToAddDecoration = BoxDecoration(
+  color: Colors.green,
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+);

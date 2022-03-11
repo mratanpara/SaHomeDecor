@@ -7,26 +7,33 @@ import 'package:decor/services/database_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CategoriesData extends StatefulWidget {
-  const CategoriesData({
+class GetAllCategoriesData extends StatefulWidget {
+  const GetAllCategoriesData({
     Key? key,
     required this.size,
-    required this.collection,
     required this.scaffoldKey,
   }) : super(key: key);
 
   final Size size;
-  final String collection;
   final GlobalKey<ScaffoldState> scaffoldKey;
-
   @override
-  State<CategoriesData> createState() => _CategoriesDataState();
+  State<GetAllCategoriesData> createState() => _GetAllCategoriesDataState();
 }
 
-class _CategoriesDataState extends State<CategoriesData> {
+class _GetAllCategoriesDataState extends State<GetAllCategoriesData> {
   final _databaseService = DatabaseService();
   List _categoryList = [];
   bool isLoading = false;
+
+  final List<String> _category = [
+    'lamps',
+    'stands',
+    'desks',
+    'armchairs',
+    'beds',
+    'chairs',
+    'sofas',
+  ];
 
   Future getCategoriesStreamSnapShot() async {
     setState(() {
@@ -34,14 +41,16 @@ class _CategoriesDataState extends State<CategoriesData> {
     });
     try {
       _categoryList.clear();
-      var data = await FirebaseFirestore.instance
-          .collection('categories')
-          .doc('products')
-          .collection(widget.collection)
-          .get();
-      setState(() {
-        _categoryList += data.docs;
-      });
+      for (int i = 0; i < _category.length; i++) {
+        var data = await FirebaseFirestore.instance
+            .collection('categories')
+            .doc('products')
+            .collection(_category.elementAt(i))
+            .get();
+        setState(() {
+          _categoryList += data.docs;
+        });
+      }
       setState(() {
         isLoading = false;
       });
@@ -65,6 +74,7 @@ class _CategoriesDataState extends State<CategoriesData> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return RefreshIndicator(
       color: Colors.black,
       onRefresh: getCategoriesStreamSnapShot,
@@ -82,13 +92,14 @@ class _CategoriesDataState extends State<CategoriesData> {
               ),
               itemCount: _categoryList.length,
               itemBuilder: (BuildContext context, int index) {
-                return _categoryItemView(context, index);
+                return _categoryItemView(context, index, size);
               },
             ),
     );
   }
 
-  GestureDetector _categoryItemView(BuildContext context, int index) =>
+  GestureDetector _categoryItemView(
+          BuildContext context, int index, Size size) =>
       GestureDetector(
         onTap: () {
           Navigator.push(
@@ -99,7 +110,7 @@ class _CategoriesDataState extends State<CategoriesData> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _categoryImageAndCartButton(index, context),
+            _categoryImageAndCartButton(index, context, size),
             _categoryDetailsAndFavouriteButton(index, context),
           ],
         ),
@@ -151,13 +162,16 @@ class _CategoriesDataState extends State<CategoriesData> {
   Text _nameText(int index) => Text(
         _categoryList[index]['name'],
         style: kViewTitleStyle,
+        maxLines: 2,
+        overflow: TextOverflow.fade,
       );
 
-  Flexible _categoryImageAndCartButton(int index, BuildContext context) =>
+  Flexible _categoryImageAndCartButton(
+          int index, BuildContext context, Size size) =>
       Flexible(
         child: Stack(
           children: [
-            _image(index),
+            _image(index, size),
             _cartButton(index, context),
           ],
         ),
@@ -193,12 +207,13 @@ class _CategoriesDataState extends State<CategoriesData> {
         ),
       );
 
-  ClipRRect _image(int index) => ClipRRect(
+  ClipRRect _image(int index, Size size) => ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(
           _categoryList[index]['url'],
           fit: BoxFit.fill,
           width: double.maxFinite,
+          height: size.height * 0.25,
         ),
       );
 }

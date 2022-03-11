@@ -90,12 +90,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             if (_emailController.text.isNotEmpty) {
               await _databaseService
                   .forgotPassword(_emailController.text.trim());
+              _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                  content: 'E-mail sent to ${_emailController.text.trim()}',
+                  color: Colors.green));
               await _authService.signOutUser();
               Navigator.pushReplacementNamed(context, LoginScreen.id);
             }
           } catch (e) {
-            _scaffoldKey.currentState
-                ?.showSnackBar(showSnackBar(content: e.toString()));
+            _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                content: 'Failed to send mail!', color: Colors.red));
           }
         },
       );

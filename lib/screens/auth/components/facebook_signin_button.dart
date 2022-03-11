@@ -9,9 +9,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class FacebookSigninButton extends StatefulWidget {
-  FacebookSigninButton({required this.label});
+  FacebookSigninButton({required this.label, required this.scaffoldKey});
 
   final String label;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   State<FacebookSigninButton> createState() => _FacebookSigninButtonState();
@@ -64,7 +65,8 @@ class _FacebookSigninButtonState extends State<FacebookSigninButton> {
       Navigator.pushReplacementNamed(context, DashBoard.id);
     } catch (e) {
       _toggleSpinner();
-      debugPrint(e.toString());
+      widget.scaffoldKey.currentState?.showSnackBar(
+          showSnackBar(content: 'Failed to login!', color: Colors.red));
     }
   }
 }

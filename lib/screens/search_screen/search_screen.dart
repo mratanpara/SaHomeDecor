@@ -24,8 +24,12 @@ class _SearchScreenState extends State<SearchScreen> {
   late Future resultLoaded;
   List _categoryList = [];
   List _resultList = [];
+  bool isLoading = false;
 
   final List<String> _categoryCollection = [
+    'lamps',
+    'stands',
+    'desks',
     'armchairs',
     'beds',
     'chairs',
@@ -79,18 +83,30 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   getCategoriesStreamSnapShot() async {
-    _categoryList.clear();
-    for (int i = 0; i < _categoryCollection.length; i++) {
-      var data = await FirebaseFirestore.instance
-          .collection('categories')
-          .doc('products')
-          .collection(_categoryCollection.elementAt(i).toString())
-          .get();
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      _categoryList.clear();
+      for (int i = 0; i < _categoryCollection.length; i++) {
+        var data = await FirebaseFirestore.instance
+            .collection('categories')
+            .doc('products')
+            .collection(_categoryCollection.elementAt(i).toString())
+            .get();
+        setState(() {
+          _categoryList += data.docs;
+        });
+      }
+      searchResultList();
       setState(() {
-        _categoryList += data.docs;
+        isLoading = false;
       });
+    } catch (e) {
+      _scaffoldKey.currentState?.showSnackBar(
+          showSnackBar(content: 'not getting categories!', color: Colors.red));
     }
-    searchResultList();
+
     return 'completed';
   }
 
@@ -103,7 +119,10 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Column(
         children: [
           _searchTextField(),
-          _gridView(size),
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(color: Colors.black))
+              : _gridView(size),
         ],
       ),
     );
@@ -124,13 +143,14 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             itemCount: _resultList.length,
             itemBuilder: (BuildContext context, int index) {
-              return _categoryItemGrid(context, index);
+              return _categoryItemGrid(context, index, size);
             },
           ),
         ),
       );
 
-  GestureDetector _categoryItemGrid(BuildContext context, int index) =>
+  GestureDetector _categoryItemGrid(
+          BuildContext context, int index, Size size) =>
       GestureDetector(
         onTap: () {
           Navigator.push(
@@ -141,7 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _imageAndAddToCartButton(index, context),
+            _imageAndAddToCartButton(index, context, size),
             _categoryDetailsListTile(index, context),
           ],
         ),
@@ -161,20 +181,23 @@ class _SearchScreenState extends State<SearchScreen> {
 
   IconButton _addToFavButton(int index, BuildContext context) => IconButton(
         onPressed: () async {
-          await _databaseService.addToFavourites(
-            Categories(
-              name: _resultList[index]['name'],
-              url: _resultList[index]['url'],
-              desc: _resultList[index]['desc'],
-              star: _resultList[index]['star'].toString(),
-              category: _resultList[index]['category'],
-              price: _resultList[index]['price'].toString(),
-              itemCount: 1,
-            ),
-            _scaffoldKey,
-          );
-          Scaffold.of(context).showSnackBar(showSnackBar(
-              content: "${_resultList[index]['name']} added to favourites !"));
+          try {
+            await _databaseService.addToFavourites(
+              Categories(
+                name: _resultList[index]['name'],
+                url: _resultList[index]['url'],
+                desc: _resultList[index]['desc'],
+                star: _resultList[index]['star'].toString(),
+                category: _resultList[index]['category'],
+                price: _resultList[index]['price'].toString(),
+                itemCount: 1,
+              ),
+              _scaffoldKey,
+            );
+          } catch (e) {
+            _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                content: 'Failed to add into favourites!', color: Colors.red));
+          }
         },
         icon: const Icon(
           CupertinoIcons.heart,
@@ -190,13 +213,16 @@ class _SearchScreenState extends State<SearchScreen> {
   Text _nameText(int index) => Text(
         _resultList[index]['name'],
         style: kViewTitleStyle,
+        maxLines: 2,
+        overflow: TextOverflow.fade,
       );
 
-  Flexible _imageAndAddToCartButton(int index, BuildContext context) =>
+  Flexible _imageAndAddToCartButton(
+          int index, BuildContext context, Size size) =>
       Flexible(
         child: Stack(
           children: [
-            _image(index),
+            _image(index, size),
             _addToCartButton(index, context),
           ],
         ),
@@ -210,32 +236,36 @@ class _SearchScreenState extends State<SearchScreen> {
           height: 42,
           icon: CupertinoIcons.cart_fill,
           onPressed: () async {
-            await _databaseService.addToCart(
-              Categories(
-                name: _resultList[index]['name'],
-                url: _resultList[index]['url'],
-                desc: _resultList[index]['desc'],
-                star: _resultList[index]['star'].toString(),
-                category: _resultList[index]['category'],
-                price: _resultList[index]['price'].toString(),
-                itemCount: 1,
-              ),
-              _scaffoldKey,
-            );
-            Scaffold.of(context).showSnackBar(showSnackBar(
-                content: "${_resultList[index]['name']} added to cart !"));
+            try {
+              await _databaseService.addToCart(
+                Categories(
+                  name: _resultList[index]['name'],
+                  url: _resultList[index]['url'],
+                  desc: _resultList[index]['desc'],
+                  star: _resultList[index]['star'].toString(),
+                  category: _resultList[index]['category'],
+                  price: _resultList[index]['price'].toString(),
+                  itemCount: 1,
+                ),
+                _scaffoldKey,
+              );
+            } catch (e) {
+              _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                  content: 'Failed to add into cart!', color: Colors.red));
+            }
           },
           color: Colors.black38,
           iconColor: Colors.white,
         ),
       );
 
-  ClipRRect _image(int index) => ClipRRect(
+  ClipRRect _image(int index, Size size) => ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Image.asset(
           _resultList[index]['url'],
           fit: BoxFit.fill,
           width: double.maxFinite,
+          height: size.height * 0.25,
         ),
       );
 
