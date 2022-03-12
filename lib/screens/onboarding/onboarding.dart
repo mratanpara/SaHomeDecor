@@ -2,6 +2,7 @@ import 'package:decor/components/custom_button.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const duration = Duration(milliseconds: 500);
 
@@ -14,8 +15,8 @@ class OnBoarding extends StatefulWidget {
 }
 
 class _OnBoardingState extends State<OnBoarding> {
-  final int _numPages = 2;
   final PageController _pageController = PageController(initialPage: 0);
+  final int _numPages = 2;
   int _currentPage = 0;
 
   List<Widget> _buildPageIndicator() {
@@ -65,8 +66,12 @@ class _OnBoardingState extends State<OnBoarding> {
 
   CustomButton _getStartedButton(BuildContext context) => CustomButton(
         label: 'Get Started',
-        onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context, LoginScreen.id, (route) => false),
+        onPressed: () async {
+          Navigator.pushNamedAndRemoveUntil(
+              context, LoginScreen.id, (route) => false);
+          final _prefs = await SharedPreferences.getInstance();
+          _prefs.setBool('newToApp', false);
+        },
       );
   CustomButton _next(BuildContext context) => CustomButton(
         label: 'Next',

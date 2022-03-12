@@ -1,5 +1,8 @@
+import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
   final _auth = FirebaseAuth.instance;
@@ -27,8 +30,12 @@ class AuthServices {
   }
 
   //sign out
-  Future<void> signOutUser() async {
+  Future<void> signOutUser(BuildContext context) async {
     await FacebookAuth.instance.logOut();
     await _auth.signOut();
+    final _prefs = await SharedPreferences.getInstance();
+    _prefs.setBool('isLoggedIn', false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, LoginScreen.id, (route) => false);
   }
 }

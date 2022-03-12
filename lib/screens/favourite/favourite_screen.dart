@@ -27,6 +27,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   dynamic allData;
+  bool _isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +53,18 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
 
             final data = snapshot.data!.docs;
             allData = snapshot.data!.docs;
-            return Stack(
-              children: [
-                _favItemListView(data),
-              ],
-            );
+
+            if (data.isNotEmpty) {
+              _isVisible = true;
+            } else {
+              _isVisible = false;
+            }
+
+            return data.isNotEmpty
+                ? _favItemListView(data)
+                : const Center(
+                    child: Text('No data found'),
+                  );
           },
         ),
       ),
@@ -66,26 +74,29 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
 
   Padding _addAllToFavButton(Size size) => Padding(
         padding: kSymmetricPaddingHor,
-        child: CustomButton(
-          label: 'Add all to my cart',
-          onPressed: () {
-            for (int index = 0; index < allData.length; index++) {
-              _databaseService.addToCart(
-                Categories(
-                  name: allData[index]['name'],
-                  url: allData[index]['url'],
-                  desc: allData[index]['desc'],
-                  star: allData[index]['star'].toString(),
-                  category: allData[index]['category'],
-                  price: allData[index]['price'].toString(),
-                  itemCount: 1,
-                ),
-                _scaffoldKey,
-              );
-              _databaseService.deleteFromFavourite(
-                  allData[index].id, _scaffoldKey);
-            }
-          },
+        child: Visibility(
+          visible: _isVisible,
+          child: CustomButton(
+            label: 'Add all to my cart',
+            onPressed: () {
+              for (int index = 0; index < allData.length; index++) {
+                _databaseService.addToCart(
+                  Categories(
+                    name: allData[index]['name'],
+                    url: allData[index]['url'],
+                    desc: allData[index]['desc'],
+                    star: allData[index]['star'].toString(),
+                    category: allData[index]['category'],
+                    price: allData[index]['price'].toString(),
+                    itemCount: 1,
+                  ),
+                  _scaffoldKey,
+                );
+                _databaseService.deleteFromFavourite(
+                    allData[index].id, _scaffoldKey);
+              }
+            },
+          ),
         ),
       );
 

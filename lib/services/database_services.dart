@@ -21,22 +21,24 @@ class DatabaseService {
 
   Future<void> addAddress({
     required String fullName,
+    required int phone,
     required String address,
     required int zipcode,
     required String country,
     required String city,
-    required String district,
+    required String state,
   }) async {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('shipping_address')
         .add({
       'fullName': fullName,
+      'phone': phone,
       'address': address,
       'zipcode': zipcode,
       'country': country,
       'city': city,
-      'district': district,
+      'state': state,
       'isPrimary': false,
     });
   }
@@ -44,11 +46,12 @@ class DatabaseService {
   Future<void> updateAddress({
     required String doc,
     required String fullName,
+    required int phone,
     required String address,
     required int zipcode,
     required String country,
     required String city,
-    required String district,
+    required String state,
     required bool isPrimary,
   }) async {
     await _userCollection
@@ -57,11 +60,12 @@ class DatabaseService {
         .doc(doc)
         .update({
       'fullName': fullName,
+      'phone': phone,
       'address': address,
       'zipcode': zipcode,
       'country': country,
       'city': city,
-      'district': district,
+      'state': state,
       'isPrimary': isPrimary,
     });
   }

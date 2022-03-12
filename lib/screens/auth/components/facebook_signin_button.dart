@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/models/users_model.dart';
@@ -7,6 +6,7 @@ import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FacebookSigninButton extends StatefulWidget {
   FacebookSigninButton({required this.label, required this.scaffoldKey});
@@ -62,7 +62,10 @@ class _FacebookSigninButtonState extends State<FacebookSigninButton> {
         email: currentUser.email.toString(),
         photoURL: currentUser.photoURL.toString(),
       ));
-      Navigator.pushReplacementNamed(context, DashBoard.id);
+      final _prefs = await SharedPreferences.getInstance();
+      _prefs.setBool('isLoggedIn', true);
+      Navigator.pushNamedAndRemoveUntil(
+          context, DashBoard.id, (route) => false);
     } catch (e) {
       _toggleSpinner();
       widget.scaffoldKey.currentState?.showSnackBar(

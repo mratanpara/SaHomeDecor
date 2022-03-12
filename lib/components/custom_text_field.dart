@@ -25,7 +25,6 @@ class CustomTextField extends StatefulWidget {
 
 class _CustomTextFieldState extends State<CustomTextField> {
   bool isSecure = false;
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -50,7 +49,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         keyboardType: widget.type,
         obscureText: _isObscureText(),
         cursorColor: Colors.black,
+        onChanged: (text) => setState(() => _errorText),
         decoration: InputDecoration(
+            errorText: _errorText,
             suffixIcon: _suffixIcon(),
             hintText: widget.hintText,
             focusedBorder: _underlineInputBorder(),
@@ -58,9 +59,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
             hintStyle: const TextStyle(color: Colors.grey)),
       );
 
+  String? get _errorText {
+    // at any time, we can get the text from _controller.value.text
+    final text = widget.controller.value.text;
+    // Note: you can do your own custom validation here
+    // Move this logic this outside the widget for more testable code
+    if (text.isEmpty) {
+      return 'Can\'t be empty';
+    }
+    // return null if the text is valid
+    return null;
+  }
+
   bool _isObscureText() {
     if (!isSecure) {
-      if (widget.label == 'Password' || widget.label == 'Confirm Password') {
+      if (widget.label.contains('Password')) {
         return true;
       }
     }
@@ -68,21 +81,27 @@ class _CustomTextFieldState extends State<CustomTextField> {
   }
 
   Widget? _suffixIcon() {
-    if (widget.label == 'Password' || widget.label == 'Confirm Password') {
+    if (widget.label.contains('Password')) {
       return IconButton(
         onPressed: () {
           setState(() {
             isSecure = !isSecure;
           });
         },
-        icon: const Icon(
-          CupertinoIcons.eye,
-          size: kIconSize,
-          color: Colors.grey,
-        ),
+        icon: isSecure
+            ? eyeIcon(CupertinoIcons.eye_slash)
+            : eyeIcon(CupertinoIcons.eye),
       );
     }
     return null;
+  }
+
+  Icon eyeIcon(IconData icon) {
+    return Icon(
+      icon,
+      size: kIconSize,
+      color: Colors.grey,
+    );
   }
 
   UnderlineInputBorder _underlineInputBorder() => const UnderlineInputBorder(

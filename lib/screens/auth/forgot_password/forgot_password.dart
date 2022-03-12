@@ -2,7 +2,6 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/components/custom_text_field.dart';
-import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:flutter/cupertino.dart';
@@ -93,8 +92,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               _scaffoldKey.currentState?.showSnackBar(showSnackBar(
                   content: 'E-mail sent to ${_emailController.text.trim()}',
                   color: Colors.green));
-              await _authService.signOutUser();
-              Navigator.pushReplacementNamed(context, LoginScreen.id);
+              await _authService.signOutUser(context);
             }
           } catch (e) {
             _scaffoldKey.currentState?.showSnackBar(showSnackBar(

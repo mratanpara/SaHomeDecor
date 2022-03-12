@@ -4,7 +4,6 @@ import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/get_counts_data.dart';
 import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/providers/common_provider.dart';
-import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/screens/profile/components/custom_card.dart';
 import 'package:decor/screens/profile/screens/myorder/myorder_screen.dart';
 import 'package:decor/screens/profile/screens/myreviews/reviews_screen.dart';
@@ -30,7 +29,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _auth = AuthServices();
-  final _databaseService = DatabaseService();
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _usersCollection = FirebaseFirestore.instance.collection('users');
 
@@ -178,8 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: 'Profile',
         actionIcon: Icons.logout,
         onActionIconPressed: () async {
-          await _auth.signOutUser();
-          Navigator.pushReplacementNamed(context, LoginScreen.id);
+          await _auth.signOutUser(context);
         },
         onLeadingIconPressed: () =>
             Navigator.pushNamed(context, SearchScreen.id),

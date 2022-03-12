@@ -24,18 +24,20 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
   late bool _isPrimary = false;
 
   late TextEditingController _fullNameController;
-  late TextEditingController _addressController;
   late TextEditingController _zipcodeController;
   late TextEditingController _countryController;
   late TextEditingController _cityController;
-  late TextEditingController _districtController;
+  late TextEditingController _stateController;
+  late TextEditingController _addressController;
+  late TextEditingController _phoneController;
 
   late FocusNode _fullNameFocus;
   late FocusNode _addressFocus;
   late FocusNode _zipcodeFocus;
   late FocusNode _countryFocus;
   late FocusNode _cityFocus;
-  late FocusNode _districtFocus;
+  late FocusNode _stateFocus;
+  late FocusNode _phoneFocus;
 
   @override
   void initState() {
@@ -45,14 +47,16 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
     _zipcodeController = TextEditingController();
     _countryController = TextEditingController();
     _cityController = TextEditingController();
-    _districtController = TextEditingController();
+    _stateController = TextEditingController();
+    _phoneController = TextEditingController();
 
     _fullNameFocus = FocusNode();
     _addressFocus = FocusNode();
     _zipcodeFocus = FocusNode();
     _countryFocus = FocusNode();
     _cityFocus = FocusNode();
-    _districtFocus = FocusNode();
+    _stateFocus = FocusNode();
+    _phoneFocus = FocusNode();
 
     if (widget.data != null) {
       _fullNameController.text = widget.data['fullName'];
@@ -60,7 +64,8 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
       _zipcodeController.text = widget.data['zipcode'].toString();
       _countryController.text = widget.data['country'];
       _cityController.text = widget.data['city'];
-      _districtController.text = widget.data['district'];
+      _stateController.text = widget.data['state'];
+      _phoneController.text = widget.data['phone'].toString();
       setState(() {
         _isPrimary = widget.data['isPrimary'];
       });
@@ -70,7 +75,8 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
       _zipcodeController.text = '';
       _countryController.text = '';
       _cityController.text = '';
-      _districtController.text = '';
+      _stateController.text = '';
+      _phoneController.text = '';
     }
   }
 
@@ -81,14 +87,16 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
     _zipcodeController.dispose();
     _countryController.dispose();
     _cityController.dispose();
-    _districtController.dispose();
+    _stateController.dispose();
+    _phoneController.dispose();
 
     _fullNameFocus.dispose();
     _addressFocus.dispose();
     _zipcodeFocus.dispose();
     _countryFocus.dispose();
     _cityFocus.dispose();
-    _districtFocus.dispose();
+    _stateFocus.dispose();
+    _phoneFocus.dispose();
     super.dispose();
   }
 
@@ -120,17 +128,18 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
         _zipcodeController.text.isNotEmpty &&
         _countryController.text.isNotEmpty &&
         _cityController.text.isNotEmpty &&
-        _districtController.text.isNotEmpty) {
+        _stateController.text.isNotEmpty) {
       if (widget.data != null) {
         try {
           await _databaseService.updateAddress(
             doc: widget.data.id,
             fullName: _fullNameController.text,
+            phone: int.parse(_phoneController.text),
             address: _addressController.text,
             zipcode: int.parse(_zipcodeController.text),
             country: _countryController.text,
             city: _cityController.text,
-            district: _districtController.text,
+            state: _stateController.text,
             isPrimary: _isPrimary,
           );
         } catch (e) {
@@ -141,11 +150,12 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
         try {
           await _databaseService.addAddress(
             fullName: _fullNameController.text,
+            phone: int.parse(_phoneController.text),
             address: _addressController.text,
             zipcode: int.parse(_zipcodeController.text),
             country: _countryController.text,
             city: _cityController.text,
-            district: _districtController.text,
+            state: _stateController.text,
           );
         } catch (e) {
           _scaffoldKey.currentState?.showSnackBar(showSnackBar(
@@ -160,58 +170,36 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
   Column _column(BuildContext context) => Column(
         children: [
           _fullNameTextField(context),
+          _phoneTextField(context),
           _addressTextField(context),
           _zipcodeTextField(context),
-          _countryTextField(context),
           _cityTextField(context),
-          _districtTextField(),
+          _stateTextField(context),
+          _countryTextField(context),
         ],
       );
 
-  CustomCardTextField _districtTextField() => CustomCardTextField(
-        type: TextInputType.text,
-        label: 'District',
-        hintText: 'Enter District',
-        controller: _districtController,
-        focusNode: _districtFocus,
-        onPressed: (t) {
-          _districtFocus.unfocus();
-        },
-      );
-
-  CustomCardTextField _cityTextField(BuildContext context) =>
+  CustomCardTextField _fullNameTextField(BuildContext context) =>
       CustomCardTextField(
         type: TextInputType.text,
-        label: 'City',
-        hintText: 'Enter City',
-        controller: _cityController,
-        focusNode: _cityFocus,
+        label: 'Full Name',
+        hintText: 'Enter Full Name',
+        controller: _fullNameController,
+        focusNode: _fullNameFocus,
         onPressed: (t) {
-          fieldFocusChange(context, _cityFocus, _districtFocus);
+          fieldFocusChange(context, _fullNameFocus, _phoneFocus);
         },
       );
 
-  CustomCardTextField _countryTextField(BuildContext context) =>
-      CustomCardTextField(
-        type: TextInputType.text,
-        label: 'Country',
-        hintText: 'Enter Country',
-        controller: _countryController,
-        focusNode: _countryFocus,
-        onPressed: (t) {
-          fieldFocusChange(context, _countryFocus, _cityFocus);
-        },
-      );
-
-  CustomCardTextField _zipcodeTextField(BuildContext context) =>
+  CustomCardTextField _phoneTextField(BuildContext context) =>
       CustomCardTextField(
         type: TextInputType.number,
-        label: 'Zipcode (Postal Code)',
-        hintText: 'Enter Zipcode (Postal Code)',
-        controller: _zipcodeController,
-        focusNode: _zipcodeFocus,
+        label: 'Mobile Number',
+        hintText: 'Enter Mobile Number',
+        controller: _phoneController,
+        focusNode: _phoneFocus,
         onPressed: (t) {
-          fieldFocusChange(context, _zipcodeFocus, _countryFocus);
+          fieldFocusChange(context, _phoneFocus, _addressFocus);
         },
       );
 
@@ -227,15 +215,51 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
         },
       );
 
-  CustomCardTextField _fullNameTextField(BuildContext context) =>
+  CustomCardTextField _zipcodeTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.number,
+        label: 'Zipcode (Postal Code)',
+        hintText: 'Enter Zipcode (Postal Code)',
+        controller: _zipcodeController,
+        focusNode: _zipcodeFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _zipcodeFocus, _cityFocus);
+        },
+      );
+
+  CustomCardTextField _cityTextField(BuildContext context) =>
       CustomCardTextField(
         type: TextInputType.text,
-        label: 'Full Name',
-        hintText: 'Enter Full Name',
-        controller: _fullNameController,
-        focusNode: _fullNameFocus,
+        label: 'City',
+        hintText: 'Enter City',
+        controller: _cityController,
+        focusNode: _cityFocus,
         onPressed: (t) {
-          fieldFocusChange(context, _fullNameFocus, _addressFocus);
+          fieldFocusChange(context, _cityFocus, _stateFocus);
+        },
+      );
+
+  CustomCardTextField _stateTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.text,
+        label: 'State',
+        hintText: 'Enter State',
+        controller: _stateController,
+        focusNode: _stateFocus,
+        onPressed: (t) {
+          fieldFocusChange(context, _stateFocus, _countryFocus);
+        },
+      );
+
+  CustomCardTextField _countryTextField(BuildContext context) =>
+      CustomCardTextField(
+        type: TextInputType.text,
+        label: 'Country',
+        hintText: 'Enter Country',
+        controller: _countryController,
+        focusNode: _countryFocus,
+        onPressed: (t) {
+          _countryFocus.unfocus();
         },
       );
 

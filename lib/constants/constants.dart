@@ -186,3 +186,6 @@ const kSwipeToAddDecoration = BoxDecoration(
   color: Colors.green,
   borderRadius: BorderRadius.all(Radius.circular(10)),
 );
+
+//shipping address
+const kShippingAddTextStyle = TextStyle(fontSize: 18, color: Colors.grey);

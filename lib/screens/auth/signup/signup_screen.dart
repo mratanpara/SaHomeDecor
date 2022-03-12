@@ -4,10 +4,11 @@ import 'package:decor/constants/constants.dart';
 import 'package:decor/models/users_model.dart';
 import 'package:decor/components/custom_text_field.dart';
 import 'package:decor/screens/auth/components/facebook_signin_button.dart';
-import 'package:decor/screens/auth/login/login_screen.dart';
+import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const _normalUserPhotoURl =
     'https://banner2.cleanpng.com/20180319/pde/kisspng-computer-icons-icon-design-avatar-flat-face-icon-5ab06e33bee962.122118601521511987782.jpg';
@@ -193,7 +194,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           displayName: _nameController.text,
                           email: _emailController.text,
                           photoURL: _normalUserPhotoURl));
-                      Navigator.pushReplacementNamed(context, LoginScreen.id);
+                      final _prefs = await SharedPreferences.getInstance();
+                      _prefs.setBool('isLoggedIn', true);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, DashBoard.id, (route) => false);
                     } catch (e) {
                       _toggleSpinner();
                       _scaffoldKey.currentState?.showSnackBar(showSnackBar(

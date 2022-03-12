@@ -114,12 +114,90 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
   Padding _address(List<QueryDocumentSnapshot<Object?>> data, int index) =>
       Padding(
         padding: kSymmetricPaddingVer,
-        child: Align(
-          alignment: Alignment.topLeft,
-          child: Text(
-            '${data[index]['address']} ${data[index]['city']} - ${data[index]['zipcode']}',
-            style:
-                const TextStyle(fontSize: kNormalFontSize, color: Colors.grey),
+        child: Column(
+          children: [
+            _areaFlatVillage(data, index),
+            _ciyStateZipcode(data, index),
+            const Divider(thickness: 1),
+            _phoneNumberCountry(data, index),
+          ],
+        ),
+      );
+
+  Row _phoneNumberCountry(
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _phoneNumber(data, index),
+          Text(
+            '${data[index]['country']}',
+            style: kShippingAddTextStyle,
+          ),
+        ],
+      );
+
+  Row _phoneNumber(List<QueryDocumentSnapshot<Object?>> data, int index) => Row(
+        children: [
+          const Icon(
+            CupertinoIcons.phone_fill,
+            color: Colors.grey,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            '${data[index]['phone']}',
+            style: kShippingAddTextStyle,
+          ),
+        ],
+      );
+
+  Align _ciyStateZipcode(
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: kSymmetricPaddingVer,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                CupertinoIcons.building_2_fill,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  '${data[index]['city']}, ${data[index]['state']} ${data[index]['zipcode']}'
+                      .toUpperCase(),
+                  style: kShippingAddTextStyle,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Align _areaFlatVillage(
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: kSymmetricPaddingVer,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                CupertinoIcons.location_solid,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  '${data[index]['address']}',
+                  style: kShippingAddTextStyle,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -201,22 +279,5 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
         leadingIcon: CupertinoIcons.back,
         onActionIconPressed: null,
         onLeadingIconPressed: () => Navigator.pop(context),
-      );
-
-  Future<dynamic> _confirmationAlertDialog(
-          BuildContext context, String dataId) =>
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Warning'),
-          content: const Text('Are you sure you want to delete!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('No'),
-            ),
-            TextButton(onPressed: () async {}, child: const Text('Yes')),
-          ],
-        ),
       );
 }

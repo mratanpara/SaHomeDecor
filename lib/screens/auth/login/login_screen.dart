@@ -9,6 +9,7 @@ import 'package:decor/screens/auth/signup/signup_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -149,7 +150,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         await _auth.signinWithEmailAndPassword(
                             _emailController.text.trim(),
                             _passwordController.text.trim());
-                        Navigator.pushReplacementNamed(context, DashBoard.id);
+                        final _prefs = await SharedPreferences.getInstance();
+                        _prefs.setBool('isLoggedIn', true);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, DashBoard.id, (route) => false);
                       } catch (e) {
                         _toggleSpinner();
                         _scaffoldKey.currentState?.showSnackBar(showSnackBar(
