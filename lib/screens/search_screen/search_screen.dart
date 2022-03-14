@@ -261,7 +261,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   ClipRRect _image(int index, Size size) => ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
+        child: Image.network(
           _resultList[index]['url'],
           fit: BoxFit.fill,
           width: double.maxFinite,

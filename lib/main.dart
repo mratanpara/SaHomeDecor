@@ -8,7 +8,7 @@ import 'package:decor/screens/favourite/favourite_screen.dart';
 import 'package:decor/screens/home/screens/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
 import 'package:decor/screens/onboarding/onboarding.dart';
-import 'package:decor/screens/profile/components/add_payment_method.dart';
+import 'package:decor/screens/profile/screens/payment_method/components/add_payment_method.dart';
 import 'package:decor/screens/profile/screens/change_password/change_password.dart';
 import 'package:decor/screens/profile/screens/myorder/myorder_screen.dart';
 import 'package:decor/screens/profile/screens/payment_method/payment_method_screen.dart';

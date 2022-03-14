@@ -7,6 +7,7 @@ import 'package:decor/screens/auth/components/facebook_signin_button.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,6 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final _auth = AuthServices();
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isPressed = false;
 
@@ -100,17 +102,20 @@ class _SignupScreenState extends State<SignupScreen> {
             color: kBgColor,
             child: Padding(
               padding: kCardPadding,
-              child: Column(
-                children: [
-                  _fullNameTextField(),
-                  _emailTextField(),
-                  _passwordTextField(),
-                  _confirmPasswordTextField(),
-                  _signupButton(size),
-                  _richTextButton(size),
-                  const Divider(thickness: 1),
-                  _facebookButton(size),
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    _fullNameTextField(),
+                    _emailTextField(),
+                    _passwordTextField(),
+                    _confirmPasswordTextField(),
+                    _signupButton(size),
+                    _richTextButton(size),
+                    const Divider(thickness: 1),
+                    _facebookButton(size),
+                  ],
+                ),
               ),
             ),
           ),
@@ -123,6 +128,14 @@ class _SignupScreenState extends State<SignupScreen> {
         controller: _confirmPasswordController,
         type: TextInputType.visiblePassword,
         focusNode: _confirmPasswordFocus,
+        validator: (confirmPassword) {
+          if (_passwordController.text.trim() != confirmPassword) {
+            return 'Confirm password must be same as password';
+          } else if (_confirmPasswordController.text.trim().isEmpty) {
+            return 'Confirm password can\'t be empty!';
+          }
+          return null;
+        },
         onSubmitted: (term) {
           _confirmPasswordFocus.unfocus();
         },
@@ -134,6 +147,7 @@ class _SignupScreenState extends State<SignupScreen> {
         controller: _passwordController,
         focusNode: _passwordFocus,
         type: TextInputType.visiblePassword,
+        validator: validatePassword,
         onSubmitted: (term) {
           fieldFocusChange(context, _passwordFocus, _confirmPasswordFocus);
         },
@@ -145,6 +159,7 @@ class _SignupScreenState extends State<SignupScreen> {
         controller: _emailController,
         focusNode: _emailFocus,
         type: TextInputType.emailAddress,
+        validator: validateEmail,
         onSubmitted: (term) {
           fieldFocusChange(context, _emailFocus, _passwordFocus);
         },
@@ -156,6 +171,7 @@ class _SignupScreenState extends State<SignupScreen> {
         controller: _nameController,
         focusNode: _nameFocus,
         type: TextInputType.text,
+        validator: validateFullName,
         onSubmitted: (term) {
           fieldFocusChange(context, _nameFocus, _emailFocus);
         },
@@ -180,10 +196,7 @@ class _SignupScreenState extends State<SignupScreen> {
             : CustomButton(
                 label: 'Sign Up',
                 onPressed: () async {
-                  if (_nameController.text.isNotEmpty &&
-                      _emailController.text.isNotEmpty &&
-                      _passwordController.text.isNotEmpty &&
-                      _confirmPasswordController.text.isNotEmpty) {
+                  if (_formKey.currentState!.validate()) {
                     _toggleSpinner();
                     try {
                       await _auth.createUserWithEmailAndPassword(
@@ -200,13 +213,13 @@ class _SignupScreenState extends State<SignupScreen> {
                           context, DashBoard.id, (route) => false);
                     } catch (e) {
                       _toggleSpinner();
+                      _nameController.clear();
+                      _emailController.clear();
+                      _passwordController.clear();
+                      _confirmPasswordController.clear();
                       _scaffoldKey.currentState?.showSnackBar(showSnackBar(
                           content: 'Failed to signup!', color: Colors.red));
                     }
-                  } else {
-                    _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                        content: 'Required all the fields!',
-                        color: Colors.red));
                   }
                 },
               ),

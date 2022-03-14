@@ -41,8 +41,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/category/
-    - assets/images/pageview/
     - assets/images/success_screen/
     - assets/images/
     - assets/icons/

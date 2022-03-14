@@ -2,6 +2,7 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_card_text_field.dart';
 import 'package:decor/constants/constants.dart';
+import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +14,8 @@ class AddPaymentMethod extends StatefulWidget {
 }
 
 class _AddPaymentMethodState extends State<AddPaymentMethod> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   late TextEditingController _cardHolderController;
   late TextEditingController _cardNumberController;
   late TextEditingController _cvvController;
@@ -58,14 +61,17 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
       body: SingleChildScrollView(
         physics: kPhysics,
         padding: kAllPadding,
-        child: Column(
-          children: [
-            _image(),
-            const SizedBox(height: 10),
-            _cardHolderTextField(context),
-            _cardNumberTextField(context),
-            _cvvAndExpirationDate(context),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _image(),
+              const SizedBox(height: 10),
+              _cardHolderTextField(context),
+              _cardNumberTextField(context),
+              _cvvAndExpirationDate(context),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: _addNewCardButton(),
@@ -76,7 +82,9 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
         padding: const EdgeInsets.all(20),
         child: CustomButton(
           label: 'ADD NEW CARD',
-          onPressed: () {},
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {}
+          },
         ),
       );
 
@@ -94,6 +102,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
           hintText: '03/22',
           controller: _expirationDataController,
           focusNode: _expirationDateFocus,
+          validator: validateExpirationDate,
           onPressed: (t) {
             _expirationDateFocus.unfocus();
           },
@@ -107,6 +116,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
           hintText: 'Ex: 123',
           controller: _cvvController,
           focusNode: _cvvFocus,
+          validator: validateCVV,
           onPressed: (t) {
             fieldFocusChange(context, _cvvFocus, _expirationDateFocus);
           },
@@ -115,11 +125,12 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
 
   CustomCardTextField _cardNumberTextField(BuildContext context) =>
       CustomCardTextField(
-        type: TextInputType.text,
+        type: TextInputType.number,
         label: 'Card Number',
         hintText: '**** **** **** 1234',
         controller: _cardNumberController,
         focusNode: _cardNumberFocus,
+        validator: validateCardNumber,
         onPressed: (t) {
           fieldFocusChange(context, _cardNumberFocus, _cvvFocus);
         },
@@ -132,6 +143,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
         hintText: 'Ex: John Deo',
         controller: _cardHolderController,
         focusNode: _cardHolderFocus,
+        validator: validateHolderName,
         onPressed: (t) {
           fieldFocusChange(context, _cardHolderFocus, _cardNumberFocus);
         },

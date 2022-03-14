@@ -4,6 +4,7 @@ import 'package:decor/constants/constants.dart';
 import 'package:decor/components/custom_text_field.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final _databaseService = DatabaseService();
   final _authService = AuthServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late TextEditingController _emailController;
   late FocusNode _emailFocus;
@@ -72,11 +74,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           elevation: 0,
           child: Padding(
             padding: kAllPadding,
-            child: Column(
-              children: [
-                _textField(),
-                _button(context),
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _textField(),
+                  _button(context),
+                ],
+              ),
             ),
           ),
         ),
@@ -86,7 +91,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         label: 'SEND EMAIL',
         onPressed: () async {
           try {
-            if (_emailController.text.isNotEmpty) {
+            if (_formKey.currentState!.validate()) {
               await _databaseService
                   .forgotPassword(_emailController.text.trim());
               _scaffoldKey.currentState?.showSnackBar(showSnackBar(
@@ -105,6 +110,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         onSubmitted: (val) {
           _emailFocus.unfocus();
         },
+        validator: validateEmail,
         type: TextInputType.text,
         label: 'Email',
         hintText: 'Enter email here',

@@ -209,7 +209,7 @@ class _GetAllCategoriesDataState extends State<GetAllCategoriesData> {
 
   ClipRRect _image(int index, Size size) => ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
+        child: Image.network(
           _categoryList[index]['url'],
           fit: BoxFit.fill,
           width: double.maxFinite,

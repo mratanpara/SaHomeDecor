@@ -4,6 +4,7 @@ import 'package:decor/constants/constants.dart';
 import 'package:decor/components/custom_text_field.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   final _databaseService = DatabaseService();
   final _authService = AuthServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late TextEditingController _newPasswordController;
   late FocusNode _newPasswordFocus;
@@ -70,11 +72,14 @@ class _ChangePasswordState extends State<ChangePassword> {
           elevation: 0,
           child: Padding(
             padding: kAllPadding,
-            child: Column(
-              children: [
-                _newPasswordTextFiled(),
-                _saveButton(context),
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  _newPasswordTextFiled(),
+                  _saveButton(context),
+                ],
+              ),
             ),
           ),
         ),
@@ -84,7 +89,7 @@ class _ChangePasswordState extends State<ChangePassword> {
         label: 'SAVE PASSWORD',
         onPressed: () async {
           try {
-            if (_newPasswordController.text.isNotEmpty) {
+            if (_formKey.currentState!.validate()) {
               await _databaseService
                   .changePassword(_newPasswordController.text.trim());
               _scaffoldKey.currentState?.showSnackBar(showSnackBar(
@@ -102,6 +107,7 @@ class _ChangePasswordState extends State<ChangePassword> {
         onSubmitted: (val) {
           _newPasswordFocus.unfocus();
         },
+        validator: validatePassword,
         type: TextInputType.text,
         label: 'Password',
         hintText: 'Enter new password',

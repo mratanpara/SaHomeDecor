@@ -2,7 +2,7 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/refresh_indicator.dart';
-import 'package:decor/screens/profile/components/add_payment_method.dart';
+import 'package:decor/screens/profile/screens/payment_method/components/add_payment_method.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +53,7 @@ class PaymentMethodScreen extends StatelessWidget {
             onChanged: (value) {},
           ),
           const Text(
-            'Use as the shipping address',
+            'Use as the payment method',
             style: TextStyle(fontSize: 22, color: Colors.grey),
           ),
         ],

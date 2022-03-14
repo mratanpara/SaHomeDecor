@@ -4,6 +4,7 @@ import 'package:decor/components/custom_card_text_field.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/get_counts_data.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,8 @@ class AddShippingAddress extends StatefulWidget {
 class _AddShippingAddressState extends State<AddShippingAddress> {
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   late bool _isPrimary = false;
 
   late TextEditingController _fullNameController;
@@ -123,12 +126,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
       );
 
   void onSave() async {
-    if (_addressController.text.isNotEmpty &&
-        _fullNameController.text.isNotEmpty &&
-        _zipcodeController.text.isNotEmpty &&
-        _countryController.text.isNotEmpty &&
-        _cityController.text.isNotEmpty &&
-        _stateController.text.isNotEmpty) {
+    if (_formKey.currentState!.validate()) {
       if (widget.data != null) {
         try {
           await _databaseService.updateAddress(
@@ -167,20 +165,24 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
     }
   }
 
-  Column _column(BuildContext context) => Column(
-        children: [
-          _fullNameTextField(context),
-          _phoneTextField(context),
-          _addressTextField(context),
-          _zipcodeTextField(context),
-          _cityTextField(context),
-          _stateTextField(context),
-          _countryTextField(context),
-        ],
+  Form _column(BuildContext context) => Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            _fullNameTextField(context),
+            _phoneTextField(context),
+            _addressTextField(context),
+            _zipcodeTextField(context),
+            _cityTextField(context),
+            _stateTextField(context),
+            _countryTextField(context),
+          ],
+        ),
       );
 
   CustomCardTextField _fullNameTextField(BuildContext context) =>
       CustomCardTextField(
+        validator: validateFullName,
         type: TextInputType.text,
         label: 'Full Name',
         hintText: 'Enter Full Name',
@@ -193,6 +195,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
 
   CustomCardTextField _phoneTextField(BuildContext context) =>
       CustomCardTextField(
+        validator: validateMobileNumber,
         type: TextInputType.number,
         label: 'Mobile Number',
         hintText: 'Enter Mobile Number',
@@ -205,6 +208,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
 
   CustomCardTextField _addressTextField(BuildContext context) =>
       CustomCardTextField(
+        validator: validateAddress,
         type: TextInputType.text,
         label: 'Address',
         hintText: 'Enter Address',
@@ -217,6 +221,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
 
   CustomCardTextField _zipcodeTextField(BuildContext context) =>
       CustomCardTextField(
+        validator: validateZipcode,
         type: TextInputType.number,
         label: 'Zipcode (Postal Code)',
         hintText: 'Enter Zipcode (Postal Code)',
@@ -229,6 +234,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
 
   CustomCardTextField _cityTextField(BuildContext context) =>
       CustomCardTextField(
+        validator: validateCity,
         type: TextInputType.text,
         label: 'City',
         hintText: 'Enter City',
@@ -241,6 +247,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
 
   CustomCardTextField _stateTextField(BuildContext context) =>
       CustomCardTextField(
+        validator: validateState,
         type: TextInputType.text,
         label: 'State',
         hintText: 'Enter State',
@@ -253,6 +260,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
 
   CustomCardTextField _countryTextField(BuildContext context) =>
       CustomCardTextField(
+        validator: validateCountry,
         type: TextInputType.text,
         label: 'Country',
         hintText: 'Enter Country',

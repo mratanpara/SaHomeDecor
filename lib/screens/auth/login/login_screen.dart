@@ -8,6 +8,7 @@ import 'package:decor/screens/auth/forgot_password/forgot_password.dart';
 import 'package:decor/screens/auth/signup/signup_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';
+import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +23,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = AuthServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
@@ -85,16 +87,19 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Padding(
               padding: EdgeInsets.symmetric(
                   vertical: size.width * 0.01, horizontal: size.height * 0.01),
-              child: Column(
-                children: [
-                  _emailTextField(context),
-                  _passwordTextField(),
-                  _forgotPassword(size),
-                  _loginButton(size),
-                  _richTextButton(context, size),
-                  const Divider(thickness: 1),
-                  _facebookButton(size),
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    _emailTextField(context),
+                    _passwordTextField(),
+                    _forgotPassword(size),
+                    _loginButton(size),
+                    _richTextButton(context, size),
+                    const Divider(thickness: 1),
+                    _facebookButton(size),
+                  ],
+                ),
               ),
             ),
           ),
@@ -107,6 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
         controller: _passwordController,
         focusNode: _passwordFocus,
         type: TextInputType.visiblePassword,
+        validator: validatePassword,
         onSubmitted: (term) {
           _passwordFocus.unfocus();
         },
@@ -118,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
         controller: _emailController,
         focusNode: _emailFocus,
         type: TextInputType.emailAddress,
+        validator: validateEmail,
         onSubmitted: (term) {
           fieldFocusChange(context, _emailFocus, _passwordFocus);
         },
@@ -143,8 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 label: 'Log In',
                 onPressed: () async {
                   try {
-                    if (_emailController.text.isNotEmpty &&
-                        _passwordController.text.isNotEmpty) {
+                    if (_formKey.currentState!.validate()) {
                       _toggleSpinner();
                       try {
                         await _auth.signinWithEmailAndPassword(
@@ -159,10 +165,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         _scaffoldKey.currentState?.showSnackBar(showSnackBar(
                             content: 'Invalid credential!', color: Colors.red));
                       }
-                    } else {
-                      _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                          content: 'Enter email & password!',
-                          color: Colors.red));
                     }
                   } catch (e) {
                     _scaffoldKey.currentState?.showSnackBar(showSnackBar(

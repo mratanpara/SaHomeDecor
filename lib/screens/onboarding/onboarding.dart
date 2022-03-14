@@ -118,8 +118,8 @@ class _OnBoardingState extends State<OnBoarding> {
       );
 
   Align _view2Image() => Align(
-        child: Image.asset(
-          'assets/images/pageview/view-2.png',
+        child: Image.network(
+          'https://firebasestorage.googleapis.com/v0/b/sahomedecor-794d8.appspot.com/o/on_boarding%2Fview-2.png?alt=media&token=3be375c5-ef62-4724-b617-5555e04f670a',
           height: 300,
           width: 300,
         ),
@@ -167,8 +167,8 @@ class _OnBoardingState extends State<OnBoarding> {
       );
 
   Align _view1Image() => Align(
-        child: Image.asset(
-          'assets/images/pageview/view-1.png',
+        child: Image.network(
+          'https://firebasestorage.googleapis.com/v0/b/sahomedecor-794d8.appspot.com/o/on_boarding%2Fview-1.png?alt=media&token=e748e3e4-e755-49b8-a430-268662e13875',
           height: 300,
           width: 300,
         ),

@@ -9,6 +9,7 @@ class CustomCardTextField extends StatelessWidget {
   final Function(String) onPressed;
   final TextInputType type;
   final String hintText;
+  final validator;
 
   CustomCardTextField({
     required this.controller,
@@ -17,6 +18,7 @@ class CustomCardTextField extends StatelessWidget {
     required this.onPressed,
     required this.type,
     required this.hintText,
+    required this.validator,
   });
 
   @override
@@ -34,6 +36,7 @@ class CustomCardTextField extends StatelessWidget {
             focusNode: focusNode,
             onSubmitted: onPressed,
             type: type,
+            validator: validator,
           ),
         ),
       ),

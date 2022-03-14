@@ -310,7 +310,7 @@ class _CartScreenState extends State<CartScreen> {
   ClipRRect _image(List<QueryDocumentSnapshot<Object?>> data, int index) =>
       ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
+        child: Image.network(
           data[index]['url'],
           fit: BoxFit.cover,
           height: 110,

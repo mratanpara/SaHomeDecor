@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
     required this.onSubmitted,
     required this.type,
     required this.hintText,
+    required this.validator,
   });
 
   final String label;
@@ -18,6 +19,7 @@ class CustomTextField extends StatefulWidget {
   final Function(String) onSubmitted;
   final TextInputType type;
   final String hintText;
+  final validator;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -49,27 +51,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
         keyboardType: widget.type,
         obscureText: _isObscureText(),
         cursorColor: Colors.black,
-        onChanged: (text) => setState(() => _errorText),
+        validator: widget.validator,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
-            errorText: _errorText,
             suffixIcon: _suffixIcon(),
             hintText: widget.hintText,
             focusedBorder: _underlineInputBorder(),
             enabledBorder: _underlineInputBorder(),
             hintStyle: const TextStyle(color: Colors.grey)),
       );
-
-  String? get _errorText {
-    // at any time, we can get the text from _controller.value.text
-    final text = widget.controller.value.text;
-    // Note: you can do your own custom validation here
-    // Move this logic this outside the widget for more testable code
-    if (text.isEmpty) {
-      return 'Can\'t be empty';
-    }
-    // return null if the text is valid
-    return null;
-  }
 
   bool _isObscureText() {
     if (!isSecure) {

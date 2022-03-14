@@ -7,6 +7,7 @@ import 'package:decor/screens/profile/screens/settings/components/custom_list_ti
 import 'package:decor/screens/profile/screens/settings/screens/faqs_screen.dart';
 import 'package:decor/screens/profile/screens/settings/screens/privacy_policy.dart';
 import 'package:decor/screens/profile/screens/settings/screens/terms_and_conditions.dart';
+import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -130,6 +131,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       controller: _emailController,
       focusNode: _emailFocus,
       label: 'Email',
+      validator: validateEmail,
       onPressed: (val) {},
       type: TextInputType.emailAddress,
       hintText: 'Emaail');
@@ -138,6 +140,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       controller: _nameController,
       focusNode: _nameFocus,
       label: 'Name',
+      validator: validateFullName,
       onPressed: (val) {},
       type: TextInputType.text,
       hintText: 'Name');
