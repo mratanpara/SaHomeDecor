@@ -217,8 +217,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       _emailController.clear();
                       _passwordController.clear();
                       _confirmPasswordController.clear();
-                      _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                          content: 'Failed to signup!', color: Colors.red));
+                      _scaffoldKey.currentState?.showSnackBar(
+                          showSnackBar(content: 'Failed to signup!'));
                     }
                   }
                 },

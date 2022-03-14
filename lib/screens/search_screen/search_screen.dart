@@ -103,8 +103,8 @@ class _SearchScreenState extends State<SearchScreen> {
         isLoading = false;
       });
     } catch (e) {
-      _scaffoldKey.currentState?.showSnackBar(
-          showSnackBar(content: 'not getting categories!', color: Colors.red));
+      _scaffoldKey.currentState
+          ?.showSnackBar(showSnackBar(content: 'not getting categories!'));
     }
 
     return 'completed';
@@ -195,8 +195,8 @@ class _SearchScreenState extends State<SearchScreen> {
               _scaffoldKey,
             );
           } catch (e) {
-            _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                content: 'Failed to add into favourites!', color: Colors.red));
+            _scaffoldKey.currentState?.showSnackBar(
+                showSnackBar(content: 'Failed to add into favourites!'));
           }
         },
         icon: const Icon(
@@ -250,8 +250,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 _scaffoldKey,
               );
             } catch (e) {
-              _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                  content: 'Failed to add into cart!', color: Colors.red));
+              _scaffoldKey.currentState?.showSnackBar(
+                  showSnackBar(content: 'Failed to add into cart!'));
             }
           },
           color: Colors.black38,

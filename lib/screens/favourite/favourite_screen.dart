@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
+import 'package:decor/components/no_data_found.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/models/category_model.dart';
@@ -61,41 +62,47 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             }
 
             return data.isNotEmpty
-                ? _favItemListView(data)
-                : const Center(
-                    child: Text('No data found'),
-                  );
+                ? Stack(
+                    children: [
+                      _favItemListView(data),
+                      _addAllToFavButton(size),
+                    ],
+                  )
+                : NoDataFound();
           },
         ),
       ),
-      bottomNavigationBar: _addAllToFavButton(size),
     );
   }
 
-  Padding _addAllToFavButton(Size size) => Padding(
-        padding: kSymmetricPaddingHor,
-        child: Visibility(
-          visible: _isVisible,
-          child: CustomButton(
-            label: 'Add all to my cart',
-            onPressed: () {
-              for (int index = 0; index < allData.length; index++) {
-                _databaseService.addToCart(
-                  Categories(
-                    name: allData[index]['name'],
-                    url: allData[index]['url'],
-                    desc: allData[index]['desc'],
-                    star: allData[index]['star'].toString(),
-                    category: allData[index]['category'],
-                    price: allData[index]['price'].toString(),
-                    itemCount: 1,
-                  ),
-                  _scaffoldKey,
-                );
-                _databaseService.deleteFromFavourite(
-                    allData[index].id, _scaffoldKey);
-              }
-            },
+  Positioned _addAllToFavButton(Size size) => Positioned(
+        width: size.width,
+        bottom: 1,
+        child: Padding(
+          padding: kSymmetricPaddingHor,
+          child: Visibility(
+            visible: _isVisible,
+            child: CustomButton(
+              label: 'Add all to my cart',
+              onPressed: () {
+                for (int index = 0; index < allData.length; index++) {
+                  _databaseService.addToCart(
+                    Categories(
+                      name: allData[index]['name'],
+                      url: allData[index]['url'],
+                      desc: allData[index]['desc'],
+                      star: allData[index]['star'].toString(),
+                      category: allData[index]['category'],
+                      price: allData[index]['price'].toString(),
+                      itemCount: 1,
+                    ),
+                    _scaffoldKey,
+                  );
+                  _databaseService.deleteFromFavourite(
+                      allData[index].id, _scaffoldKey);
+                }
+              },
+            ),
           ),
         ),
       );
@@ -114,7 +121,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
               alignment: Alignment.centerLeft,
               child: const Icon(
                 CupertinoIcons.trash_fill,
-                color: Colors.black,
+                color: Colors.white,
                 size: kIconSize,
               ),
             ),
@@ -124,7 +131,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
               decoration: kSwipeToAddDecoration,
               child: const Icon(
                 CupertinoIcons.cart_fill,
-                color: Colors.black,
+                color: Colors.white,
                 size: kIconSize,
               ),
             ),
@@ -149,16 +156,15 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   await _databaseService.deleteFromFavourite(
                       data[index].id, _scaffoldKey);
                   _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                      content: '${data[index]['name']} deleted !',
-                      color: Colors.red));
+                      content: '${data[index]['name']} deleted !'));
                 }
               } catch (e) {
                 if (direction == DismissDirection.endToStart) {
-                  _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                      content: "Failed to add into cart!", color: Colors.red));
+                  _scaffoldKey.currentState!.showSnackBar(
+                      showSnackBar(content: "Failed to add into cart!"));
                 } else {
-                  _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                      content: "Failed to delete !", color: Colors.red));
+                  _scaffoldKey.currentState!.showSnackBar(
+                      showSnackBar(content: "Failed to delete !"));
                 }
               }
             },
@@ -222,8 +228,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
               await _databaseService.deleteFromFavourite(
                   data[index].id, _scaffoldKey);
             } catch (e) {
-              _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                  content: "Failed to add into cart!", color: Colors.red));
+              _scaffoldKey.currentState!.showSnackBar(
+                  showSnackBar(content: "Failed to add into cart!"));
             }
           },
           icon: const Icon(
@@ -251,12 +257,11 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             try {
               await _databaseService.deleteFromFavourite(
                   data[index].id, _scaffoldKey);
-              _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                  content: "${data[index]['name']} deleted.",
-                  color: Colors.red));
+              _scaffoldKey.currentState!.showSnackBar(
+                  showSnackBar(content: "${data[index]['name']} deleted."));
             } catch (e) {
-              _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                  content: "Failed to delete!", color: Colors.red));
+              _scaffoldKey.currentState!
+                  .showSnackBar(showSnackBar(content: "Failed to delete!"));
             }
           },
           icon: const Icon(

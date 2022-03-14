@@ -167,9 +167,9 @@ void fieldFocusChange(
   FocusScope.of(context).requestFocus(nextFocus);
 }
 
-SnackBar showSnackBar({required String content, required Color color}) {
+SnackBar showSnackBar({required String content}) {
   return SnackBar(
-    backgroundColor: color,
+    backgroundColor: Colors.black,
     content: Text(content),
     duration: const Duration(seconds: 1),
     behavior: SnackBarBehavior.floating,

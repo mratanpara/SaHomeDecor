@@ -162,13 +162,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             context, DashBoard.id, (route) => false);
                       } catch (e) {
                         _toggleSpinner();
-                        _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                            content: 'Invalid credential!', color: Colors.red));
+                        _scaffoldKey.currentState?.showSnackBar(
+                            showSnackBar(content: 'Invalid credential!'));
                       }
                     }
                   } catch (e) {
-                    _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                        content: 'Failed to login!', color: Colors.red));
+                    _scaffoldKey.currentState?.showSnackBar(
+                        showSnackBar(content: 'Failed to login!'));
                   }
                 },
               ),

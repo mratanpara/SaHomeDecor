@@ -113,8 +113,8 @@ class DatabaseService {
       if (querySnapshot.docs.isNotEmpty) {
         for (var element in querySnapshot.docs) {
           if (element['name'] == cat.name) {
-            _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                content: 'Already in favourites!', color: Colors.black));
+            _scaffoldKey.currentState
+                ?.showSnackBar(showSnackBar(content: 'Already in favourites!'));
             return;
           }
         }
@@ -130,9 +130,8 @@ class DatabaseService {
             'price': cat.price,
             'star': cat.star,
           });
-          _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-              content: "${cat.name} added to favourites !",
-              color: Colors.green));
+          _scaffoldKey.currentState?.showSnackBar(
+              showSnackBar(content: "${cat.name} added to favourites !"));
         }
       }
       if (querySnapshot.docs.isEmpty) {
@@ -147,8 +146,8 @@ class DatabaseService {
           'price': cat.price,
           'star': cat.star,
         });
-        _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-            content: "${cat.name} added to favourites !", color: Colors.green));
+        _scaffoldKey.currentState?.showSnackBar(
+            showSnackBar(content: "${cat.name} added to favourites !"));
       }
     });
   }
@@ -194,8 +193,8 @@ class DatabaseService {
             'star': cat.star,
             'itemCount': cat.itemCount,
           });
-          _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-              content: "${cat.name} added to cart !", color: Colors.green));
+          _scaffoldKey.currentState?.showSnackBar(
+              showSnackBar(content: "${cat.name} added to cart !"));
         }
       }
       if (querySnapshot.docs.isEmpty) {
@@ -208,8 +207,8 @@ class DatabaseService {
           'star': cat.star,
           'itemCount': cat.itemCount,
         });
-        _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-            content: "${cat.name} added to cart !", color: Colors.green));
+        _scaffoldKey.currentState?.showSnackBar(
+            showSnackBar(content: "${cat.name} added to cart !"));
       }
     });
   }

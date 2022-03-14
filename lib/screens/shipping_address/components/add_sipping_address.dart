@@ -141,8 +141,8 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
             isPrimary: _isPrimary,
           );
         } catch (e) {
-          _scaffoldKey.currentState?.showSnackBar(
-              showSnackBar(content: 'Update failed!', color: Colors.red));
+          _scaffoldKey.currentState
+              ?.showSnackBar(showSnackBar(content: 'Update failed!'));
         }
       } else {
         try {
@@ -156,8 +156,8 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
             state: _stateController.text,
           );
         } catch (e) {
-          _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-              content: 'Failed to add address!', color: Colors.red));
+          _scaffoldKey.currentState
+              ?.showSnackBar(showSnackBar(content: 'Failed to add address!'));
         }
       }
       getAddressCount(context, _scaffoldKey);

@@ -68,8 +68,8 @@ class _FacebookSigninButtonState extends State<FacebookSigninButton> {
           context, DashBoard.id, (route) => false);
     } catch (e) {
       _toggleSpinner();
-      widget.scaffoldKey.currentState?.showSnackBar(
-          showSnackBar(content: 'Failed to login!', color: Colors.red));
+      widget.scaffoldKey.currentState
+          ?.showSnackBar(showSnackBar(content: 'Failed to login!'));
     }
   }
 }

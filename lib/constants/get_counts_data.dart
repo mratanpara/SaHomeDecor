@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/constants/constants.dart';
 import 'package:decor/providers/common_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +20,7 @@ Future<void> getAddressCount(
           .setAddressCount(querySnapshot.docs.length);
     });
   } catch (e) {
-    scaffoldKey.currentState?.showSnackBar(
-        showSnackBar(content: 'Failed to Count addresses!', color: Colors.red));
+    debugPrint(e.toString());
   }
 }
 
@@ -38,8 +36,7 @@ Future<void> getTotalAmount(
           .setTotalAmount(querySnapshot.docs);
     });
   } catch (e) {
-    scaffoldKey.currentState?.showSnackBar(
-        showSnackBar(content: 'Failed to Count Total!', color: Colors.red));
+    debugPrint(e.toString());
   }
 }
 

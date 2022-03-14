@@ -92,13 +92,13 @@ class _ChangePasswordState extends State<ChangePassword> {
             if (_formKey.currentState!.validate()) {
               await _databaseService
                   .changePassword(_newPasswordController.text.trim());
-              _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                  content: 'Password changed !', color: Colors.green));
+              _scaffoldKey.currentState
+                  ?.showSnackBar(showSnackBar(content: 'Password changed !'));
               await _authService.signOutUser(context);
             }
           } catch (e) {
-            _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                content: 'Failed to change password !', color: Colors.red));
+            _scaffoldKey.currentState?.showSnackBar(
+                showSnackBar(content: 'Failed to change password !'));
           }
         },
       );

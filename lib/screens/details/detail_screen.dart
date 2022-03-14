@@ -83,8 +83,8 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
           _scaffoldKey);
     } catch (e) {
-      _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-          content: "Failed to add into favourites!", color: Colors.red));
+      _scaffoldKey.currentState!.showSnackBar(
+          showSnackBar(content: "Failed to add into favourites!"));
     }
   }
 
@@ -103,8 +103,8 @@ class _DetailScreenState extends State<DetailScreen> {
         _scaffoldKey,
       );
     } catch (e) {
-      _scaffoldKey.currentState!.showSnackBar(
-          showSnackBar(content: "Failed to add into cart!", color: Colors.red));
+      _scaffoldKey.currentState!
+          .showSnackBar(showSnackBar(content: "Failed to add into cart!"));
     }
   }
 

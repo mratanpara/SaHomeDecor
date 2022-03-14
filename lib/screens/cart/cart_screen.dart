@@ -3,6 +3,7 @@ import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/components/custom_rect_button.dart';
+import 'package:decor/components/no_data_found.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/constants/get_counts_data.dart';
 import 'package:decor/constants/refresh_indicator.dart';
@@ -39,23 +40,54 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: _appBar(context),
-      body: _body(size),
-      bottomNavigationBar: _bottomNavigationBar(size, context),
+      body: CommonRefreshIndicator(
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .doc(_currentUser!.uid)
+              .collection('cart')
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return const Text('Something went wrong');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CustomProgressIndicator();
+            }
+
+            final data = snapshot.data?.docs;
+            return data!.isEmpty
+                ? NoDataFound()
+                : Stack(
+                    children: [
+                      _cartLists(data, size),
+                      _bottomNavigationBar(size, context),
+                    ],
+                  );
+          },
+        ),
+      ),
     );
   }
 
-  Padding _bottomNavigationBar(Size size, BuildContext context) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.04,
-          vertical: size.height * 0.01,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _promoCodeTextField(size),
-            _totalAmountText(size, context),
-            _checkOutButton(context),
-          ],
+  Positioned _bottomNavigationBar(Size size, BuildContext context) =>
+      Positioned(
+        width: size.width,
+        bottom: 1,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: size.width * 0.04,
+            vertical: size.height * 0.01,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _totalAmountText(size, context),
+              _checkOutButton(context),
+            ],
+          ),
         ),
       );
 
@@ -84,118 +116,54 @@ class _CartScreenState extends State<CartScreen> {
         ),
       );
 
-  Container _promoCodeTextField(Size size) => Container(
-        decoration: kBoxShadow,
-        child: Card(
-          margin: EdgeInsets.zero,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _textField(size),
-              _promoCodeButton(),
-            ],
-          ),
-        ),
-      );
-
-  Expanded _promoCodeButton() => Expanded(
-        child: CustomRectButton(
-          width: 56,
-          height: 56,
-          icon: CupertinoIcons.forward,
-          onPressed: () {},
-          color: Colors.black,
-          iconColor: Colors.white,
-        ),
-      );
-
-  Expanded _textField(Size size) => Expanded(
-        flex: 6,
-        child: Padding(
-          padding: EdgeInsets.only(left: size.width * 0.01),
-          child: const TextField(
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-              hintText: 'Enter your promo code',
-              hintStyle: TextStyle(color: Colors.grey),
+  ListView _cartLists(List<QueryDocumentSnapshot<Object?>> data, Size size) {
+    return ListView.separated(
+      physics: kPhysics,
+      padding: kSymmetricPaddingHor,
+      itemCount: data.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Dismissible(
+          key: UniqueKey(),
+          background: Container(
+            decoration: kSwipeToDeleteDecoration,
+            padding: kSymmetricPaddingHor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _trashIcon(),
+                _trashIcon(),
+              ],
             ),
           ),
-        ),
-      );
-
-  CommonRefreshIndicator _body(Size size) => CommonRefreshIndicator(
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(_currentUser!.uid)
-              .collection('cart')
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Something went wrong');
+          onDismissed: (direction) async {
+            try {
+              await _databaseService.deleteFromCart(
+                  data[index].id, _scaffoldKey);
+              await getTotalAmount(context, _scaffoldKey);
+              _scaffoldKey.currentState!.showSnackBar(
+                  showSnackBar(content: "${data[index]['name']} deleted !"));
+            } catch (e) {
+              _scaffoldKey.currentState
+                  ?.showSnackBar(showSnackBar(content: 'Failed to delete!'));
             }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CustomProgressIndicator();
-            }
-
-            final data = snapshot.data?.docs;
-            return ListView.separated(
-              physics: kPhysics,
-              padding: kSymmetricPaddingHor,
-              itemCount: data!.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Dismissible(
-                  key: UniqueKey(),
-                  background: Container(
-                    decoration: kSwipeToDeleteDecoration,
-                    padding: kSymmetricPaddingHor,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Icon(
-                          CupertinoIcons.trash_fill,
-                          color: Colors.black,
-                          size: kIconSize,
-                        ),
-                        Icon(
-                          CupertinoIcons.trash_fill,
-                          color: Colors.black,
-                          size: kIconSize,
-                        ),
-                      ],
-                    ),
-                  ),
-                  onDismissed: (direction) async {
-                    try {
-                      await _databaseService.deleteFromCart(
-                          data[index].id, _scaffoldKey);
-                      await getTotalAmount(context, _scaffoldKey);
-                      _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                          content: "${data[index]['name']} deleted !",
-                          color: Colors.red));
-                    } catch (e) {
-                      _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                          content: 'Failed to delete!', color: Colors.red));
-                    }
-                  },
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _image(data, index),
-                      _showData(data, index, context, size),
-                    ],
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-            );
           },
-        ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _image(data, index),
+              _showData(data, index, context, size),
+            ],
+          ),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
+    );
+  }
+
+  Icon _trashIcon() => const Icon(
+        CupertinoIcons.trash_fill,
+        color: Colors.white,
+        size: kIconSize,
       );
 
   Flexible _showData(List<QueryDocumentSnapshot<Object?>> data, int index,
@@ -293,9 +261,8 @@ class _CartScreenState extends State<CartScreen> {
               await _databaseService.deleteFromCart(
                   data[index].id, _scaffoldKey);
               await getTotalAmount(context, _scaffoldKey);
-              _scaffoldKey.currentState!.showSnackBar(showSnackBar(
-                  content: "${data[index]['name']} deleted !",
-                  color: Colors.red));
+              _scaffoldKey.currentState!.showSnackBar(
+                  showSnackBar(content: "${data[index]['name']} deleted !"));
             } catch (e) {
               debugPrint(e.toString());
             }

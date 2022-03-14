@@ -144,8 +144,8 @@ class _GetAllCategoriesDataState extends State<GetAllCategoriesData> {
                 ),
                 widget.scaffoldKey);
           } catch (e) {
-            Scaffold.of(context).showSnackBar(
-                showSnackBar(content: 'Failed to add!', color: Colors.red));
+            Scaffold.of(context)
+                .showSnackBar(showSnackBar(content: 'Failed to add!'));
           }
         },
         icon: const Icon(
@@ -198,8 +198,8 @@ class _GetAllCategoriesDataState extends State<GetAllCategoriesData> {
                   ),
                   widget.scaffoldKey);
             } catch (e) {
-              Scaffold.of(context).showSnackBar(
-                  showSnackBar(content: 'Failed to add!', color: Colors.red));
+              Scaffold.of(context)
+                  .showSnackBar(showSnackBar(content: 'Failed to add!'));
             }
           },
           color: Colors.black38,

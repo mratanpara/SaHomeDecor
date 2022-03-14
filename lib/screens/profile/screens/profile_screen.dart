@@ -12,7 +12,6 @@ import 'package:decor/screens/profile/screens/settings/settings_screen.dart';
 import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:decor/screens/shipping_address/screens/shipping_addresses_screen.dart';
 import 'package:decor/services/auth_services.dart';
-import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,8 +48,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
     } catch (e) {
-      _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-          content: 'Not getting current user details!', color: Colors.red));
+      _scaffoldKey.currentState?.showSnackBar(
+          showSnackBar(content: 'Not getting current user details!'));
     }
   }
 
