@@ -64,19 +64,45 @@ class _OnBoardingState extends State<OnBoarding> {
     );
   }
 
-  CustomButton _getStartedButton(BuildContext context) => CustomButton(
-        label: 'Get Started',
-        onPressed: () async {
-          Navigator.pushNamedAndRemoveUntil(
-              context, LoginScreen.id, (route) => false);
-          final _prefs = await SharedPreferences.getInstance();
-          _prefs.setBool('newToApp', false);
-        },
+  Padding _view1() => Padding(
+        padding: kAllPadding,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _view1Image(),
+              _viewIndicator(),
+              _view1Title(),
+              _view1TextContent(),
+            ],
+          ),
+        ),
       );
-  CustomButton _next(BuildContext context) => CustomButton(
-        label: 'Next',
-        onPressed: () =>
-            _pageController.nextPage(duration: duration, curve: Curves.ease),
+
+  Align _view1Image() => Align(
+        child: Image.network(
+          'https://firebasestorage.googleapis.com/v0/b/sahomedecor-794d8.appspot.com/o/on_boarding%2Fview-1.png?alt=media&token=e748e3e4-e755-49b8-a430-268662e13875',
+          height: 300,
+          width: 300,
+        ),
+        alignment: Alignment.center,
+      );
+
+  Padding _view1Title() => const Padding(
+        padding: kSymmetricPaddingVer,
+        child: Text(
+          'We’ve Got Your Style',
+          style: kOnBoardingTitleTextStyle,
+        ),
+      );
+
+  Padding _view1TextContent() => const Padding(
+        padding: kSymmetricPaddingVer,
+        child: Text(
+          'Your home is a reflection of you. Nail your aesthetic with products our stylists love and recommend',
+          style: kOnBoardingContentTextStyle,
+        ),
       );
 
   Padding _view2() => Padding(
@@ -96,12 +122,18 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
       );
 
-  Padding _view2TextContent() => const Padding(
-        padding: kSymmetricPaddingVer,
-        child: Text(
-          'The best simple place where you discover most wonderful furniture\'s and make your home beautiful',
-          style: kOnBoardingContentTextStyle,
+  Align _view2Image() => Align(
+        child: Image.network(
+          'https://firebasestorage.googleapis.com/v0/b/sahomedecor-794d8.appspot.com/o/on_boarding%2Fview-2.png?alt=media&token=3be375c5-ef62-4724-b617-5555e04f670a',
+          height: 300,
+          width: 300,
         ),
+        alignment: Alignment.center,
+      );
+
+  Text _view2Title1() => const Text(
+        'MAKE YOUR',
+        style: kOnBoardingTitleTextStyle,
       );
 
   Padding _view2Title2() => const Padding(
@@ -112,50 +144,28 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
       );
 
-  Text _view2Title1() => const Text(
-        'MAKE YOUR',
-        style: kOnBoardingTitleTextStyle,
-      );
-
-  Align _view2Image() => Align(
-        child: Image.network(
-          'https://firebasestorage.googleapis.com/v0/b/sahomedecor-794d8.appspot.com/o/on_boarding%2Fview-2.png?alt=media&token=3be375c5-ef62-4724-b617-5555e04f670a',
-          height: 300,
-          width: 300,
-        ),
-        alignment: Alignment.center,
-      );
-
-  Padding _view1() => Padding(
-        padding: kAllPadding,
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _view1Image(),
-              _viewIndicator(),
-              _view1Title(),
-              _view1TextContent(),
-            ],
-          ),
-        ),
-      );
-
-  Padding _view1TextContent() => const Padding(
+  Padding _view2TextContent() => const Padding(
         padding: kSymmetricPaddingVer,
         child: Text(
-          'Your home is a reflection of you. Nail your aesthetic with products our stylists love and recommend',
+          'The best simple place where you discover most wonderful furniture\'s and make your home beautiful',
           style: kOnBoardingContentTextStyle,
         ),
       );
 
-  Padding _view1Title() => const Padding(
-        padding: kSymmetricPaddingVer,
-        child: Text(
-          'We’ve Got Your Style',
-          style: kOnBoardingTitleTextStyle,
-        ),
+  CustomButton _getStartedButton(BuildContext context) => CustomButton(
+        label: 'Get Started',
+        onPressed: () async {
+          Navigator.pushNamedAndRemoveUntil(
+              context, LoginScreen.id, (route) => false);
+          final _prefs = await SharedPreferences.getInstance();
+          _prefs.setBool('newToApp', false);
+        },
+      );
+
+  CustomButton _next(BuildContext context) => CustomButton(
+        label: 'Next',
+        onPressed: () =>
+            _pageController.nextPage(duration: duration, curve: Curves.ease),
       );
 
   Padding _viewIndicator() => Padding(
@@ -164,14 +174,5 @@ class _OnBoardingState extends State<OnBoarding> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: _buildPageIndicator(),
         ),
-      );
-
-  Align _view1Image() => Align(
-        child: Image.network(
-          'https://firebasestorage.googleapis.com/v0/b/sahomedecor-794d8.appspot.com/o/on_boarding%2Fview-1.png?alt=media&token=e748e3e4-e755-49b8-a430-268662e13875',
-          height: 300,
-          width: 300,
-        ),
-        alignment: Alignment.center,
       );
 }

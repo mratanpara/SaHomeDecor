@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/get_counts_data.dart';
+import 'package:decor/constants/params_constants.dart';
+import 'package:decor/utils/methods/get_address_count.dart';
 import 'package:decor/screens/shipping_address/components/add_sipping_address.dart';
 import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,19 +33,12 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
     );
   }
 
-  FloatingActionButton _addShippingAddressFAB(BuildContext context) =>
-      FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddShippingAddress(data: null)));
-        },
-        backgroundColor: Colors.white,
-        child: const Icon(
-          CupertinoIcons.add,
-          color: Colors.black,
-        ),
+  CustomAppBar _appbar(BuildContext context) => CustomAppBar(
+        title: 'Shipping Address',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
       );
 
   StreamBuilder<QuerySnapshot<Object?>> _shippingAddressStreamBuilder() =>
@@ -87,6 +81,25 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
         ],
       );
 
+  Row _setPrimaryAddressCheckBox(
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      Row(
+        children: [
+          Checkbox(
+            activeColor: Colors.black,
+            value: data[index][paramIsPrimary],
+            onChanged: (value) {
+              _databaseService.setPrimaryShippingAddress(
+                  doc: data[index].id, isPrimary: value);
+            },
+          ),
+          const Text(
+            'Use as the shipping address',
+            style: TextStyle(fontSize: 22, color: Colors.grey),
+          ),
+        ],
+      );
+
   Container _card(List<QueryDocumentSnapshot<Object?>> data, int index,
           BuildContext context) =>
       Container(
@@ -111,6 +124,57 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
         ),
       );
 
+  Row _fullNameAndEditDeleteButton(List<QueryDocumentSnapshot<Object?>> data,
+          int index, BuildContext context) =>
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _fullNameText(data, index),
+          _editAndDeleteButton(context, data, index),
+        ],
+      );
+
+  Text _fullNameText(List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      Text(data[index][paramFullName],
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold));
+
+  Row _editAndDeleteButton(BuildContext context,
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      Row(children: [
+        _editButton(context, data, index),
+        _deleteButton(context, data, index),
+      ]);
+
+  IconButton _editButton(BuildContext context,
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      IconButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddShippingAddress(
+                        data: data[index],
+                      )));
+        },
+        icon: const Icon(
+          Icons.edit,
+          color: Colors.lightGreen,
+        ),
+      );
+
+  IconButton _deleteButton(BuildContext context,
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      IconButton(
+        onPressed: () async {
+          await _databaseService.deleteShippingAddress(data[index].id);
+          await getAddressCount(context, _scaffoldKey);
+        },
+        icon: const Icon(
+          Icons.delete,
+          color: Colors.redAccent,
+        ),
+      );
+
   Padding _address(List<QueryDocumentSnapshot<Object?>> data, int index) =>
       Padding(
         padding: kSymmetricPaddingVer,
@@ -121,59 +185,6 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
             const Divider(thickness: 1),
             _phoneNumberCountry(data, index),
           ],
-        ),
-      );
-
-  Row _phoneNumberCountry(
-          List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _phoneNumber(data, index),
-          Text(
-            '${data[index]['country']}',
-            style: kShippingAddTextStyle,
-          ),
-        ],
-      );
-
-  Row _phoneNumber(List<QueryDocumentSnapshot<Object?>> data, int index) => Row(
-        children: [
-          const Icon(
-            CupertinoIcons.phone_fill,
-            color: Colors.grey,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            '${data[index]['phone']}',
-            style: kShippingAddTextStyle,
-          ),
-        ],
-      );
-
-  Align _ciyStateZipcode(
-          List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: kSymmetricPaddingVer,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                CupertinoIcons.building_2_fill,
-                color: Colors.grey,
-              ),
-              const SizedBox(width: 10),
-              Flexible(
-                child: Text(
-                  '${data[index]['city']}, ${data[index]['state']} ${data[index]['zipcode']}'
-                      .toUpperCase(),
-                  style: kShippingAddTextStyle,
-                ),
-              ),
-            ],
-          ),
         ),
       );
 
@@ -193,7 +204,7 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
               const SizedBox(width: 10),
               Flexible(
                 child: Text(
-                  '${data[index]['address']}',
+                  '${data[index][paramAddress]}',
                   style: kShippingAddTextStyle,
                 ),
               ),
@@ -202,82 +213,80 @@ class _ShippingAddressesState extends State<ShippingAddresses> {
         ),
       );
 
-  Row _fullNameAndEditDeleteButton(List<QueryDocumentSnapshot<Object?>> data,
-          int index, BuildContext context) =>
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _fullNameText(data, index),
-          _editAndDeleteButton(context, data, index),
-        ],
-      );
-
-  Row _editAndDeleteButton(BuildContext context,
+  Align _ciyStateZipcode(
           List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      Row(children: [
-        _editButton(context, data, index),
-        _deleteButton(context, data, index),
-      ]);
-
-  IconButton _deleteButton(BuildContext context,
-          List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      IconButton(
-        onPressed: () async {
-          await _databaseService.deleteShippingAddress(data[index].id);
-          Navigator.pop(context);
-          await getAddressCount(context, _scaffoldKey);
-        },
-        icon: const Icon(
-          Icons.delete,
-          color: Colors.redAccent,
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: kSymmetricPaddingVer,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                CupertinoIcons.building_2_fill,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  '${data[index][paramCity]}, ${data[index][paramState]} ${data[index][paramZipcode]}'
+                      .toUpperCase(),
+                  style: kShippingAddTextStyle,
+                ),
+              ),
+            ],
+          ),
         ),
       );
 
-  IconButton _editButton(BuildContext context,
+  Row _phoneNumberCountry(
           List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      IconButton(
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _phoneNumber(data, index),
+          Row(
+            children: [
+              const Icon(
+                CupertinoIcons.flag_fill,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 10),
+              Text(
+                '${data[index][paramCountry]}',
+                style: kShippingAddTextStyle,
+              ),
+            ],
+          )
+        ],
+      );
+
+  Row _phoneNumber(List<QueryDocumentSnapshot<Object?>> data, int index) => Row(
+        children: [
+          const Icon(
+            CupertinoIcons.phone_fill,
+            color: Colors.grey,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            '${data[index][paramPhone]}',
+            style: kShippingAddTextStyle,
+          ),
+        ],
+      );
+
+  FloatingActionButton _addShippingAddressFAB(BuildContext context) =>
+      FloatingActionButton(
         onPressed: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AddShippingAddress(
-                        data: data[index],
-                      )));
+                  builder: (context) => AddShippingAddress(data: null)));
         },
-        icon: const Icon(
-          Icons.edit,
-          color: Colors.lightGreen,
+        backgroundColor: Colors.white,
+        child: const Icon(
+          CupertinoIcons.add,
+          color: Colors.black,
         ),
-      );
-
-  Text _fullNameText(List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      Text(data[index]['fullName'],
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold));
-
-  Row _setPrimaryAddressCheckBox(
-          List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      Row(
-        children: [
-          Checkbox(
-            activeColor: Colors.black,
-            value: data[index]['isPrimary'],
-            onChanged: (value) {
-              _databaseService.setPrimaryShippingAddress(
-                  doc: data[index].id, isPrimary: value);
-            },
-          ),
-          const Text(
-            'Use as the shipping address',
-            style: TextStyle(fontSize: 22, color: Colors.grey),
-          ),
-        ],
-      );
-
-  CustomAppBar _appbar(BuildContext context) => CustomAppBar(
-        title: 'Shipping Address',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
       );
 }

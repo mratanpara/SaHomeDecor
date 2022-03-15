@@ -1,5 +1,6 @@
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
+import 'package:decor/constants/asset_constants.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/screens/auth/components/custom_text_button.dart';
 import 'package:decor/components/custom_text_field.dart';
@@ -8,6 +9,7 @@ import 'package:decor/screens/auth/forgot_password/forgot_password.dart';
 import 'package:decor/screens/auth/signup/signup_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,6 +78,28 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Padding _image(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: size.width * 0.01, horizontal: size.height * 0.02),
+        child: Image.asset(kSignUpAndSignInLogoImage),
+      );
+
+  Padding _firstHeading(Size size) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.height * 0.02),
+        child: const Text(
+          'Hello !',
+          style: kFirstHeadingTextStyle,
+        ),
+      );
+
+  Padding _secondHeading(Size size) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.height * 0.02),
+        child: Text(
+          'welcome back'.toUpperCase(),
+          style: kSecondHeadingTextStyle,
+        ),
+      );
+
   Padding _cardWithShadow(Size size, BuildContext context) => Padding(
         padding: EdgeInsets.symmetric(
             vertical: size.width * 0.01, horizontal: size.height * 0.01),
@@ -106,18 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-  CustomTextField _passwordTextField() => CustomTextField(
-        label: 'Password',
-        hintText: 'Enter Password',
-        controller: _passwordController,
-        focusNode: _passwordFocus,
-        type: TextInputType.visiblePassword,
-        validator: validatePassword,
-        onSubmitted: (term) {
-          _passwordFocus.unfocus();
-        },
-      );
-
   CustomTextField _emailTextField(BuildContext context) => CustomTextField(
         label: 'Email',
         hintText: 'Enter Email',
@@ -130,17 +142,27 @@ class _LoginScreenState extends State<LoginScreen> {
         },
       );
 
-  Padding _facebookButton(Size size) => Padding(
-        padding: EdgeInsets.symmetric(vertical: size.width * 0.01),
-        child: FacebookSigninButton(
-            label: 'Sign in with Facebook', scaffoldKey: _scaffoldKey),
+  CustomTextField _passwordTextField() => CustomTextField(
+        label: 'Password',
+        hintText: 'Enter Password',
+        controller: _passwordController,
+        focusNode: _passwordFocus,
+        type: TextInputType.visiblePassword,
+        validator: validatePassword,
+        onSubmitted: (term) {
+          _passwordFocus.unfocus();
+        },
       );
 
-  void _toggleSpinner() {
-    setState(() {
-      isPressed = !isPressed;
-    });
-  }
+  Align _forgotPassword(Size size) => Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: size.width * 0.01),
+          child: CustomTextButton(
+              text: 'Forgot Password?',
+              onPressed: () => Navigator.pushNamed(context, ForgotPassword.id)),
+        ),
+      );
 
   Padding _loginButton(Size size) => Padding(
         padding: EdgeInsets.symmetric(vertical: size.width * 0.01),
@@ -174,16 +196,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
       );
 
-  Align _forgotPassword(Size size) => Align(
-        alignment: Alignment.topLeft,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: size.width * 0.01),
-          child: CustomTextButton(
-              text: 'Forgot Password?',
-              onPressed: () => Navigator.pushNamed(context, ForgotPassword.id)),
-        ),
-      );
-
   Padding _richTextButton(BuildContext context, Size size) => Padding(
         padding: EdgeInsets.symmetric(vertical: size.width * 0.02),
         child: GestureDetector(
@@ -206,25 +218,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-  Padding _secondHeading(Size size) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.height * 0.02),
-        child: Text(
-          'welcome back'.toUpperCase(),
-          style: kSecondHeadingTextStyle,
-        ),
+  Padding _facebookButton(Size size) => Padding(
+        padding: EdgeInsets.symmetric(vertical: size.width * 0.01),
+        child: FacebookSigninButton(
+            label: 'Sign in with Facebook', scaffoldKey: _scaffoldKey),
       );
 
-  Padding _firstHeading(Size size) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.height * 0.02),
-        child: const Text(
-          'Hello !',
-          style: kFirstHeadingTextStyle,
-        ),
-      );
-
-  Padding _image(Size size) => Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: size.width * 0.01, horizontal: size.height * 0.02),
-        child: Image.asset('assets/images/img.png'),
-      );
+  void _toggleSpinner() {
+    setState(() {
+      isPressed = !isPressed;
+    });
+  }
 }

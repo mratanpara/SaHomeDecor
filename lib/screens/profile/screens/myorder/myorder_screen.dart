@@ -1,7 +1,5 @@
 import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_button.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/screens/profile/screens/myorder/screens/cancelled_orders_screen.dart';
 import 'package:decor/screens/profile/screens/myorder/screens/delivered_orders_screen.dart';
 import 'package:decor/screens/profile/screens/myorder/screens/processing_orders_screen.dart';
@@ -28,7 +26,6 @@ class _OrderScreenState extends State<OrderScreen>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: _appBar(context),
       body: Column(
@@ -51,6 +48,14 @@ class _OrderScreenState extends State<OrderScreen>
     );
   }
 
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'My Order',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
+      );
+
   TabBar _tabBar() => TabBar(
         labelColor: Colors.black,
         labelStyle: kOrderTabTextStyle,
@@ -70,13 +75,5 @@ class _OrderScreenState extends State<OrderScreen>
             text: 'Cancelled',
           ),
         ],
-      );
-
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        title: 'My Order',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
       );
 }

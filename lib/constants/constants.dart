@@ -1,3 +1,4 @@
+import 'package:decor/constants/params_constants.dart';
 import 'package:flutter/material.dart';
 
 //icon size
@@ -28,23 +29,16 @@ const kForgotPasswordTextStyle = TextStyle(
   fontSize: 20,
 );
 
-//first heading textstyle
+//first heading textStyle
 const kFirstHeadingTextStyle = TextStyle(
   fontSize: 26,
   color: Colors.grey,
 );
 
-//second heading textstyle
+//second heading textStyle
 const kSecondHeadingTextStyle = TextStyle(
   fontSize: 26,
   fontWeight: FontWeight.bold,
-);
-
-//Tab indicator
-BoxDecoration kTabIndicatorDecoration = BoxDecoration(
-  color: Colors.black,
-  borderRadius: BorderRadius.circular(14),
-  shape: BoxShape.rectangle,
 );
 
 //app bar text style
@@ -56,21 +50,6 @@ const kSecondTitleTextStyle = TextStyle(
   fontSize: 20,
   letterSpacing: 1,
   fontWeight: FontWeight.bold,
-);
-
-//box shadow
-BoxDecoration kBoxShadow = BoxDecoration(
-  boxShadow: [
-    BoxShadow(
-      color: Colors.grey.withOpacity(.2),
-      blurRadius: 20.0, // soften the shadow
-      spreadRadius: 0.0, //extend the shadow
-      offset: const Offset(
-        2.0, // Move to right 10  horizontally
-        2.0, // Move to bottom 10 Vertically
-      ),
-    )
-  ],
 );
 
 //gridview text style
@@ -106,9 +85,7 @@ const kOrderBoldTextStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.w600,
 );
-
 const kOrderTextStyle = TextStyle(fontSize: 18, color: Colors.grey);
-
 const kOrderTabTextStyle = TextStyle(
   fontSize: 18,
   fontWeight: FontWeight.w600,
@@ -122,7 +99,6 @@ const kSettingsHeadingTextStyle = TextStyle(
 );
 
 //welcome page
-
 const kWelcomeFirstHeading = TextStyle(
   fontSize: 24,
   letterSpacing: 2,
@@ -144,7 +120,6 @@ var kWelcomeContentStyle = TextStyle(
 );
 
 //onBoarding
-
 const kOnBoardingTitleTextStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.bold,
@@ -157,35 +132,54 @@ const kOnBoardingContentTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
+//shipping address
+const kShippingAddTextStyle = TextStyle(fontSize: 18, color: Colors.grey);
+
 //physics
 const kPhysics = BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
 
-//change the focus of text field
-void fieldFocusChange(
-    BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
-  currentFocus.unfocus();
-  FocusScope.of(context).requestFocus(nextFocus);
-}
+// all categories collection list
+final List<String> allCategoriesCollectionList = [
+  paramLampsCollection,
+  paramStandsCollection,
+  paramDesksCollection,
+  paramArmchairCollection,
+  paramBedsCollection,
+  paramChairsCollection,
+  paramSofasCollection,
+];
 
-SnackBar showSnackBar({required String content}) {
-  return SnackBar(
-    backgroundColor: Colors.black,
-    content: Text(content),
-    duration: const Duration(seconds: 1),
-    behavior: SnackBarBehavior.floating,
-  );
-}
+/* box decoration */
 
-//delete Decoration
-const kSwipeToDeleteDecoration = BoxDecoration(
-  color: Colors.red,
-  borderRadius: BorderRadius.all(Radius.circular(10)),
+//box shadow
+BoxDecoration kBoxShadow = BoxDecoration(
+  boxShadow: [
+    BoxShadow(
+      color: Colors.grey.withOpacity(.2),
+      blurRadius: 20.0, // soften the shadow
+      spreadRadius: 0.0, //extend the shadow
+      offset: const Offset(
+        2.0, // Move to right 10  horizontally
+        2.0, // Move to bottom 10 Vertically
+      ),
+    )
+  ],
 );
 
-const kSwipeToAddDecoration = BoxDecoration(
+//Tab indicator
+BoxDecoration kTabIndicatorDecoration = BoxDecoration(
+  color: Colors.black,
+  borderRadius: BorderRadius.circular(14),
+  shape: BoxShape.rectangle,
+);
+
+BoxDecoration kSwipeToAddDecoration = const BoxDecoration(
   color: Colors.green,
   borderRadius: BorderRadius.all(Radius.circular(10)),
 );
 
-//shipping address
-const kShippingAddTextStyle = TextStyle(fontSize: 18, color: Colors.grey);
+//delete Decoration
+BoxDecoration kSwipeToDeleteDecoration = const BoxDecoration(
+  color: Colors.red,
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+);

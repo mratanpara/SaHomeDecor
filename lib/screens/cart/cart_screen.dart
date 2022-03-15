@@ -5,11 +5,13 @@ import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/components/custom_rect_button.dart';
 import 'package:decor/components/no_data_found.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/get_counts_data.dart';
-import 'package:decor/constants/refresh_indicator.dart';
-import 'package:decor/providers/common_provider.dart';
+import 'package:decor/constants/params_constants.dart';
+import 'package:decor/utils/methods/get_total_amount.dart';
+import 'package:decor/components/refresh_indicator.dart';
+import 'package:decor/providers/amount_provider.dart';
 import 'package:decor/screens/success/success_screen.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +42,19 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: _appBar(context),
-      body: CommonRefreshIndicator(
+      body: _body(size),
+    );
+  }
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        leadingIcon: CupertinoIcons.back,
+        title: 'Cart',
+        actionIcon: null,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
+      );
+
+  CommonRefreshIndicator _body(Size size) => CommonRefreshIndicator(
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('users')
@@ -63,56 +77,10 @@ class _CartScreenState extends State<CartScreen> {
                 : Stack(
                     children: [
                       _cartLists(data, size),
-                      _bottomNavigationBar(size, context),
+                      _totalAmountAndCheckOutButton(size, context),
                     ],
                   );
           },
-        ),
-      ),
-    );
-  }
-
-  Positioned _bottomNavigationBar(Size size, BuildContext context) =>
-      Positioned(
-        width: size.width,
-        bottom: 1,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: size.width * 0.04,
-            vertical: size.height * 0.01,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _totalAmountText(size, context),
-              _checkOutButton(context),
-            ],
-          ),
-        ),
-      );
-
-  CustomButton _checkOutButton(BuildContext context) => CustomButton(
-        label: 'Check out',
-        onPressed: () {
-          Navigator.pushReplacementNamed(context, SuccessScreen.id);
-        },
-      );
-
-  Padding _totalAmountText(Size size, BuildContext context) => Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: size.height * 0.02, horizontal: size.width * 0.01),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Total:',
-              style: TextStyle(color: Colors.grey, fontSize: 22),
-            ),
-            Text(
-              '\$ ${Provider.of<CommonProvider>(context).getTotalAmount}',
-              style: TextStyle(fontSize: 22),
-            ),
-          ],
         ),
       );
 
@@ -166,6 +134,17 @@ class _CartScreenState extends State<CartScreen> {
         size: kIconSize,
       );
 
+  ClipRRect _image(List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.network(
+          data[index][paramUrl],
+          fit: BoxFit.cover,
+          height: 110,
+          width: 110,
+        ),
+      );
+
   Flexible _showData(List<QueryDocumentSnapshot<Object?>> data, int index,
           BuildContext context, Size size) =>
       Flexible(
@@ -175,6 +154,37 @@ class _CartScreenState extends State<CartScreen> {
             _categoryListTile(data, index, context),
             _incrementDecrementQuantity(data, index, context, size),
           ],
+        ),
+      );
+
+  ListTile _categoryListTile(List<QueryDocumentSnapshot<Object?>> data,
+          int index, BuildContext context) =>
+      ListTile(
+        dense: true,
+        title: Text(
+          data[index][paramName],
+          style: kViewTitleStyle,
+        ),
+        subtitle: Text(
+          '\$ ${data[index][paramPrice]}',
+          style: kViewSubTitleStyle,
+        ),
+        trailing: IconButton(
+          onPressed: () async {
+            try {
+              await _databaseService.deleteFromCart(
+                  data[index].id, _scaffoldKey);
+              await getTotalAmount(context, _scaffoldKey);
+              _scaffoldKey.currentState!.showSnackBar(
+                  showSnackBar(content: "${data[index][paramName]} deleted !"));
+            } catch (e) {
+              debugPrint(e.toString());
+            }
+          },
+          icon: const Icon(
+            CupertinoIcons.clear_circled,
+            size: 28,
+          ),
         ),
       );
 
@@ -192,12 +202,31 @@ class _CartScreenState extends State<CartScreen> {
         ),
       );
 
+  CustomRectButton _incrementButton(List<QueryDocumentSnapshot<Object?>> data,
+          int index, BuildContext context) =>
+      CustomRectButton(
+        width: 38,
+        height: 38,
+        icon: CupertinoIcons.plus,
+        onPressed: () async {
+          try {
+            await _databaseService.increaseItemCount(
+                data[index].id, data[index][paramItemCount]);
+            getTotalAmount(context, _scaffoldKey);
+          } catch (e) {
+            debugPrint(e.toString());
+          }
+        },
+        color: Colors.white,
+        iconColor: Colors.black,
+      );
+
   Padding _quantityText(
           Size size, List<QueryDocumentSnapshot<Object?>> data, int index) =>
       Padding(
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
         child: Text(
-          data[index]['itemCount'].toString(),
+          data[index][paramItemCount].toString(),
           style: const TextStyle(
             color: Colors.black,
             fontSize: kNormalFontSize,
@@ -214,7 +243,7 @@ class _CartScreenState extends State<CartScreen> {
         onPressed: () async {
           try {
             await _databaseService.decreaseItemCount(
-                data[index].id, data[index]['itemCount'], _scaffoldKey);
+                data[index].id, data[index][paramItemCount], _scaffoldKey);
             getTotalAmount(context, _scaffoldKey);
           } catch (e) {
             debugPrint(e.toString());
@@ -224,72 +253,47 @@ class _CartScreenState extends State<CartScreen> {
         iconColor: Colors.black,
       );
 
-  CustomRectButton _incrementButton(List<QueryDocumentSnapshot<Object?>> data,
-          int index, BuildContext context) =>
-      CustomRectButton(
-        width: 38,
-        height: 38,
-        icon: CupertinoIcons.plus,
-        onPressed: () async {
-          try {
-            await _databaseService.increaseItemCount(
-                data[index].id, data[index]['itemCount']);
-            getTotalAmount(context, _scaffoldKey);
-          } catch (e) {
-            debugPrint(e.toString());
-          }
-        },
-        color: Colors.white,
-        iconColor: Colors.black,
-      );
-
-  ListTile _categoryListTile(List<QueryDocumentSnapshot<Object?>> data,
-          int index, BuildContext context) =>
-      ListTile(
-        dense: true,
-        title: Text(
-          data[index]['name'],
-          style: kViewTitleStyle,
-        ),
-        subtitle: Text(
-          '\$ ${data[index]['price']}',
-          style: kViewSubTitleStyle,
-        ),
-        trailing: IconButton(
-          onPressed: () async {
-            try {
-              await _databaseService.deleteFromCart(
-                  data[index].id, _scaffoldKey);
-              await getTotalAmount(context, _scaffoldKey);
-              _scaffoldKey.currentState!.showSnackBar(
-                  showSnackBar(content: "${data[index]['name']} deleted !"));
-            } catch (e) {
-              debugPrint(e.toString());
-            }
-          },
-          icon: const Icon(
-            CupertinoIcons.clear_circled,
-            size: 28,
+  Positioned _totalAmountAndCheckOutButton(Size size, BuildContext context) =>
+      Positioned(
+        width: size.width,
+        bottom: 1,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: size.width * 0.04,
+            vertical: size.height * 0.01,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _totalAmountText(size, context),
+              _checkOutButton(context),
+            ],
           ),
         ),
       );
 
-  ClipRRect _image(List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          data[index]['url'],
-          fit: BoxFit.cover,
-          height: 110,
-          width: 110,
+  Padding _totalAmountText(Size size, BuildContext context) => Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: size.height * 0.02, horizontal: size.width * 0.01),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Total:',
+              style: TextStyle(color: Colors.grey, fontSize: 22),
+            ),
+            Text(
+              '\$ ${Provider.of<AmountProvider>(context).getTotalAmount}',
+              style: const TextStyle(fontSize: 22),
+            ),
+          ],
         ),
       );
 
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        leadingIcon: CupertinoIcons.back,
-        title: 'Cart',
-        actionIcon: null,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
+  CustomButton _checkOutButton(BuildContext context) => CustomButton(
+        label: 'Check out',
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, SuccessScreen.id);
+        },
       );
 }

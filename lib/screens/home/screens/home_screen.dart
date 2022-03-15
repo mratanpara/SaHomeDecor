@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/refresh_indicator.dart';
+import 'package:decor/constants/params_constants.dart';
 import 'package:decor/screens/cart/cart_screen.dart';
 import 'package:decor/screens/home/components/all_categories_data.dart';
 import 'package:decor/screens/home/components/categories_data.dart';
@@ -43,41 +42,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Column _homeScreenData(Size size) => Column(
-        children: [
-          _categoryTabs(),
-          _categoryTabsAndData(size),
-        ],
-      );
-
-  Flexible _categoryTabsAndData(Size size) => Flexible(
-        child: SizedBox(
-          height: size.height,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // _getAllCategories(size),
-                GetAllCategoriesData(size: size, scaffoldKey: _scaffoldKey),
-                CategoriesData(
-                    size: size,
-                    collection: 'chairs',
-                    scaffoldKey: _scaffoldKey),
-                CategoriesData(
-                    size: size, collection: 'sofas', scaffoldKey: _scaffoldKey),
-                CategoriesData(
-                    size: size, collection: 'beds', scaffoldKey: _scaffoldKey),
-                CategoriesData(
-                    size: size,
-                    collection: 'armchairs',
-                    scaffoldKey: _scaffoldKey),
-              ],
-            ),
-          ),
-        ),
-      );
-
   CustomAppBar _appBar(BuildContext context) => CustomAppBar(
         title: 'Beautiful',
         actionIcon: CupertinoIcons.cart,
@@ -87,6 +51,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         },
         onLeadingIconPressed: () =>
             Navigator.pushNamed(context, SearchScreen.id),
+      );
+
+  Column _homeScreenData(Size size) => Column(
+        children: [
+          _categoryTabs(),
+          _categoryTabsAndData(size),
+        ],
       );
 
   TabBar _categoryTabs() => TabBar(
@@ -101,20 +72,51 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           Tab(
             icon: Icon(FontAwesomeIcons.chair, size: kIconSize),
-            text: 'Chair',
+            text: paramChairsCollection,
           ),
           Tab(
             icon: Icon(FontAwesomeIcons.couch, size: kIconSize),
-            text: 'Sofa',
+            text: paramSofasCollection,
           ),
           Tab(
             icon: Icon(Icons.bed, size: kIconSize),
-            text: 'Bed',
+            text: paramBedsCollection,
           ),
           Tab(
             icon: Icon(Icons.chair, size: kIconSize),
-            text: 'Armchair',
+            text: paramArmchairCollection,
           ),
         ],
+      );
+
+  Flexible _categoryTabsAndData(Size size) => Flexible(
+        child: SizedBox(
+          height: size.height,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                GetAllCategoriesData(size: size, scaffoldKey: _scaffoldKey),
+                CategoriesData(
+                    size: size,
+                    collection: paramChairsCollection,
+                    scaffoldKey: _scaffoldKey),
+                CategoriesData(
+                    size: size,
+                    collection: paramSofasCollection,
+                    scaffoldKey: _scaffoldKey),
+                CategoriesData(
+                    size: size,
+                    collection: paramBedsCollection,
+                    scaffoldKey: _scaffoldKey),
+                CategoriesData(
+                    size: size,
+                    collection: paramArmchairCollection,
+                    scaffoldKey: _scaffoldKey),
+              ],
+            ),
+          ),
+        ),
       );
 }

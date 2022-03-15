@@ -1,5 +1,6 @@
 import 'package:decor/constants/constants.dart';
-import 'package:decor/providers/common_provider.dart';
+import 'package:decor/providers/amount_provider.dart';
+import 'package:decor/providers/navigation_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<CommonProvider>(
+    return Consumer<NavigationProvider>(
       builder: (context, selectedIndex, child) {
         return BottomNavigationBar(
           items: <BottomNavigationBarItem>[
@@ -41,18 +42,11 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     );
   }
 
-  BottomNavigationBarItem _accountNavigationBarItem() =>
+  BottomNavigationBarItem _homeNavigationBarItem() =>
       const BottomNavigationBarItem(
-        activeIcon: Icon(CupertinoIcons.person_fill),
-        icon: Icon(CupertinoIcons.person),
-        label: 'Account',
-      );
-
-  BottomNavigationBarItem _notificationNavigationBarItem() =>
-      const BottomNavigationBarItem(
-        activeIcon: Icon(CupertinoIcons.bell_fill),
-        icon: Icon(CupertinoIcons.bell),
-        label: 'Notification',
+        activeIcon: Icon(CupertinoIcons.house_fill),
+        icon: Icon(CupertinoIcons.house),
+        label: 'Home',
       );
 
   BottomNavigationBarItem _favouritesNavigationBarItem() =>
@@ -62,10 +56,17 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         label: 'Favourites',
       );
 
-  BottomNavigationBarItem _homeNavigationBarItem() =>
+  BottomNavigationBarItem _notificationNavigationBarItem() =>
       const BottomNavigationBarItem(
-        activeIcon: Icon(CupertinoIcons.house_fill),
-        icon: Icon(CupertinoIcons.house),
-        label: 'Home',
+        activeIcon: Icon(CupertinoIcons.bell_fill),
+        icon: Icon(CupertinoIcons.bell),
+        label: 'Notification',
+      );
+
+  BottomNavigationBarItem _accountNavigationBarItem() =>
+      const BottomNavigationBarItem(
+        activeIcon: Icon(CupertinoIcons.person_fill),
+        icon: Icon(CupertinoIcons.person),
+        label: 'Account',
       );
 }

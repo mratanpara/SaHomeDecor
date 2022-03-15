@@ -1,8 +1,10 @@
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_rect_button.dart';
 import 'package:decor/constants/constants.dart';
+import 'package:decor/constants/params_constants.dart';
 import 'package:decor/models/category_model.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -35,79 +37,6 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Padding _bottomButtons(Size size) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.1,
-          vertical: size.height * 0.01,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _favButton(),
-            SizedBox(width: size.width * 0.025),
-            _addToCartButton(),
-          ],
-        ),
-      );
-
-  Expanded _addToCartButton() => Expanded(
-        flex: 6,
-        child: CustomButton(
-          label: 'Add to cart',
-          onPressed: onAddToCartPressed,
-        ),
-      );
-
-  Expanded _favButton() => Expanded(
-        child: CustomRectButton(
-          width: 58,
-          height: 58,
-          icon: CupertinoIcons.heart,
-          onPressed: onFavPressed,
-          color: Colors.white,
-          iconColor: Colors.black,
-        ),
-      );
-
-  void onFavPressed() async {
-    try {
-      await _databaseService.addToFavourites(
-          Categories(
-            name: widget.data['name'],
-            url: widget.data['url'],
-            desc: widget.data['desc'],
-            star: widget.data['star'].toString(),
-            category: widget.data['category'],
-            price: widget.data['price'].toString(),
-            itemCount: 1,
-          ),
-          _scaffoldKey);
-    } catch (e) {
-      _scaffoldKey.currentState!.showSnackBar(
-          showSnackBar(content: "Failed to add into favourites!"));
-    }
-  }
-
-  void onAddToCartPressed() async {
-    try {
-      await _databaseService.addToCart(
-        Categories(
-          name: widget.data['name'],
-          url: widget.data['url'],
-          desc: widget.data['desc'],
-          star: widget.data['star'].toString(),
-          category: widget.data['category'],
-          price: widget.data['price'].toString(),
-          itemCount: 1,
-        ),
-        _scaffoldKey,
-      );
-    } catch (e) {
-      _scaffoldKey.currentState!
-          .showSnackBar(showSnackBar(content: "Failed to add into cart!"));
-    }
-  }
-
   Column _column(Size size, BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -119,74 +48,6 @@ class _DetailScreenState extends State<DetailScreen> {
         ],
       );
 
-  Padding _desc(Size size) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.1,
-          vertical: size.height * 0.01,
-        ),
-        child: Text(
-          widget.data['desc'],
-          style: const TextStyle(
-            fontSize: kNormalFontSize,
-            color: Colors.grey,
-          ),
-        ),
-      );
-
-  Padding _reviewsAndRating(Size size) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.1,
-          vertical: size.height * 0.005,
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              CupertinoIcons.star_fill,
-              color: Colors.yellow,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
-              child: Text(
-                widget.data['star'].toString(),
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: kNormalFontSize,
-                ),
-              ),
-            ),
-            const Text(
-              '(50 Reviews)',
-              style: TextStyle(color: Colors.grey),
-            ),
-          ],
-        ),
-      );
-
-  Padding _price(Size size) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.1,
-          vertical: size.height * 0.005,
-        ),
-        child: Text(
-          '\$ ${widget.data['price'].toString()}',
-          style: const TextStyle(fontSize: 24, color: Colors.grey),
-        ),
-      );
-
-  Padding _nameText(Size size) => Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: size.width * 0.1,
-          vertical: size.height * 0.01,
-        ),
-        child: Text(
-          widget.data['name'],
-          style: const TextStyle(
-            fontSize: 24,
-            color: Colors.black,
-          ),
-        ),
-      );
-
   Padding _imageWithBackButton(Size size, BuildContext context) => Padding(
         padding: EdgeInsets.only(bottom: size.height * 0.01),
         child: Stack(
@@ -194,6 +55,20 @@ class _DetailScreenState extends State<DetailScreen> {
             _image(size),
             _backButton(size, context),
           ],
+        ),
+      );
+
+  Align _image(Size size) => Align(
+        alignment: Alignment.topRight,
+        child: ClipRRect(
+          borderRadius:
+              const BorderRadius.only(bottomLeft: Radius.circular(80)),
+          child: Image.network(
+            widget.data[paramUrl],
+            fit: BoxFit.fill,
+            height: size.height * 0.65,
+            width: size.width * 0.85,
+          ),
         ),
       );
 
@@ -216,17 +91,144 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
       );
 
-  Align _image(Size size) => Align(
-        alignment: Alignment.topRight,
-        child: ClipRRect(
-          borderRadius:
-              const BorderRadius.only(bottomLeft: Radius.circular(80)),
-          child: Image.asset(
-            widget.data['url'],
-            fit: BoxFit.fill,
-            height: size.height * 0.65,
-            width: size.width * 0.85,
+  Padding _nameText(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.01,
+        ),
+        child: Text(
+          widget.data[paramName],
+          style: const TextStyle(
+            fontSize: 24,
+            color: Colors.black,
           ),
         ),
       );
+
+  Padding _price(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.005,
+        ),
+        child: Text(
+          '\$ ${widget.data[paramPrice].toString()}',
+          style: const TextStyle(fontSize: 24, color: Colors.grey),
+        ),
+      );
+
+  Padding _reviewsAndRating(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.005,
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              CupertinoIcons.star_fill,
+              color: Colors.yellow,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
+              child: Text(
+                widget.data[paramStar].toString(),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: kNormalFontSize,
+                ),
+              ),
+            ),
+            const Text(
+              '(50 Reviews)',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+
+  Padding _desc(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.01,
+        ),
+        child: Text(
+          widget.data[paramDesc],
+          style: const TextStyle(
+            fontSize: kNormalFontSize,
+            color: Colors.grey,
+          ),
+        ),
+      );
+
+  Padding _bottomButtons(Size size) => Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.1,
+          vertical: size.height * 0.01,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _favButton(),
+            SizedBox(width: size.width * 0.025),
+            _addToCartButton(),
+          ],
+        ),
+      );
+
+  Expanded _favButton() => Expanded(
+        child: CustomRectButton(
+          width: 58,
+          height: 58,
+          icon: CupertinoIcons.heart,
+          onPressed: onFavPressed,
+          color: Colors.white,
+          iconColor: Colors.black,
+        ),
+      );
+
+  void onFavPressed() async {
+    try {
+      await _databaseService.addToFavourites(
+          Categories(
+            name: widget.data[paramName],
+            url: widget.data[paramUrl],
+            desc: widget.data[paramDesc],
+            star: widget.data[paramStar].toString(),
+            category: widget.data[paramCategory],
+            price: widget.data[paramPrice].toString(),
+            itemCount: 1,
+          ),
+          _scaffoldKey);
+    } catch (e) {
+      _scaffoldKey.currentState!.showSnackBar(
+          showSnackBar(content: "Failed to add into favourites!"));
+    }
+  }
+
+  Expanded _addToCartButton() => Expanded(
+        flex: 6,
+        child: CustomButton(
+          label: 'Add to cart',
+          onPressed: onAddToCartPressed,
+        ),
+      );
+
+  void onAddToCartPressed() async {
+    try {
+      await _databaseService.addToCart(
+        Categories(
+          name: widget.data[paramName],
+          url: widget.data[paramUrl],
+          desc: widget.data[paramDesc],
+          star: widget.data[paramStar].toString(),
+          category: widget.data[paramCategory],
+          price: widget.data[paramPrice].toString(),
+          itemCount: 1,
+        ),
+        _scaffoldKey,
+      );
+    } catch (e) {
+      _scaffoldKey.currentState!
+          .showSnackBar(showSnackBar(content: "Failed to add into cart!"));
+    }
+  }
 }

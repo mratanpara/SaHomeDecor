@@ -1,9 +1,14 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_card_text_field.dart';
+import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/get_counts_data.dart';
+import 'package:decor/constants/params_constants.dart';
+import 'package:decor/models/address_model.dart';
+import 'package:decor/utils/methods/get_address_count.dart';
+import 'package:decor/utils/methods/get_total_amount.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +28,7 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  bool isLoading = false;
   late bool _isPrimary = false;
 
   late TextEditingController _fullNameController;
@@ -62,15 +67,15 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
     _phoneFocus = FocusNode();
 
     if (widget.data != null) {
-      _fullNameController.text = widget.data['fullName'];
-      _addressController.text = widget.data['address'];
-      _zipcodeController.text = widget.data['zipcode'].toString();
-      _countryController.text = widget.data['country'];
-      _cityController.text = widget.data['city'];
-      _stateController.text = widget.data['state'];
-      _phoneController.text = widget.data['phone'].toString();
+      _fullNameController.text = widget.data[paramFullName];
+      _addressController.text = widget.data[paramAddress];
+      _zipcodeController.text = widget.data[paramZipcode].toString();
+      _countryController.text = widget.data[paramCountry];
+      _cityController.text = widget.data[paramCity];
+      _stateController.text = widget.data[paramState];
+      _phoneController.text = widget.data[paramPhone].toString();
       setState(() {
-        _isPrimary = widget.data['isPrimary'];
+        _isPrimary = widget.data[paramIsPrimary];
       });
     } else {
       _fullNameController.text = '';
@@ -117,53 +122,13 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
     );
   }
 
-  Padding _saveAddressButton(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: CustomButton(
-          label: 'SAVE ADDRESS',
-          onPressed: onSave,
-        ),
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'Add Shipping Address',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
       );
-
-  void onSave() async {
-    if (_formKey.currentState!.validate()) {
-      if (widget.data != null) {
-        try {
-          await _databaseService.updateAddress(
-            doc: widget.data.id,
-            fullName: _fullNameController.text,
-            phone: int.parse(_phoneController.text),
-            address: _addressController.text,
-            zipcode: int.parse(_zipcodeController.text),
-            country: _countryController.text,
-            city: _cityController.text,
-            state: _stateController.text,
-            isPrimary: _isPrimary,
-          );
-        } catch (e) {
-          _scaffoldKey.currentState
-              ?.showSnackBar(showSnackBar(content: 'Update failed!'));
-        }
-      } else {
-        try {
-          await _databaseService.addAddress(
-            fullName: _fullNameController.text,
-            phone: int.parse(_phoneController.text),
-            address: _addressController.text,
-            zipcode: int.parse(_zipcodeController.text),
-            country: _countryController.text,
-            city: _cityController.text,
-            state: _stateController.text,
-          );
-        } catch (e) {
-          _scaffoldKey.currentState
-              ?.showSnackBar(showSnackBar(content: 'Failed to add address!'));
-        }
-      }
-      getAddressCount(context, _scaffoldKey);
-      Navigator.pop(context);
-    }
-  }
 
   Form _column(BuildContext context) => Form(
         key: _formKey,
@@ -271,11 +236,58 @@ class _AddShippingAddressState extends State<AddShippingAddress> {
         },
       );
 
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        title: 'Add Shipping Address',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
+  Padding _saveAddressButton(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(20),
+        child: isLoading
+            ? const CustomProgressIndicator()
+            : CustomButton(
+                label: 'SAVE ADDRESS',
+                onPressed: onSave,
+              ),
       );
+
+  void onSave() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true;
+      });
+      if (widget.data != null) {
+        try {
+          await _databaseService.updateAddress(
+              doc: widget.data.id,
+              addressData: AddressModel(
+                fullName: _fullNameController.text,
+                phone: int.parse(_phoneController.text),
+                address: _addressController.text,
+                zipcode: int.parse(_zipcodeController.text),
+                country: _countryController.text,
+                city: _cityController.text,
+                state: _stateController.text,
+                isPrimary: _isPrimary,
+              ));
+        } catch (e) {
+          _scaffoldKey.currentState
+              ?.showSnackBar(showSnackBar(content: 'Update failed!'));
+        }
+      } else {
+        try {
+          await _databaseService.addAddress(AddressModel(
+            fullName: _fullNameController.text,
+            phone: int.parse(_phoneController.text),
+            address: _addressController.text,
+            zipcode: int.parse(_zipcodeController.text),
+            country: _countryController.text,
+            city: _cityController.text,
+            state: _stateController.text,
+            isPrimary: false,
+          ));
+        } catch (e) {
+          _scaffoldKey.currentState
+              ?.showSnackBar(showSnackBar(content: 'Failed to add address!'));
+        }
+      }
+      getAddressCount(context, _scaffoldKey);
+      Navigator.pop(context);
+    }
+  }
 }

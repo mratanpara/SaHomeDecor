@@ -1,9 +1,12 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
+import 'package:decor/components/custom_progress_indicator.dart';
+import 'package:decor/constants/asset_constants.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/components/custom_text_field.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +22,9 @@ class ChangePassword extends StatefulWidget {
 
 class _ChangePasswordState extends State<ChangePassword> {
   final _databaseService = DatabaseService();
-  final _authService = AuthServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   late TextEditingController _newPasswordController;
   late FocusNode _newPasswordFocus;
@@ -55,6 +58,14 @@ class _ChangePasswordState extends State<ChangePassword> {
     );
   }
 
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'Change Password',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
+      );
+
   Column _column(BuildContext context) => Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -64,6 +75,27 @@ class _ChangePasswordState extends State<ChangePassword> {
           const SizedBox(height: 40),
           _cardWithTextField(context),
         ],
+      );
+
+  Text _headingText() => const Text(
+        'Change Password!',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 44,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+
+  Padding _image() => Padding(
+        padding: kSymmetricPaddingVer,
+        child: Stack(
+          fit: StackFit.passthrough,
+          alignment: Alignment.center,
+          children: [
+            Image.asset(kBackgroundImage),
+            Image.asset(kGroupImage),
+          ],
+        ),
       );
 
   Container _cardWithTextField(BuildContext context) => Container(
@@ -77,30 +109,14 @@ class _ChangePasswordState extends State<ChangePassword> {
               child: Column(
                 children: [
                   _newPasswordTextFiled(),
-                  _saveButton(context),
+                  isLoading
+                      ? const CustomProgressIndicator()
+                      : _saveButton(context),
                 ],
               ),
             ),
           ),
         ),
-      );
-
-  CustomButton _saveButton(BuildContext context) => CustomButton(
-        label: 'SAVE PASSWORD',
-        onPressed: () async {
-          try {
-            if (_formKey.currentState!.validate()) {
-              await _databaseService
-                  .changePassword(_newPasswordController.text.trim());
-              _scaffoldKey.currentState
-                  ?.showSnackBar(showSnackBar(content: 'Password changed !'));
-              await _authService.signOutUser(context);
-            }
-          } catch (e) {
-            _scaffoldKey.currentState?.showSnackBar(
-                showSnackBar(content: 'Failed to change password !'));
-          }
-        },
       );
 
   CustomTextField _newPasswordTextFiled() => CustomTextField(
@@ -115,32 +131,27 @@ class _ChangePasswordState extends State<ChangePassword> {
         focusNode: _newPasswordFocus,
       );
 
-  Padding _image() => Padding(
-        padding: kSymmetricPaddingVer,
-        child: Stack(
-          fit: StackFit.passthrough,
-          alignment: Alignment.center,
-          children: [
-            Image.asset('assets/images/success_screen/background.png'),
-            Image.asset('assets/images/success_screen/Group.png'),
-          ],
-        ),
-      );
-
-  Text _headingText() => const Text(
-        'Change Password!',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 44,
-          fontWeight: FontWeight.bold,
-        ),
-      );
-
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        title: 'Change Password',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
+  CustomButton _saveButton(BuildContext context) => CustomButton(
+        label: 'SAVE PASSWORD',
+        onPressed: () async {
+          try {
+            if (_formKey.currentState!.validate()) {
+              setState(() {
+                isLoading = true;
+              });
+              await _databaseService
+                  .changePassword(_newPasswordController.text.trim());
+              _scaffoldKey.currentState
+                  ?.showSnackBar(showSnackBar(content: 'Password changed !'));
+              setState(() {
+                isLoading = false;
+              });
+              Navigator.pop(context);
+            }
+          } catch (e) {
+            _scaffoldKey.currentState?.showSnackBar(
+                showSnackBar(content: 'Failed to change password !'));
+          }
+        },
       );
 }

@@ -43,7 +43,6 @@ flutter:
   assets:
     - assets/images/success_screen/
     - assets/images/
-    - assets/icons/
   fonts:
     - family: Asap
       fonts:

@@ -4,6 +4,7 @@ import 'package:decor/models/users_model.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -1,4 +1,6 @@
-import 'package:decor/providers/common_provider.dart';
+import 'package:decor/providers/address_provider.dart';
+import 'package:decor/providers/amount_provider.dart';
+import 'package:decor/providers/navigation_provider.dart';
 import 'package:decor/screens/auth/forgot_password/forgot_password.dart';
 import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/screens/auth/signup/signup_screen.dart';
@@ -62,8 +64,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) => CommonProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => NavigationProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AddressProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AmountProvider(),
+        ),
+      ],
       child: MaterialApp(
         title: 'SaHomeDecor',
         debugShowCheckedModeBanner: false,

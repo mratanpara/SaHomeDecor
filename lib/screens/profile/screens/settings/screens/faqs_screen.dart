@@ -24,6 +24,14 @@ class _FAQsScreenState extends State<FAQsScreen> {
     );
   }
 
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'FAQs',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
+      );
+
   Padding _questionListView(int i) => Padding(
         padding: kSymmetricPaddingHor,
         child: Container(
@@ -47,14 +55,6 @@ class _FAQsScreenState extends State<FAQsScreen> {
             children: _buildExpandableContent(_question[i]),
           ),
         ],
-      );
-
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        title: 'FAQs',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
       );
 
   _buildExpandableContent(Question question) {

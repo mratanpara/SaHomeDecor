@@ -1,7 +1,6 @@
 import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_button.dart';
+import 'package:decor/constants/asset_constants.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/refresh_indicator.dart';
 import 'package:decor/screens/profile/screens/payment_method/components/add_payment_method.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,16 +18,12 @@ class PaymentMethodScreen extends StatelessWidget {
     );
   }
 
-  FloatingActionButton _addPaymentMethodButton(BuildContext context) =>
-      FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, AddPaymentMethod.id);
-        },
-        backgroundColor: Colors.white,
-        child: const Icon(
-          CupertinoIcons.add,
-          color: Colors.black,
-        ),
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'Payment Method',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
       );
 
   Padding _body() => Padding(
@@ -43,7 +38,9 @@ class PaymentMethodScreen extends StatelessWidget {
         ),
       );
 
-  Image _secondImage() => Image.asset('assets/images/payment_card-2.png');
+  Image _firstImage() => Image.asset(kPaymentCardImage1);
+
+  Image _secondImage() => Image.asset(kPaymentCardImage2);
 
   Row _setPrimaryShippingAddress() => Row(
         children: [
@@ -59,13 +56,15 @@ class PaymentMethodScreen extends StatelessWidget {
         ],
       );
 
-  Image _firstImage() => Image.asset('assets/images/payment_card-1.png');
-
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        title: 'Payment Method',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
+  FloatingActionButton _addPaymentMethodButton(BuildContext context) =>
+      FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, AddPaymentMethod.id);
+        },
+        backgroundColor: Colors.white,
+        child: const Icon(
+          CupertinoIcons.add,
+          color: Colors.black,
+        ),
       );
 }

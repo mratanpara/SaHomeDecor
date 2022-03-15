@@ -1,3 +1,4 @@
+import 'package:decor/constants/asset_constants.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:decor/screens/dashboard/dashboard.dart';
@@ -63,11 +64,11 @@ class _SplashScreenState extends State<SplashScreen>
       alignment: Alignment.center,
       children: [
         Image.asset(
-          'assets/images/success_screen/background.png',
+          kBackgroundImage,
           height: animation.value,
           width: animation.value,
         ),
-        Image.asset('assets/images/success_screen/Group.png'),
+        Image.asset(kGroupImage),
       ],
     );
   }

@@ -1,9 +1,12 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_button.dart';
+import 'package:decor/components/custom_progress_indicator.dart';
+import 'package:decor/constants/asset_constants.dart';
 import 'package:decor/constants/constants.dart';
 import 'package:decor/components/custom_text_field.dart';
 import 'package:decor/services/auth_services.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:decor/utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +25,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final _authService = AuthServices();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   late TextEditingController _emailController;
   late FocusNode _emailFocus;
@@ -51,6 +55,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     );
   }
 
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'Forgot Password',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
+      );
+
   Padding _body(BuildContext context) => Padding(
         padding: kAllPadding,
         child: SingleChildScrollView(
@@ -68,6 +80,24 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       );
 
+  Text _headingTextWithIcon() => const Text(
+        'Forgot Password!',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 44,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+
+  Stack _image() => Stack(
+        fit: StackFit.passthrough,
+        alignment: Alignment.center,
+        children: [
+          Image.asset(kBackgroundImage),
+          Image.asset(kGroupImage),
+        ],
+      );
+
   Container _textFieldAndButton(BuildContext context) => Container(
         decoration: kBoxShadow,
         child: Card(
@@ -79,30 +109,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               child: Column(
                 children: [
                   _textField(),
-                  _button(context),
+                  isLoading
+                      ? const CustomProgressIndicator()
+                      : _button(context),
                 ],
               ),
             ),
           ),
         ),
-      );
-
-  CustomButton _button(BuildContext context) => CustomButton(
-        label: 'SEND EMAIL',
-        onPressed: () async {
-          try {
-            if (_formKey.currentState!.validate()) {
-              await _databaseService
-                  .forgotPassword(_emailController.text.trim());
-              _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                  content: 'E-mail sent to ${_emailController.text.trim()}'));
-              await _authService.signOutUser(context);
-            }
-          } catch (e) {
-            _scaffoldKey.currentState
-                ?.showSnackBar(showSnackBar(content: 'Failed to send mail!'));
-          }
-        },
       );
 
   CustomTextField _textField() => CustomTextField(
@@ -117,29 +131,24 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         focusNode: _emailFocus,
       );
 
-  Stack _image() => Stack(
-        fit: StackFit.passthrough,
-        alignment: Alignment.center,
-        children: [
-          Image.asset('assets/images/success_screen/background.png'),
-          Image.asset('assets/images/success_screen/Group.png'),
-        ],
-      );
-
-  Text _headingTextWithIcon() => const Text(
-        'Forgot Password!',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 44,
-          fontWeight: FontWeight.bold,
-        ),
-      );
-
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        title: 'Forgot Password',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
+  CustomButton _button(BuildContext context) => CustomButton(
+        label: 'SEND EMAIL',
+        onPressed: () async {
+          try {
+            if (_formKey.currentState!.validate()) {
+              setState(() {
+                isLoading = true;
+              });
+              await _databaseService
+                  .forgotPassword(_emailController.text.trim());
+              _scaffoldKey.currentState?.showSnackBar(showSnackBar(
+                  content: 'E-mail sent to ${_emailController.text.trim()}'));
+              await _authService.signOutUser(context);
+            }
+          } catch (e) {
+            _scaffoldKey.currentState
+                ?.showSnackBar(showSnackBar(content: 'Failed to send mail!'));
+          }
+        },
       );
 }

@@ -4,12 +4,14 @@ import 'package:decor/components/custom_button.dart';
 import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:decor/components/no_data_found.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/refresh_indicator.dart';
+import 'package:decor/components/refresh_indicator.dart';
+import 'package:decor/constants/params_constants.dart';
 import 'package:decor/models/category_model.dart';
 import 'package:decor/screens/cart/cart_screen.dart';
 import 'package:decor/screens/details/detail_screen.dart';
 import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:decor/services/database_services.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +30,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   dynamic allData;
-  bool _isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,22 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: _appBar(context),
-      body: CommonRefreshIndicator(
+      body: _body(size),
+    );
+  }
+
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        leadingIcon: CupertinoIcons.search,
+        title: 'Favourites',
+        actionIcon: CupertinoIcons.cart,
+        onActionIconPressed: () {
+          Navigator.pushNamed(context, CartScreen.id);
+        },
+        onLeadingIconPressed: () =>
+            Navigator.pushNamed(context, SearchScreen.id),
+      );
+
+  CommonRefreshIndicator _body(Size size) => CommonRefreshIndicator(
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('users')
@@ -55,12 +71,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             final data = snapshot.data!.docs;
             allData = snapshot.data!.docs;
 
-            if (data.isNotEmpty) {
-              _isVisible = true;
-            } else {
-              _isVisible = false;
-            }
-
             return data.isNotEmpty
                 ? Stack(
                     children: [
@@ -70,40 +80,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   )
                 : NoDataFound();
           },
-        ),
-      ),
-    );
-  }
-
-  Positioned _addAllToFavButton(Size size) => Positioned(
-        width: size.width,
-        bottom: 1,
-        child: Padding(
-          padding: kSymmetricPaddingHor,
-          child: Visibility(
-            visible: _isVisible,
-            child: CustomButton(
-              label: 'Add all to my cart',
-              onPressed: () {
-                for (int index = 0; index < allData.length; index++) {
-                  _databaseService.addToCart(
-                    Categories(
-                      name: allData[index]['name'],
-                      url: allData[index]['url'],
-                      desc: allData[index]['desc'],
-                      star: allData[index]['star'].toString(),
-                      category: allData[index]['category'],
-                      price: allData[index]['price'].toString(),
-                      itemCount: 1,
-                    ),
-                    _scaffoldKey,
-                  );
-                  _databaseService.deleteFromFavourite(
-                      allData[index].id, _scaffoldKey);
-                }
-              },
-            ),
-          ),
         ),
       );
 
@@ -115,37 +91,19 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         itemBuilder: (BuildContext context, int index) {
           return Dismissible(
             key: UniqueKey(),
-            background: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: kSwipeToDeleteDecoration,
-              alignment: Alignment.centerLeft,
-              child: const Icon(
-                CupertinoIcons.trash_fill,
-                color: Colors.white,
-                size: kIconSize,
-              ),
-            ),
-            secondaryBackground: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              alignment: Alignment.centerRight,
-              decoration: kSwipeToAddDecoration,
-              child: const Icon(
-                CupertinoIcons.cart_fill,
-                color: Colors.white,
-                size: kIconSize,
-              ),
-            ),
+            background: _deleteSwipeBackground(),
+            secondaryBackground: _cartSwipeBackground(),
             onDismissed: (direction) async {
               try {
                 if (direction == DismissDirection.endToStart) {
                   await _databaseService.addToCart(
                     Categories(
-                      name: data[index]['name'],
-                      url: data[index]['url'],
-                      desc: data[index]['desc'],
-                      star: data[index]['star'].toString(),
-                      category: data[index]['category'],
-                      price: data[index]['price'].toString(),
+                      name: data[index][paramName],
+                      url: data[index][paramUrl],
+                      desc: data[index][paramDesc],
+                      star: data[index][paramStar].toString(),
+                      category: data[index][paramCategory],
+                      price: data[index][paramPrice].toString(),
                       itemCount: 1,
                     ),
                     _scaffoldKey,
@@ -156,7 +114,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   await _databaseService.deleteFromFavourite(
                       data[index].id, _scaffoldKey);
                   _scaffoldKey.currentState?.showSnackBar(showSnackBar(
-                      content: '${data[index]['name']} deleted !'));
+                      content: '${data[index][paramName]} deleted !'));
                 }
               } catch (e) {
                 if (direction == DismissDirection.endToStart) {
@@ -184,6 +142,28 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         separatorBuilder: (BuildContext context, int index) => const Divider(),
       );
 
+  Container _deleteSwipeBackground() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: kSwipeToDeleteDecoration,
+        alignment: Alignment.centerLeft,
+        child: const Icon(
+          CupertinoIcons.trash_fill,
+          color: Colors.white,
+          size: kIconSize,
+        ),
+      );
+
+  Container _cartSwipeBackground() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        alignment: Alignment.centerRight,
+        decoration: kSwipeToAddDecoration,
+        child: const Icon(
+          CupertinoIcons.cart_fill,
+          color: Colors.white,
+          size: kIconSize,
+        ),
+      );
+
   Row _customFavListItem(List<QueryDocumentSnapshot<Object?>> data, int index,
           BuildContext context) =>
       Row(
@@ -192,6 +172,17 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           _image(data, index),
           _favItemDetails(data, index, context),
         ],
+      );
+
+  ClipRRect _image(List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.network(
+          data[index][paramUrl],
+          fit: BoxFit.cover,
+          height: 110,
+          width: 110,
+        ),
       );
 
   Flexible _favItemDetails(List<QueryDocumentSnapshot<Object?>> data, int index,
@@ -206,6 +197,37 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         ),
       );
 
+  ListTile _nameListTile(
+          List<QueryDocumentSnapshot<Object?>> data, int index) =>
+      ListTile(
+        dense: true,
+        title: Text(
+          data[index][paramName],
+          style: kViewTitleStyle,
+        ),
+        subtitle: Text(
+          '\$ ${data[index][paramPrice]}',
+          style: kViewSubTitleStyle,
+        ),
+        trailing: IconButton(
+          onPressed: () async {
+            try {
+              await _databaseService.deleteFromFavourite(
+                  data[index].id, _scaffoldKey);
+              _scaffoldKey.currentState!.showSnackBar(
+                  showSnackBar(content: "${data[index][paramName]} deleted."));
+            } catch (e) {
+              _scaffoldKey.currentState!
+                  .showSnackBar(showSnackBar(content: "Failed to delete!"));
+            }
+          },
+          icon: const Icon(
+            CupertinoIcons.clear_circled,
+            size: 28,
+          ),
+        ),
+      );
+
   Padding _addToCartIconButton(List<QueryDocumentSnapshot<Object?>> data,
           int index, BuildContext context) =>
       Padding(
@@ -215,12 +237,12 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             try {
               await _databaseService.addToCart(
                 Categories(
-                  name: data[index]['name'],
-                  url: data[index]['url'],
-                  desc: data[index]['desc'],
-                  star: data[index]['star'].toString(),
-                  category: data[index]['category'],
-                  price: data[index]['price'].toString(),
+                  name: data[index][paramName],
+                  url: data[index][paramUrl],
+                  desc: data[index][paramDesc],
+                  star: data[index][paramStar].toString(),
+                  category: data[index][paramCategory],
+                  price: data[index][paramPrice].toString(),
                   itemCount: 1,
                 ),
                 _scaffoldKey,
@@ -240,56 +262,32 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         ),
       );
 
-  ListTile _nameListTile(
-          List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      ListTile(
-        dense: true,
-        title: Text(
-          data[index]['name'],
-          style: kViewTitleStyle,
-        ),
-        subtitle: Text(
-          '\$ ${data[index]['price']}',
-          style: kViewSubTitleStyle,
-        ),
-        trailing: IconButton(
-          onPressed: () async {
-            try {
-              await _databaseService.deleteFromFavourite(
-                  data[index].id, _scaffoldKey);
-              _scaffoldKey.currentState!.showSnackBar(
-                  showSnackBar(content: "${data[index]['name']} deleted."));
-            } catch (e) {
-              _scaffoldKey.currentState!
-                  .showSnackBar(showSnackBar(content: "Failed to delete!"));
-            }
-          },
-          icon: const Icon(
-            CupertinoIcons.clear_circled,
-            size: 28,
+  Positioned _addAllToFavButton(Size size) => Positioned(
+        width: size.width,
+        bottom: 1,
+        child: Padding(
+          padding: kSymmetricPaddingHor,
+          child: CustomButton(
+            label: 'Add all to my cart',
+            onPressed: () {
+              for (int index = 0; index < allData.length; index++) {
+                _databaseService.addToCart(
+                  Categories(
+                    name: allData[index][paramName],
+                    url: allData[index][paramUrl],
+                    desc: allData[index][paramDesc],
+                    star: allData[index][paramStar].toString(),
+                    category: allData[index][paramCategory],
+                    price: allData[index][paramPrice].toString(),
+                    itemCount: 1,
+                  ),
+                  _scaffoldKey,
+                );
+                _databaseService.deleteFromFavourite(
+                    allData[index].id, _scaffoldKey);
+              }
+            },
           ),
         ),
-      );
-
-  ClipRRect _image(List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          data[index]['url'],
-          fit: BoxFit.cover,
-          height: 110,
-          width: 110,
-        ),
-      );
-
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        leadingIcon: CupertinoIcons.search,
-        title: 'Favourites',
-        actionIcon: CupertinoIcons.cart,
-        onActionIconPressed: () {
-          Navigator.pushNamed(context, CartScreen.id);
-        },
-        onLeadingIconPressed: () =>
-            Navigator.pushNamed(context, SearchScreen.id),
       );
 }

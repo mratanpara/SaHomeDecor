@@ -29,16 +29,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  List<Widget> _actions() => [
-        IconButton(
-          onPressed: onActionIconPressed,
-          icon: Icon(
-            actionIcon,
-            size: kIconSize,
-            color: Colors.grey,
-          ),
+  IconButton _leadingIcon() => IconButton(
+        onPressed: onLeadingIconPressed,
+        icon: Icon(
+          leadingIcon,
+          size: kIconSize,
+          color: Colors.grey,
         ),
-      ];
+      );
 
   Column _title() => Column(
         children: [
@@ -54,14 +52,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       );
 
-  IconButton _leadingIcon() => IconButton(
-        onPressed: onLeadingIconPressed,
-        icon: Icon(
-          leadingIcon,
-          size: kIconSize,
-          color: Colors.grey,
+  List<Widget> _actions() => [
+        IconButton(
+          onPressed: onActionIconPressed,
+          icon: Icon(
+            actionIcon,
+            size: kIconSize,
+            color: Colors.grey,
+          ),
         ),
-      );
+      ];
 
   @override
   Size get preferredSize => const Size.fromHeight(50);

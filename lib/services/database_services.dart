@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/constants/constants.dart';
+import 'package:decor/constants/params_constants.dart';
+import 'package:decor/models/address_model.dart';
 import 'package:decor/models/category_model.dart';
 import 'package:decor/models/users_model.dart';
+import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,63 +12,50 @@ class DatabaseService {
   final _currentUser = FirebaseAuth.instance.currentUser;
   late Users data;
 
+  //add user
   void addUsers(Users user) async {
     final currentUser = FirebaseAuth.instance.currentUser;
     await _userCollection.doc(currentUser!.uid).set({
-      'displayName': user.displayName,
-      'email': user.email,
-      'photoURL': user.photoURL,
+      paramDisplayName: user.displayName,
+      paramEmail: user.email,
+      paramPhotoURL: user.photoURL,
     });
   }
 
-  Future<void> addAddress({
-    required String fullName,
-    required int phone,
-    required String address,
-    required int zipcode,
-    required String country,
-    required String city,
-    required String state,
-  }) async {
+  //address
+  Future<void> addAddress(AddressModel addressData) async {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('shipping_address')
         .add({
-      'fullName': fullName,
-      'phone': phone,
-      'address': address,
-      'zipcode': zipcode,
-      'country': country,
-      'city': city,
-      'state': state,
-      'isPrimary': false,
+      paramFullName: addressData.fullName,
+      paramPhone: addressData.phone,
+      paramAddress: addressData.address,
+      paramZipcode: addressData.zipcode,
+      paramCountry: addressData.country,
+      paramCity: addressData.city,
+      paramState: addressData.state,
+      paramIsPrimary: addressData.isPrimary,
     });
   }
 
   Future<void> updateAddress({
     required String doc,
-    required String fullName,
-    required int phone,
-    required String address,
-    required int zipcode,
-    required String country,
-    required String city,
-    required String state,
-    required bool isPrimary,
+    required AddressModel addressData,
   }) async {
     await _userCollection
         .doc(_currentUser!.uid)
         .collection('shipping_address')
         .doc(doc)
         .update({
-      'fullName': fullName,
-      'phone': phone,
-      'address': address,
-      'zipcode': zipcode,
-      'country': country,
-      'city': city,
-      'state': state,
-      'isPrimary': isPrimary,
+      paramFullName: addressData.fullName,
+      paramPhone: addressData.phone,
+      paramAddress: addressData.address,
+      paramZipcode: addressData.zipcode,
+      paramCountry: addressData.country,
+      paramCity: addressData.city,
+      paramState: addressData.state,
+      paramIsPrimary: addressData.isPrimary,
     });
   }
 
@@ -83,13 +72,13 @@ class DatabaseService {
               .doc(_currentUser!.uid)
               .collection('shipping_address')
               .doc(doc)
-              .update({'isPrimary': true});
+              .update({paramIsPrimary: true});
         } else {
           _userCollection
               .doc(_currentUser!.uid)
               .collection('shipping_address')
               .doc(element.id)
-              .update({'isPrimary': false});
+              .update({paramIsPrimary: false});
         }
       }
     });
@@ -103,6 +92,7 @@ class DatabaseService {
         .delete();
   }
 
+  //favourite
   Future<void> addToFavourites(
       Categories cat, GlobalKey<ScaffoldState> _scaffoldKey) async {
     await _userCollection
@@ -112,7 +102,7 @@ class DatabaseService {
         .then((QuerySnapshot querySnapshot) async {
       if (querySnapshot.docs.isNotEmpty) {
         for (var element in querySnapshot.docs) {
-          if (element['name'] == cat.name) {
+          if (element[paramName] == cat.name) {
             _scaffoldKey.currentState
                 ?.showSnackBar(showSnackBar(content: 'Already in favourites!'));
             return;
@@ -123,12 +113,12 @@ class DatabaseService {
               .doc(_currentUser!.uid)
               .collection('favourites')
               .add({
-            'name': cat.name,
-            'url': cat.url,
-            'desc': cat.desc,
-            'category': cat.category,
-            'price': cat.price,
-            'star': cat.star,
+            paramName: cat.name,
+            paramUrl: cat.url,
+            paramDesc: cat.desc,
+            paramCategory: cat.category,
+            paramPrice: cat.price,
+            paramStar: cat.star,
           });
           _scaffoldKey.currentState?.showSnackBar(
               showSnackBar(content: "${cat.name} added to favourites !"));
@@ -139,12 +129,12 @@ class DatabaseService {
             .doc(_currentUser!.uid)
             .collection('favourites')
             .add({
-          'name': cat.name,
-          'url': cat.url,
-          'desc': cat.desc,
-          'category': cat.category,
-          'price': cat.price,
-          'star': cat.star,
+          paramName: cat.name,
+          paramUrl: cat.url,
+          paramDesc: cat.desc,
+          paramCategory: cat.category,
+          paramPrice: cat.price,
+          paramStar: cat.star,
         });
         _scaffoldKey.currentState?.showSnackBar(
             showSnackBar(content: "${cat.name} added to favourites !"));
@@ -161,6 +151,7 @@ class DatabaseService {
         .delete();
   }
 
+  //cart
   Future<void> addToCart(
       Categories cat, GlobalKey<ScaffoldState> _scaffoldKey) async {
     await _userCollection
@@ -170,14 +161,14 @@ class DatabaseService {
         .then((QuerySnapshot querySnapshot) async {
       if (querySnapshot.docs.isNotEmpty) {
         for (var element in querySnapshot.docs) {
-          if (element['name'] == cat.name) {
+          if (element[paramName] == cat.name) {
             await _userCollection
                 .doc(_currentUser!.uid)
                 .collection('cart')
                 .doc(element.id)
                 .update(
               {
-                'itemCount': (element['itemCount'] + 1),
+                paramItemCount: (element[paramItemCount] + 1),
               },
             );
             return;
@@ -185,13 +176,13 @@ class DatabaseService {
         }
         if (querySnapshot.docs.isNotEmpty) {
           await _userCollection.doc(_currentUser!.uid).collection('cart').add({
-            'name': cat.name,
-            'url': cat.url,
-            'desc': cat.desc,
-            'category': cat.category,
-            'price': cat.price,
-            'star': cat.star,
-            'itemCount': cat.itemCount,
+            paramName: cat.name,
+            paramUrl: cat.url,
+            paramDesc: cat.desc,
+            paramCategory: cat.category,
+            paramPrice: cat.price,
+            paramStar: cat.star,
+            paramItemCount: cat.itemCount,
           });
           _scaffoldKey.currentState?.showSnackBar(
               showSnackBar(content: "${cat.name} added to cart !"));
@@ -199,13 +190,13 @@ class DatabaseService {
       }
       if (querySnapshot.docs.isEmpty) {
         await _userCollection.doc(_currentUser!.uid).collection('cart').add({
-          'name': cat.name,
-          'url': cat.url,
-          'desc': cat.desc,
-          'category': cat.category,
-          'price': cat.price,
-          'star': cat.star,
-          'itemCount': cat.itemCount,
+          paramName: cat.name,
+          paramUrl: cat.url,
+          paramDesc: cat.desc,
+          paramCategory: cat.category,
+          paramPrice: cat.price,
+          paramStar: cat.star,
+          paramItemCount: cat.itemCount,
         });
         _scaffoldKey.currentState?.showSnackBar(
             showSnackBar(content: "${cat.name} added to cart !"));
@@ -222,7 +213,7 @@ class DatabaseService {
           .doc(doc)
           .update(
         {
-          'itemCount': (currentItemCount - 1),
+          paramItemCount: (currentItemCount - 1),
         },
       );
     } else {
@@ -237,7 +228,7 @@ class DatabaseService {
         .doc(doc)
         .update(
       {
-        'itemCount': (currentItemCount + 1),
+        paramItemCount: (currentItemCount + 1),
       },
     );
   }
@@ -251,10 +242,12 @@ class DatabaseService {
         .delete();
   }
 
+  //change password
   Future<void> changePassword(String newPassword) async {
     await _currentUser?.updatePassword(newPassword);
   }
 
+  //forgot password
   Future<void> forgotPassword(String email) async {
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }

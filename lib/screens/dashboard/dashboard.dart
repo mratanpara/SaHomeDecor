@@ -1,5 +1,5 @@
 import 'package:decor/components/custom_bottom_navigation_bar.dart';
-import 'package:decor/providers/common_provider.dart';
+import 'package:decor/providers/navigation_provider.dart';
 import 'package:decor/screens/favourite/favourite_screen.dart';
 import 'package:decor/screens/home/screens/home_screen.dart';
 import 'package:decor/screens/notification/notification_screen.dart';
@@ -32,7 +32,7 @@ class _DashBoardState extends State<DashBoard> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _widgetOptions
-          .elementAt(Provider.of<CommonProvider>(context).getSelectedIndex),
+          .elementAt(Provider.of<NavigationProvider>(context).getSelectedIndex),
       bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:decor/components/custom_app_bar.dart';
+import 'package:decor/constants/asset_constants.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/refresh_indicator.dart';
+import 'package:decor/components/refresh_indicator.dart';
 import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        leadingIcon: CupertinoIcons.search,
+        title: 'Notification',
+        actionIcon: null,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () =>
+            Navigator.pushNamed(context, SearchScreen.id),
+      );
+
   Row _customListTile(Size size) => Row(
         children: [
           _image(size),
@@ -41,19 +51,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ],
       );
 
+  ClipRRect _image(Size size) => ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.asset(
+          kSignUpAndSignInLogoImage,
+          fit: BoxFit.cover,
+          height: size.height * 0.15,
+          width: size.width * 0.3,
+        ),
+      );
+
   Flexible _orderDetails() => Flexible(
         child: ListTile(
           dense: true,
           title: _orderTitle(),
           subtitle: _orderMsg(),
-        ),
-      );
-
-  Text _orderMsg() => const Text(
-        'Please help us to confirm and rate your order to get 10% discount code for next order.',
-        style: TextStyle(
-          fontSize: kNormalFontSize,
-          color: Colors.black,
         ),
       );
 
@@ -69,22 +81,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ),
       );
 
-  ClipRRect _image(Size size) => ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
-          'assets/images/img.png',
-          fit: BoxFit.cover,
-          height: size.height * 0.15,
-          width: size.width * 0.3,
+  Text _orderMsg() => const Text(
+        'Please help us to confirm and rate your order to get 10% discount code for next order.',
+        style: TextStyle(
+          fontSize: kNormalFontSize,
+          color: Colors.black,
         ),
-      );
-
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        leadingIcon: CupertinoIcons.search,
-        title: 'Notification',
-        actionIcon: null,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () =>
-            Navigator.pushNamed(context, SearchScreen.id),
       );
 }

@@ -1,7 +1,7 @@
 import 'package:decor/components/custom_app_bar.dart';
 import 'package:decor/components/custom_card_text_field.dart';
 import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/refresh_indicator.dart';
+import 'package:decor/components/refresh_indicator.dart';
 import 'package:decor/screens/profile/screens/change_password/change_password.dart';
 import 'package:decor/screens/profile/screens/settings/components/custom_list_tile.dart';
 import 'package:decor/screens/profile/screens/settings/screens/faqs_screen.dart';
@@ -73,6 +73,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
+        title: 'Settings',
+        actionIcon: null,
+        leadingIcon: CupertinoIcons.back,
+        onActionIconPressed: null,
+        onLeadingIconPressed: () => Navigator.pop(context),
+      );
+
   Column _column(BuildContext context) => Column(
         children: [
           _headingRow(),
@@ -91,79 +99,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       );
 
-  CustomListTile _termsAndConditionTile(BuildContext context) => CustomListTile(
-      trailing: const Icon(CupertinoIcons.forward),
-      onTap: () => Navigator.pushNamed(context, TermsAndConditionsScreen.id),
-      text: 'Terms & Condition');
-
-  CustomListTile _privacyPolicyTile(BuildContext context) => CustomListTile(
-      trailing: const Icon(CupertinoIcons.forward),
-      onTap: () => Navigator.pushNamed(context, PrivacyPolicyScreen.id),
-      text: 'Privacy Policy');
-
-  CustomListTile _faqsTile(BuildContext context) => CustomListTile(
-        trailing: const Icon(CupertinoIcons.forward),
-        onTap: () => Navigator.pushNamed(context, FAQsScreen.id),
-        text: 'FAQs',
-      );
-
-  CustomListTile _deliveryStatusChangesTile() => CustomListTile(
-      trailing: CupertinoSwitch(value: false, onChanged: (val) {}),
-      onTap: () {},
-      text: 'Delivery status changes');
-
-  CustomListTile _newArrivalsTile() => CustomListTile(
-      trailing: CupertinoSwitch(value: false, onChanged: (val) {}),
-      onTap: () {},
-      text: 'New arrivals');
-
-  CustomListTile _salesTile() => CustomListTile(
-      trailing: CupertinoSwitch(value: true, onChanged: (val) {}),
-      onTap: () {},
-      text: 'Sales');
-
-  CustomListTile _changePasswordTile(BuildContext context) => CustomListTile(
-      trailing: const Icon(CupertinoIcons.forward),
-      onTap: () => Navigator.pushNamed(context, ChangePassword.id),
-      text: 'Change Password');
-
-  CustomCardTextField _emailTextField() => CustomCardTextField(
-      controller: _emailController,
-      focusNode: _emailFocus,
-      label: 'Email',
-      validator: validateEmail,
-      onPressed: (val) {},
-      type: TextInputType.emailAddress,
-      hintText: 'Emaail');
-
-  CustomCardTextField _nameTextField() => CustomCardTextField(
-      controller: _nameController,
-      focusNode: _nameFocus,
-      label: 'Name',
-      validator: validateFullName,
-      onPressed: (val) {},
-      type: TextInputType.text,
-      hintText: 'Name');
-
-  CustomAppBar _appBar(BuildContext context) => CustomAppBar(
-        title: 'Settings',
-        actionIcon: null,
-        leadingIcon: CupertinoIcons.back,
-        onActionIconPressed: null,
-        onLeadingIconPressed: () => Navigator.pop(context),
-      );
-
-  Align _heading(String text) => Align(
-        alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: kSymmetricPaddingVer,
-          child: Text(
-            text,
-            style: kSettingsHeadingTextStyle,
-          ),
-        ),
-      );
-
   Row _headingRow() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -176,5 +111,70 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: const Icon(Icons.edit),
           ),
         ],
+      );
+
+  CustomCardTextField _nameTextField() => CustomCardTextField(
+      controller: _nameController,
+      focusNode: _nameFocus,
+      label: 'Name',
+      validator: validateFullName,
+      onPressed: (val) {},
+      type: TextInputType.text,
+      hintText: 'Name');
+
+  CustomCardTextField _emailTextField() => CustomCardTextField(
+      controller: _emailController,
+      focusNode: _emailFocus,
+      label: 'Email',
+      validator: validateEmail,
+      onPressed: (val) {},
+      type: TextInputType.emailAddress,
+      hintText: 'Email');
+
+  CustomListTile _changePasswordTile(BuildContext context) => CustomListTile(
+      trailing: const Icon(CupertinoIcons.forward),
+      onTap: () => Navigator.pushNamed(context, ChangePassword.id),
+      text: 'Change Password');
+
+  CustomListTile _salesTile() => CustomListTile(
+      trailing: CupertinoSwitch(value: true, onChanged: (val) {}),
+      onTap: () {},
+      text: 'Sales');
+
+  CustomListTile _newArrivalsTile() => CustomListTile(
+      trailing: CupertinoSwitch(value: false, onChanged: (val) {}),
+      onTap: () {},
+      text: 'New arrivals');
+
+  CustomListTile _deliveryStatusChangesTile() => CustomListTile(
+      trailing: CupertinoSwitch(value: false, onChanged: (val) {}),
+      onTap: () {},
+      text: 'Delivery status changes');
+
+  CustomListTile _faqsTile(BuildContext context) => CustomListTile(
+        trailing: const Icon(CupertinoIcons.forward),
+        onTap: () => Navigator.pushNamed(context, FAQsScreen.id),
+        text: 'FAQs',
+      );
+
+  CustomListTile _privacyPolicyTile(BuildContext context) => CustomListTile(
+      trailing: const Icon(CupertinoIcons.forward),
+      onTap: () => Navigator.pushNamed(context, PrivacyPolicyScreen.id),
+      text: 'Privacy Policy');
+
+  CustomListTile _termsAndConditionTile(BuildContext context) => CustomListTile(
+      trailing: const Icon(CupertinoIcons.forward),
+      onTap: () => Navigator.pushNamed(context, TermsAndConditionsScreen.id),
+      text: 'Terms & Condition');
+
+  Align _heading(String text) => Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: kSymmetricPaddingVer,
+          child: Text(
+            text,
+            style: kSettingsHeadingTextStyle,
+          ),
+        ),
       );
 }
