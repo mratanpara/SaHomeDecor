@@ -1,21 +1,25 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/components/custom_rect_button.dart';
-import 'package:decor/components/no_data_found.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/utils/methods/get_total_amount.dart';
-import 'package:decor/components/refresh_indicator.dart';
-import 'package:decor/providers/amount_provider.dart';
-import 'package:decor/screens/success/success_screen.dart';
-import 'package:decor/services/database_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../components/custom_app_bar.dart';
+import '../../components/custom_button.dart';
+import '../../components/custom_progress_indicator.dart';
+import '../../components/custom_rect_button.dart';
+import '../../components/no_data_found.dart';
+import '../../components/refresh_indicator.dart';
+import '../../constants/constants.dart';
+import '../../constants/params_constants.dart';
+import '../../providers/amount_provider.dart';
+import '../../services/database_services.dart';
+import '../../utils/methods/get_total_amount.dart';
+import '../../utils/methods/reusable_methods.dart';
+import '../success/success_screen.dart';
+import '../details/detail_screen.dart';
 
 class CartScreen extends StatefulWidget {
   static const String id = 'cart_screen';
@@ -73,7 +77,7 @@ class _CartScreenState extends State<CartScreen> {
 
             final data = snapshot.data?.docs;
             return data!.isEmpty
-                ? NoDataFound()
+                ? const NoDataFound()
                 : Stack(
                     children: [
                       _cartLists(data, size),
@@ -115,12 +119,22 @@ class _CartScreenState extends State<CartScreen> {
                   ?.showSnackBar(showSnackBar(content: 'Failed to delete!'));
             }
           },
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _image(data, index),
-              _showData(data, index, context, size),
-            ],
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailScreen(data[index]),
+                ),
+              );
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _image(data, index),
+                _showData(data, index, context, size),
+              ],
+            ),
           ),
         );
       },
@@ -134,14 +148,16 @@ class _CartScreenState extends State<CartScreen> {
         size: kIconSize,
       );
 
-  ClipRRect _image(List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          data[index][paramUrl],
-          fit: BoxFit.cover,
-          height: 110,
-          width: 110,
+  Hero _image(List<QueryDocumentSnapshot<Object?>> data, int index) => Hero(
+        tag: data[index][paramUrl],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.network(
+            data[index][paramUrl],
+            fit: BoxFit.cover,
+            height: 110,
+            width: 110,
+          ),
         ),
       );
 

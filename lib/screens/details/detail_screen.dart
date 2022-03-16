@@ -1,25 +1,23 @@
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/components/custom_rect_button.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/models/category_model.dart';
-import 'package:decor/services/database_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class DetailScreen extends StatefulWidget {
+import '../../components/custom_button.dart';
+import '../../components/custom_rect_button.dart';
+import '../../constants/constants.dart';
+import '../../constants/params_constants.dart';
+import '../../models/category_model.dart';
+import '../../services/database_services.dart';
+import '../../utils/methods/reusable_methods.dart';
+
+class DetailScreen extends StatelessWidget {
   static const String id = 'detail_screen';
 
-  const DetailScreen(this.data);
+  DetailScreen(this.data, {Key? key}) : super(key: key);
 
   final dynamic data;
 
-  @override
-  _DetailScreenState createState() => _DetailScreenState();
-}
-
-class _DetailScreenState extends State<DetailScreen> {
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -60,14 +58,17 @@ class _DetailScreenState extends State<DetailScreen> {
 
   Align _image(Size size) => Align(
         alignment: Alignment.topRight,
-        child: ClipRRect(
-          borderRadius:
-              const BorderRadius.only(bottomLeft: Radius.circular(80)),
-          child: Image.network(
-            widget.data[paramUrl],
-            fit: BoxFit.fill,
-            height: size.height * 0.65,
-            width: size.width * 0.85,
+        child: Hero(
+          tag: data[paramUrl],
+          child: ClipRRect(
+            borderRadius:
+                const BorderRadius.only(bottomLeft: Radius.circular(80)),
+            child: Image.network(
+              data[paramUrl],
+              fit: BoxFit.fill,
+              height: size.height * 0.65,
+              width: size.width * 0.85,
+            ),
           ),
         ),
       );
@@ -97,7 +98,7 @@ class _DetailScreenState extends State<DetailScreen> {
           vertical: size.height * 0.01,
         ),
         child: Text(
-          widget.data[paramName],
+          data[paramName],
           style: const TextStyle(
             fontSize: 24,
             color: Colors.black,
@@ -111,7 +112,7 @@ class _DetailScreenState extends State<DetailScreen> {
           vertical: size.height * 0.005,
         ),
         child: Text(
-          '\$ ${widget.data[paramPrice].toString()}',
+          '\$ ${data[paramPrice].toString()}',
           style: const TextStyle(fontSize: 24, color: Colors.grey),
         ),
       );
@@ -130,7 +131,7 @@ class _DetailScreenState extends State<DetailScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: size.width * 0.01),
               child: Text(
-                widget.data[paramStar].toString(),
+                data[paramStar].toString(),
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: kNormalFontSize,
@@ -151,7 +152,7 @@ class _DetailScreenState extends State<DetailScreen> {
           vertical: size.height * 0.01,
         ),
         child: Text(
-          widget.data[paramDesc],
+          data[paramDesc],
           style: const TextStyle(
             fontSize: kNormalFontSize,
             color: Colors.grey,
@@ -189,12 +190,12 @@ class _DetailScreenState extends State<DetailScreen> {
     try {
       await _databaseService.addToFavourites(
           Categories(
-            name: widget.data[paramName],
-            url: widget.data[paramUrl],
-            desc: widget.data[paramDesc],
-            star: widget.data[paramStar].toString(),
-            category: widget.data[paramCategory],
-            price: widget.data[paramPrice].toString(),
+            name: data[paramName],
+            url: data[paramUrl],
+            desc: data[paramDesc],
+            star: data[paramStar].toString(),
+            category: data[paramCategory],
+            price: data[paramPrice].toString(),
             itemCount: 1,
           ),
           _scaffoldKey);
@@ -216,12 +217,12 @@ class _DetailScreenState extends State<DetailScreen> {
     try {
       await _databaseService.addToCart(
         Categories(
-          name: widget.data[paramName],
-          url: widget.data[paramUrl],
-          desc: widget.data[paramDesc],
-          star: widget.data[paramStar].toString(),
-          category: widget.data[paramCategory],
-          price: widget.data[paramPrice].toString(),
+          name: data[paramName],
+          url: data[paramUrl],
+          desc: data[paramDesc],
+          star: data[paramStar].toString(),
+          category: data[paramCategory],
+          price: data[paramPrice].toString(),
           itemCount: 1,
         ),
         _scaffoldKey,

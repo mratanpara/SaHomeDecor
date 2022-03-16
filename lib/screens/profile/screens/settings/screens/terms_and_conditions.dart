@@ -4,6 +4,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class TermsAndConditionsScreen extends StatefulWidget {
   static const String id = 'terms_and_condition';
+
+  const TermsAndConditionsScreen({Key? key}) : super(key: key);
   @override
   TermsAndConditionsScreenState createState() =>
       TermsAndConditionsScreenState();

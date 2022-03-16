@@ -1,16 +1,14 @@
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/models/question_model.dart';
+import '../../../../../components/custom_app_bar.dart';
+import '../../../../../constants/constants.dart';
+import '../../../../../models/question_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class FAQsScreen extends StatefulWidget {
+class FAQsScreen extends StatelessWidget {
   static const String id = 'faqs_screen';
-  @override
-  _FAQsScreenState createState() => new _FAQsScreenState();
-}
 
-class _FAQsScreenState extends State<FAQsScreen> {
+  const FAQsScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

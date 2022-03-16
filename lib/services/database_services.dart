@@ -1,9 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/models/address_model.dart';
-import 'package:decor/models/category_model.dart';
-import 'package:decor/models/users_model.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
+import '../constants/params_constants.dart';
+import '../models/address_model.dart';
+import '../models/category_model.dart';
+import '../models/users_model.dart';
+import '../utils/methods/reusable_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

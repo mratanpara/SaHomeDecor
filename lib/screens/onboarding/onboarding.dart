@@ -1,8 +1,9 @@
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../components/custom_button.dart';
+import '../../constants/constants.dart';
+import '../auth/login/login_screen.dart';
 
 const duration = Duration(milliseconds: 500);
 

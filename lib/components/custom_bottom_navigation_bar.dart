@@ -1,19 +1,12 @@
-import 'package:decor/constants/constants.dart';
-import 'package:decor/providers/amount_provider.dart';
-import 'package:decor/providers/navigation_provider.dart';
+import '../constants/constants.dart';
+import '../providers/navigation_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
+class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({Key? key}) : super(key: key);
 
-  @override
-  _CustomBottomNavigationBarState createState() =>
-      _CustomBottomNavigationBarState();
-}
-
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Consumer<NavigationProvider>(

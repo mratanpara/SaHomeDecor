@@ -1,18 +1,21 @@
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/constants/asset_constants.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/auth/components/custom_text_button.dart';
-import 'package:decor/components/custom_text_field.dart';
-import 'package:decor/screens/auth/components/facebook_signin_button.dart';
-import 'package:decor/screens/auth/forgot_password/forgot_password.dart';
-import 'package:decor/screens/auth/signup/signup_screen.dart';
-import 'package:decor/screens/dashboard/dashboard.dart';
-import 'package:decor/services/auth_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
-import 'package:decor/utils/methods/validation_methods.dart';
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../components/custom_button.dart';
+import '../../../components/custom_progress_indicator.dart';
+import '../../../components/custom_text_field.dart';
+import '../../../constants/asset_constants.dart';
+import '../../../constants/constants.dart';
+import '../../../services/auth_services.dart';
+import '../../../utils/methods/reusable_methods.dart';
+import '../../../utils/methods/validation_methods.dart';
+import '../../dashboard/dashboard.dart';
+import '../components/custom_text_button.dart';
+import '../components/facebook_signin_button.dart';
+import '../forgot_password/forgot_password.dart';
+import '../signup/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';

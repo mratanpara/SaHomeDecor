@@ -1,14 +1,17 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_rect_button.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/models/category_model.dart';
-import 'package:decor/screens/details/detail_screen.dart';
-import 'package:decor/services/database_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../components/custom_app_bar.dart';
+import '../../components/custom_rect_button.dart';
+import '../../constants/constants.dart';
+import '../../constants/params_constants.dart';
+import '../../models/category_model.dart';
+import '../../services/database_services.dart';
+import '../../utils/methods/reusable_methods.dart';
+import '../details/detail_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String id = 'search_screen';
@@ -31,6 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    _categoryList.clear();
     _searchController = TextEditingController();
     _searchFocus = FocusNode();
 
@@ -39,7 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   _onSearchChanged() {
     searchResultList();
-    print(_searchController.text);
+    debugPrint(_searchController.text);
   }
 
   @override
@@ -209,13 +213,16 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       );
 
-  ClipRRect _image(int index, Size size) => ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          _resultList[index][paramUrl],
-          fit: BoxFit.fill,
-          width: double.maxFinite,
-          height: size.height * 0.25,
+  Hero _image(int index, Size size) => Hero(
+        tag: _resultList[index][paramUrl],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.network(
+            _resultList[index][paramUrl],
+            fit: BoxFit.fill,
+            width: double.maxFinite,
+            height: size.height * 0.25,
+          ),
         ),
       );
 

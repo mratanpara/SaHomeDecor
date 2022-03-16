@@ -1,15 +1,17 @@
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/components/custom_card_text_field.dart';
-import 'package:decor/constants/asset_constants.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
-import 'package:decor/utils/methods/validation_methods.dart';
+import '../../../../../components/custom_app_bar.dart';
+import '../../../../../components/custom_button.dart';
+import '../../../../../components/custom_card_text_field.dart';
+import '../../../../../constants/asset_constants.dart';
+import '../../../../../constants/constants.dart';
+import '../../../../../utils/methods/reusable_methods.dart';
+import '../../../../../utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AddPaymentMethod extends StatefulWidget {
   static const String id = 'add_payment_method';
+
+  const AddPaymentMethod({Key? key}) : super(key: key);
 
   @override
   _AddPaymentMethodState createState() => _AddPaymentMethodState();

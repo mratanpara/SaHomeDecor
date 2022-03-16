@@ -1,4 +1,4 @@
-import 'package:decor/constants/params_constants.dart';
+import 'params_constants.dart';
 import 'package:flutter/material.dart';
 
 //icon size

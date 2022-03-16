@@ -1,13 +1,13 @@
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/constants/asset_constants.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/dashboard/dashboard.dart';
+import '../../components/custom_button.dart';
+import '../../constants/asset_constants.dart';
+import '../../constants/constants.dart';
+import '../dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class SuccessScreen extends StatelessWidget {
   static const String id = 'success_screen';
 
-  SuccessScreen({Key? key}) : super(key: key);
+  const SuccessScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

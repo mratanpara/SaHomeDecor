@@ -1,20 +1,16 @@
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/constants/asset_constants.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/components/refresh_indicator.dart';
-import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class NotificationScreen extends StatefulWidget {
+import '../../components/custom_app_bar.dart';
+import '../../components/refresh_indicator.dart';
+import '../../constants/asset_constants.dart';
+import '../../constants/constants.dart';
+import '../search_screen/search_screen.dart';
+
+class NotificationScreen extends StatelessWidget {
   static const String id = 'notification_screen';
   const NotificationScreen({Key? key}) : super(key: key);
 
-  @override
-  _NotificationScreenState createState() => _NotificationScreenState();
-}
-
-class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

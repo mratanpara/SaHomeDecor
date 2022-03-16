@@ -1,24 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/utils/methods/get_address_count.dart';
-import 'package:decor/screens/shipping_address/components/add_sipping_address.dart';
-import 'package:decor/services/database_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ShippingAddresses extends StatefulWidget {
+import '../../../components/custom_app_bar.dart';
+import '../../../components/custom_progress_indicator.dart';
+import '../../../constants/constants.dart';
+import '../../../constants/params_constants.dart';
+import '../../../services/database_services.dart';
+import '../../../utils/methods/get_address_count.dart';
+import '../components/add_sipping_address.dart';
+
+class ShippingAddresses extends StatelessWidget {
   static const String id = 'shipping_address';
-  const ShippingAddresses({Key? key}) : super(key: key);
+  ShippingAddresses({Key? key}) : super(key: key);
 
-  @override
-  _ShippingAddressesState createState() => _ShippingAddressesState();
-}
-
-class _ShippingAddressesState extends State<ShippingAddresses> {
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();

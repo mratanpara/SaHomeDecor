@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import "package:webview_flutter/webview_flutter.dart";
 
 class PrivacyPolicyScreen extends StatefulWidget {
   static const String id = 'privacy_policy_screen';
+
+  const PrivacyPolicyScreen({Key? key}) : super(key: key);
   @override
   PrivacyPolicyScreenState createState() => PrivacyPolicyScreenState();
 }

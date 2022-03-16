@@ -1,13 +1,14 @@
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/screens/cart/cart_screen.dart';
-import 'package:decor/screens/home/components/all_categories_data.dart';
-import 'package:decor/screens/home/components/categories_data.dart';
-import 'package:decor/screens/search_screen/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../components/custom_app_bar.dart';
+import '../../../constants/constants.dart';
+import '../../../constants/params_constants.dart';
+import '../../cart/cart_screen.dart';
+import '../../search_screen/search_screen.dart';
+import '../components/all_categories_data.dart';
+import '../components/categories_data.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';

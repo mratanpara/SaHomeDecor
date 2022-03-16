@@ -1,20 +1,22 @@
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/constants/asset_constants.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/components/custom_text_field.dart';
-import 'package:decor/services/auth_services.dart';
-import 'package:decor/services/database_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
-import 'package:decor/utils/methods/validation_methods.dart';
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../components/custom_app_bar.dart';
+import '../../../../components/custom_button.dart';
+import '../../../../components/custom_progress_indicator.dart';
+import '../../../../components/custom_text_field.dart';
+import '../../../../constants/asset_constants.dart';
+import '../../../../constants/constants.dart';
+import '../../../../services/database_services.dart';
+import '../../../../utils/methods/reusable_methods.dart';
+import '../../../../utils/methods/validation_methods.dart';
 
 class ChangePassword extends StatefulWidget {
   static const String id = 'change_password';
 
-  ChangePassword({Key? key}) : super(key: key);
+  const ChangePassword({Key? key}) : super(key: key);
 
   @override
   _ChangePasswordState createState() => _ChangePasswordState();

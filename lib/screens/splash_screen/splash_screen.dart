@@ -1,36 +1,48 @@
-import 'package:decor/constants/asset_constants.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/auth/login/login_screen.dart';
-import 'package:decor/screens/dashboard/dashboard.dart';
-import 'package:decor/screens/onboarding/onboarding.dart';
+import '../../constants/asset_constants.dart';
+import '../../constants/constants.dart';
+import '../auth/login/login_screen.dart';
+import '../dashboard/dashboard.dart';
+import '../onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splash_screen';
 
-  SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late Animation animation;
-  late AnimationController controller;
+    with TickerProviderStateMixin {
+  late Animation _imageAnimation;
+  late Animation _colorAnimation;
+  late AnimationController _imageAnimationController;
+  late AnimationController _colorAnimationController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
+    _imageAnimationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 600));
-    final CurvedAnimation curve =
-        CurvedAnimation(parent: controller, curve: Curves.bounceOut);
-    animation = Tween(begin: 100.0, end: 300.0).animate(curve);
+    _colorAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1500));
+    final CurvedAnimation curve = CurvedAnimation(
+        parent: _imageAnimationController, curve: Curves.bounceOut);
 
-    controller.forward();
+    _imageAnimation = Tween(begin: 100.0, end: 300.0).animate(curve);
+
+    _colorAnimation = ColorTween(begin: Colors.grey, end: Colors.black)
+        .animate(_colorAnimationController)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    _imageAnimationController.forward();
+    _colorAnimationController.forward();
 
     Future.delayed(const Duration(milliseconds: 3000), () async {
       final _prefs = await SharedPreferences.getInstance();
@@ -54,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    controller.dispose();
+    _imageAnimationController.dispose();
     super.dispose();
   }
 
@@ -65,8 +77,8 @@ class _SplashScreenState extends State<SplashScreen>
       children: [
         Image.asset(
           kBackgroundImage,
-          height: animation.value,
-          width: animation.value,
+          height: _imageAnimation.value,
+          width: _imageAnimation.value,
         ),
         Image.asset(kGroupImage),
       ],
@@ -83,11 +95,11 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AnimatedBuilder(animation: animation, builder: builder),
-              const Text(
+              AnimatedBuilder(animation: _imageAnimation, builder: builder),
+              Text(
                 'SA Home Decor',
                 style: TextStyle(
-                  color: Colors.black,
+                  color: _colorAnimation.value,
                   fontSize: 44,
                   fontWeight: FontWeight.bold,
                 ),

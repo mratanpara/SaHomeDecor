@@ -1,31 +1,29 @@
+// ignore_for_file: must_be_immutable, deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/components/no_data_found.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/components/refresh_indicator.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/models/category_model.dart';
-import 'package:decor/screens/cart/cart_screen.dart';
-import 'package:decor/screens/details/detail_screen.dart';
-import 'package:decor/screens/search_screen/search_screen.dart';
-import 'package:decor/services/database_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class FavouriteScreen extends StatefulWidget {
+import '../../components/custom_app_bar.dart';
+import '../../components/custom_button.dart';
+import '../../components/custom_progress_indicator.dart';
+import '../../components/no_data_found.dart';
+import '../../components/refresh_indicator.dart';
+import '../../constants/constants.dart';
+import '../../constants/params_constants.dart';
+import '../../models/category_model.dart';
+import '../../services/database_services.dart';
+import '../../utils/methods/reusable_methods.dart';
+import '../cart/cart_screen.dart';
+import '../details/detail_screen.dart';
+import '../search_screen/search_screen.dart';
+
+class FavouriteScreen extends StatelessWidget {
   static const String id = 'favorite_screen';
 
-  const FavouriteScreen({Key? key}) : super(key: key);
+  FavouriteScreen({Key? key}) : super(key: key);
 
-  @override
-  _FavouriteScreenState createState() => _FavouriteScreenState();
-}
-
-class _FavouriteScreenState extends State<FavouriteScreen> {
   final _currentUser = FirebaseAuth.instance.currentUser;
   final _databaseService = DatabaseService();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -78,7 +76,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       _addAllToFavButton(size),
                     ],
                   )
-                : NoDataFound();
+                : const NoDataFound();
           },
         ),
       );
@@ -174,14 +172,16 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         ],
       );
 
-  ClipRRect _image(List<QueryDocumentSnapshot<Object?>> data, int index) =>
-      ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          data[index][paramUrl],
-          fit: BoxFit.cover,
-          height: 110,
-          width: 110,
+  Hero _image(List<QueryDocumentSnapshot<Object?>> data, int index) => Hero(
+        tag: data[index][paramUrl],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.network(
+            data[index][paramUrl],
+            fit: BoxFit.cover,
+            height: 110,
+            width: 110,
+          ),
         ),
       );
 

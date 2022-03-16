@@ -1,7 +1,9 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 
 class CustomRectButton extends StatelessWidget {
-  CustomRectButton({
+  const CustomRectButton({
     required this.width,
     required this.height,
     required this.icon,

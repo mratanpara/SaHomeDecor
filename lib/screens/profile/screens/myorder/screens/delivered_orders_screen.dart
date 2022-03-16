@@ -1,6 +1,6 @@
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/components/refresh_indicator.dart';
+import '../../../../../components/custom_button.dart';
+import '../../../../../constants/constants.dart';
+import '../../../../../components/refresh_indicator.dart';
 import 'package:flutter/material.dart';
 
 class DeliveredOrders extends StatelessWidget {
@@ -8,10 +8,8 @@ class DeliveredOrders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: CommonRefreshIndicator(
-        child: _deliveredList(),
-      ),
+    return CommonRefreshIndicator(
+      child: _deliveredList(),
     );
   }
 

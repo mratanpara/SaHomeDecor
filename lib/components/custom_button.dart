@@ -1,8 +1,10 @@
-import 'package:decor/constants/constants.dart';
+// ignore_for_file: use_key_in_widget_constructors
+
+import '../constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  CustomButton({required this.label, required this.onPressed});
+  const CustomButton({required this.label, required this.onPressed});
 
   final String label;
   final VoidCallback onPressed;

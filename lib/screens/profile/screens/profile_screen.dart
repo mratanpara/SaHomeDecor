@@ -1,23 +1,26 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/utils/methods/get_address_count.dart';
-import 'package:decor/components/refresh_indicator.dart';
-import 'package:decor/providers/address_provider.dart';
-import 'package:decor/screens/profile/components/custom_card.dart';
-import 'package:decor/screens/profile/screens/myorder/myorder_screen.dart';
-import 'package:decor/screens/profile/screens/myreviews/reviews_screen.dart';
-import 'package:decor/screens/profile/screens/payment_method/payment_method_screen.dart';
-import 'package:decor/screens/profile/screens/settings/settings_screen.dart';
-import 'package:decor/screens/search_screen/search_screen.dart';
-import 'package:decor/screens/shipping_address/screens/shipping_addresses_screen.dart';
-import 'package:decor/services/auth_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../components/custom_app_bar.dart';
+import '../../../components/refresh_indicator.dart';
+import '../../../constants/constants.dart';
+import '../../../constants/params_constants.dart';
+import '../../../providers/address_provider.dart';
+import '../../../services/auth_services.dart';
+import '../../../utils/methods/get_address_count.dart';
+import '../../../utils/methods/reusable_methods.dart';
+import '../../search_screen/search_screen.dart';
+import '../../shipping_address/screens/shipping_addresses_screen.dart';
+import '../components/custom_card.dart';
+import 'myorder/myorder_screen.dart';
+import 'myreviews/reviews_screen.dart';
+import 'payment_method/payment_method_screen.dart';
+import 'settings/settings_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';

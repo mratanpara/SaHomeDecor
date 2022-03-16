@@ -1,13 +1,16 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:decor/components/custom_rect_button.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/constants/params_constants.dart';
-import 'package:decor/models/category_model.dart';
-import 'package:decor/screens/details/detail_screen.dart';
-import 'package:decor/services/database_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../../components/custom_rect_button.dart';
+import '../../../constants/constants.dart';
+import '../../../constants/params_constants.dart';
+import '../../../models/category_model.dart';
+import '../../../services/database_services.dart';
+import '../../../utils/methods/reusable_methods.dart';
+import '../../details/detail_screen.dart';
 
 class CategoriesData extends StatefulWidget {
   const CategoriesData({
@@ -49,7 +52,7 @@ class _CategoriesDataState extends State<CategoriesData> {
       });
       return 'completed';
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
@@ -117,12 +120,15 @@ class _CategoriesDataState extends State<CategoriesData> {
         ),
       );
 
-  ClipRRect _image(int index) => ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.network(
-          _categoryList[index][paramUrl],
-          fit: BoxFit.fill,
-          width: double.maxFinite,
+  Hero _image(int index) => Hero(
+        tag: _categoryList[index][paramUrl],
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.network(
+            _categoryList[index][paramUrl],
+            fit: BoxFit.fill,
+            width: double.maxFinite,
+          ),
         ),
       );
 

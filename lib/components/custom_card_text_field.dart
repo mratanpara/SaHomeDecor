@@ -1,5 +1,7 @@
-import 'package:decor/constants/constants.dart';
-import 'package:decor/components/custom_text_field.dart';
+// ignore_for_file: prefer_typing_uninitialized_variables, use_key_in_widget_constructors
+
+import '../constants/constants.dart';
+import 'custom_text_field.dart';
 import 'package:flutter/material.dart';
 
 class CustomCardTextField extends StatelessWidget {
@@ -11,7 +13,7 @@ class CustomCardTextField extends StatelessWidget {
   final String hintText;
   final validator;
 
-  CustomCardTextField({
+  const CustomCardTextField({
     required this.controller,
     required this.focusNode,
     required this.label,

@@ -1,17 +1,20 @@
-import 'package:decor/components/custom_button.dart';
-import 'package:decor/components/custom_progress_indicator.dart';
-import 'package:decor/constants/asset_constants.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/models/users_model.dart';
-import 'package:decor/components/custom_text_field.dart';
-import 'package:decor/screens/auth/components/facebook_signin_button.dart';
-import 'package:decor/screens/dashboard/dashboard.dart';
-import 'package:decor/services/auth_services.dart';
-import 'package:decor/services/database_services.dart';
-import 'package:decor/utils/methods/reusable_methods.dart';
-import 'package:decor/utils/methods/validation_methods.dart';
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../components/custom_button.dart';
+import '../../../components/custom_progress_indicator.dart';
+import '../../../components/custom_text_field.dart';
+import '../../../constants/asset_constants.dart';
+import '../../../constants/constants.dart';
+import '../../../models/users_model.dart';
+import '../../../services/auth_services.dart';
+import '../../../services/database_services.dart';
+import '../../../utils/methods/reusable_methods.dart';
+import '../../../utils/methods/validation_methods.dart';
+import '../../dashboard/dashboard.dart';
+import '../components/facebook_signin_button.dart';
 
 const _normalUserPhotoURl =
     'https://banner2.cleanpng.com/20180319/pde/kisspng-computer-icons-icon-design-avatar-flat-face-icon-5ab06e33bee962.122118601521511987782.jpg';

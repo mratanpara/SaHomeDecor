@@ -1,8 +1,8 @@
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/profile/screens/myorder/screens/cancelled_orders_screen.dart';
-import 'package:decor/screens/profile/screens/myorder/screens/delivered_orders_screen.dart';
-import 'package:decor/screens/profile/screens/myorder/screens/processing_orders_screen.dart';
+import '../../../../components/custom_app_bar.dart';
+import '../../../../constants/constants.dart';
+import 'screens/cancelled_orders_screen.dart';
+import 'screens/delivered_orders_screen.dart';
+import 'screens/processing_orders_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

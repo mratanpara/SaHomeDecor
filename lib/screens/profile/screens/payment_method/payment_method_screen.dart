@@ -1,7 +1,7 @@
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/constants/asset_constants.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/screens/profile/screens/payment_method/components/add_payment_method.dart';
+import '../../../../components/custom_app_bar.dart';
+import '../../../../constants/asset_constants.dart';
+import '../../../../constants/constants.dart';
+import 'components/add_payment_method.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

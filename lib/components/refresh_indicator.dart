@@ -1,7 +1,9 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 
 class CommonRefreshIndicator extends StatelessWidget {
-  CommonRefreshIndicator({required this.child});
+  const CommonRefreshIndicator({required this.child});
 
   final Widget child;
 

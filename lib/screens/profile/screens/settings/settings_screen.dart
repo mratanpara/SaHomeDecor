@@ -1,13 +1,15 @@
-import 'package:decor/components/custom_app_bar.dart';
-import 'package:decor/components/custom_card_text_field.dart';
-import 'package:decor/constants/constants.dart';
-import 'package:decor/components/refresh_indicator.dart';
-import 'package:decor/screens/profile/screens/change_password/change_password.dart';
-import 'package:decor/screens/profile/screens/settings/components/custom_list_tile.dart';
-import 'package:decor/screens/profile/screens/settings/screens/faqs_screen.dart';
-import 'package:decor/screens/profile/screens/settings/screens/privacy_policy.dart';
-import 'package:decor/screens/profile/screens/settings/screens/terms_and_conditions.dart';
-import 'package:decor/utils/methods/validation_methods.dart';
+// ignore_for_file: use_key_in_widget_constructors
+
+import '../../../../components/custom_app_bar.dart';
+import '../../../../components/custom_card_text_field.dart';
+import '../../../../constants/constants.dart';
+import '../../../../components/refresh_indicator.dart';
+import '../change_password/change_password.dart';
+import 'components/custom_list_tile.dart';
+import 'screens/faqs_screen.dart';
+import 'screens/privacy_policy.dart';
+import 'screens/terms_and_conditions.dart';
+import '../../../../utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
