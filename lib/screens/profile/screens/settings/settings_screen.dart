@@ -18,39 +18,16 @@ import 'package:flutter/material.dart';
 class SettingsScreen extends StatefulWidget {
   static const String id = 'settings_screen';
 
-  const SettingsScreen({required this.displayName, required this.email});
-
-  final String displayName;
-  final String email;
-
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late TextEditingController _nameController;
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
-
-  late FocusNode _nameFocus;
-  late FocusNode _emailFocus;
-  late FocusNode _passwordFocus;
-
   bool _isDarkMode = false;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
-
-    _nameController.text = widget.displayName;
-    _emailController.text = widget.email;
-
-    _nameFocus = FocusNode();
-    _emailFocus = FocusNode();
-    _passwordFocus = FocusNode();
     getTheme();
   }
 
@@ -63,12 +40,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _nameFocus.dispose();
-    _emailFocus.dispose();
-    _passwordFocus.dispose();
     super.dispose();
   }
 

@@ -86,7 +86,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   Text _headingTextWithIcon() => const Text(
         'Forgot Password!',
         style: TextStyle(
-          color: Colors.black,
           fontSize: 44,
           fontWeight: FontWeight.bold,
         ),

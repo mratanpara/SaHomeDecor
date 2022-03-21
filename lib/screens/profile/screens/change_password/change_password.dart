@@ -82,7 +82,6 @@ class _ChangePasswordState extends State<ChangePassword> {
   Text _headingText() => const Text(
         'Change Password!',
         style: TextStyle(
-          color: Colors.black,
           fontSize: 44,
           fontWeight: FontWeight.bold,
         ),
@@ -134,7 +133,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       );
 
   CustomButton _saveButton(BuildContext context) => CustomButton(
-        label: 'SAVE PASSWORD',
+        label: 'CHANGE PASSWORD',
         onPressed: () async {
           try {
             if (_formKey.currentState!.validate()) {

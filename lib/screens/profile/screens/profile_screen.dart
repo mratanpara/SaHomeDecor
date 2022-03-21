@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:decor/providers/user_provider.dart';
+import 'package:decor/screens/profile/screens/edit_profile/edit_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +17,12 @@ import '../../../services/auth_services.dart';
 import '../../../utils/methods/get_address_count.dart';
 import '../../../utils/methods/reusable_methods.dart';
 import '../../search_screen/search_screen.dart';
-import '../../shipping_address/screens/shipping_addresses_screen.dart';
 import '../components/custom_card.dart';
 import 'myorder/myorder_screen.dart';
 import 'myreviews/reviews_screen.dart';
 import 'payment_method/payment_method_screen.dart';
 import 'settings/settings_screen.dart';
+import 'shipping_address/screens/shipping_addresses_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String id = 'profile_screen';
@@ -45,6 +47,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (_currentUser != null) {
         var docSnapshot = await _usersCollection.doc(_currentUser!.uid).get();
         if (docSnapshot.exists) {
+          Provider.of<UserDataProvider>(context, listen: false)
+              .updateCurrentUser(docSnapshot);
           setState(() {
             displayName = docSnapshot.get(paramDisplayName);
             email = docSnapshot.get(paramEmail);
@@ -109,32 +113,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Padding _userDetails(Size size) => Padding(
         padding: kSymmetricPaddingVer,
-        child: Row(
-          children: [
-            _image(size),
-            _listTile(),
-          ],
+        child: Consumer<UserDataProvider>(
+          builder: (context, userData, child) => Row(
+            children: [
+              _image(size, userData),
+              _listTile(userData),
+            ],
+          ),
         ),
       );
 
-  CircleAvatar _image(Size size) => CircleAvatar(
-        backgroundImage: NetworkImage(photoURL),
+  CircleAvatar _image(Size size, UserDataProvider userData) => CircleAvatar(
+        backgroundImage: NetworkImage(userData.userPhotoUrl),
         radius: size.width * 0.1,
       );
 
-  Flexible _listTile() => Flexible(
+  Flexible _listTile(UserDataProvider userData) => Flexible(
         child: ListTile(
           title: Padding(
             padding: kBottomPadding,
             child: Text(
-              displayName,
+              userData.userDisplayName,
               style: kProfileTileTitleTextStyle,
             ),
           ),
           subtitle: Text(
-            email,
+            userData.userEmail,
             style: kProfileTileSubTitleTextStyle,
           ),
+          trailing: IconButton(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EditProfileScreen(name: userData.userDisplayName))),
+              icon: const Icon(Icons.edit)),
         ),
       );
 
@@ -178,11 +191,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: CustomCard(
           title: 'Settings',
           subTitle: 'Notification, Password, FAQs, Contact',
-          onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      SettingsScreen(displayName: displayName, email: email))),
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SettingsScreen())),
         ),
       );
 }
