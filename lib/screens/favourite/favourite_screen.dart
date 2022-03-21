@@ -51,33 +51,36 @@ class FavouriteScreen extends StatelessWidget {
       );
 
   CommonRefreshIndicator _body(Size size) => CommonRefreshIndicator(
-        child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(_currentUser!.uid)
-              .collection('favourites')
-              .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return const CustomProgressIndicator();
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CustomProgressIndicator();
-            }
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(_currentUser!.uid)
+                .collection('favourites')
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return const CustomProgressIndicator();
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CustomProgressIndicator();
+              }
 
-            final data = snapshot.data!.docs;
-            allData = snapshot.data!.docs;
+              final data = snapshot.data!.docs;
+              allData = snapshot.data!.docs;
 
-            return data.isNotEmpty
-                ? Stack(
-                    children: [
-                      _favItemListView(data),
-                      _addAllToFavButton(size),
-                    ],
-                  )
-                : const NoDataFound();
-          },
+              return data.isNotEmpty
+                  ? Stack(
+                      children: [
+                        _favItemListView(data),
+                        _addAllToFavButton(size),
+                      ],
+                    )
+                  : const NoDataFound();
+            },
+          ),
         ),
       );
 
@@ -257,7 +260,6 @@ class FavouriteScreen extends StatelessWidget {
           icon: const Icon(
             CupertinoIcons.cart,
             size: 28,
-            color: Colors.grey,
           ),
         ),
       );

@@ -46,7 +46,6 @@ class PaymentMethodScreen extends StatelessWidget {
         children: [
           Checkbox(
             value: true,
-            activeColor: Colors.black,
             onChanged: (value) {},
           ),
           const Text(

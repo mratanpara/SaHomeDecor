@@ -1,3 +1,5 @@
+import '../../../../../constants/customExtension.dart';
+
 import '../../../../../components/custom_app_bar.dart';
 import '../../../../../constants/constants.dart';
 import '../../../../../models/question_model.dart';
@@ -18,7 +20,7 @@ class FAQsScreen extends StatelessWidget {
         itemBuilder: (context, i) {
           return _questionListView(i);
         },
-      ),
+      ).padTop(),
     );
   }
 

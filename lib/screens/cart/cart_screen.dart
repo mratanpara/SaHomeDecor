@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../constants/customExtension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ class _CartScreenState extends State<CartScreen> {
                 ? const NoDataFound()
                 : Stack(
                     children: [
-                      _cartLists(data, size),
+                      _cartLists(data, size).padTop(),
                       _totalAmountAndCheckOutButton(size, context),
                     ],
                   );
@@ -244,7 +245,6 @@ class _CartScreenState extends State<CartScreen> {
         child: Text(
           data[index][paramItemCount].toString(),
           style: const TextStyle(
-            color: Colors.black,
             fontSize: kNormalFontSize,
           ),
         ),

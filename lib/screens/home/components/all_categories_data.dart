@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -72,9 +73,10 @@ class _GetAllCategoriesDataState extends State<GetAllCategoriesData> {
     final size = MediaQuery.of(context).size;
     return RefreshIndicator(
       color: Colors.black,
+      backgroundColor: Colors.white,
       onRefresh: getCategoriesStreamSnapShot,
       child: isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.black))
+          ? const CustomProgressIndicator()
           : GridView.builder(
               shrinkWrap: true,
               physics: kPhysics,
@@ -83,7 +85,7 @@ class _GetAllCategoriesDataState extends State<GetAllCategoriesData> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 20,
                 mainAxisSpacing: 20,
-                mainAxisExtent: widget.size.height * 0.35,
+                mainAxisExtent: widget.size.height * 0.33,
               ),
               itemCount: _categoryList.length,
               itemBuilder: (BuildContext context, int index) {

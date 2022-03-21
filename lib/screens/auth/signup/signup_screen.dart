@@ -97,10 +97,15 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Padding _image(Size size) => Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: size.width * 0.01, horizontal: size.height * 0.02),
-        child: Image.asset(kSignUpAndSignInLogoImage),
+  Hero _image(Size size) => Hero(
+        tag: 'logo',
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(kBackgroundImage),
+            Image.asset(kGroupImage),
+          ],
+        ),
       );
 
   Padding _headingText(Size size) => Padding(
@@ -118,7 +123,6 @@ class _SignupScreenState extends State<SignupScreen> {
           decoration: kBoxShadow,
           child: Card(
             shadowColor: Colors.transparent,
-            color: kBgColor,
             child: Padding(
               padding: kCardPadding,
               child: Form(
@@ -245,7 +249,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   text: 'Sign In',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 ),
               ],

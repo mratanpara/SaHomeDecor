@@ -1,3 +1,5 @@
+import "../../../../constants/customExtension.dart";
+
 import '../../../../components/custom_app_bar.dart';
 import '../../../../constants/constants.dart';
 import 'screens/cancelled_orders_screen.dart';
@@ -31,7 +33,7 @@ class _OrderScreenState extends State<OrderScreen>
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          _tabBar(),
+          _tabBar().padTop(),
           Flexible(
             child: TabBarView(
               controller: _tabController,
@@ -57,7 +59,6 @@ class _OrderScreenState extends State<OrderScreen>
       );
 
   TabBar _tabBar() => TabBar(
-        labelColor: Colors.black,
         labelStyle: kOrderTabTextStyle,
         indicator: const UnderlineTabIndicator(
             borderSide: BorderSide(width: 6),

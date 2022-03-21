@@ -36,8 +36,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       key: _scaffoldKey,
       appBar: _appBar(context),
       body: Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: size.height * 0.02, horizontal: size.width * 0.02),
+        padding: EdgeInsets.only(
+            left: size.width * 0.02,
+            right: size.width * 0.02,
+            top: size.height * 0.02),
         child: _homeScreenData(size),
       ),
     );
@@ -65,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         indicator: kTabIndicatorDecoration,
         indicatorSize: TabBarIndicatorSize.tab,
         unselectedLabelColor: Colors.grey,
+        labelColor: Colors.white,
         controller: _tabController,
         tabs: const <Widget>[
           Tab(
@@ -94,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: SizedBox(
           height: size.height,
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height * 0.01),
+            padding: EdgeInsets.only(top: size.height * 0.01),
             child: TabBarView(
               controller: _tabController,
               children: [

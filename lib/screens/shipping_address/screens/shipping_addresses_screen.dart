@@ -82,7 +82,6 @@ class ShippingAddresses extends StatelessWidget {
       Row(
         children: [
           Checkbox(
-            activeColor: Colors.black,
             value: data[index][paramIsPrimary],
             onChanged: (value) {
               _databaseService.setPrimaryShippingAddress(

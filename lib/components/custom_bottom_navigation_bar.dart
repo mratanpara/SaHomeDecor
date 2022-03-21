@@ -18,13 +18,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
             _notificationNavigationBarItem(),
             _accountNavigationBarItem(),
           ],
-          backgroundColor: Colors.white,
           elevation: 2,
           iconSize: kIconSize,
           showSelectedLabels: false,
           currentIndex: selectedIndex.getSelectedIndex,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
           showUnselectedLabels: false,
           type: BottomNavigationBarType.fixed,
           onTap: (index) {

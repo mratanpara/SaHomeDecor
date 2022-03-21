@@ -19,13 +19,12 @@ const kBgColor = Colors.white;
 
 //TextField lable style
 const kTextFieldLabelStyle = TextStyle(
-  color: Colors.black,
   fontSize: 18,
 );
 
 //forgot password style
 const kForgotPasswordTextStyle = TextStyle(
-  color: Colors.black,
+  color: Colors.grey,
   fontSize: 20,
 );
 
@@ -54,14 +53,12 @@ const kSecondTitleTextStyle = TextStyle(
 
 //gridview text style
 const kViewTitleStyle = TextStyle(
-  color: Colors.grey,
   fontSize: 16,
   letterSpacing: 2,
   fontWeight: FontWeight.bold,
 );
 const kViewSubTitleStyle = TextStyle(
   fontSize: kNormalFontSize,
-  color: Colors.black,
   fontWeight: FontWeight.bold,
 );
 
@@ -82,7 +79,6 @@ const kSuccessMsgTextStyle = TextStyle(
 //order page
 const kOrderBoldTextStyle = TextStyle(
   fontSize: 18,
-  color: Colors.black,
   fontWeight: FontWeight.w600,
 );
 const kOrderTextStyle = TextStyle(fontSize: 18, color: Colors.grey);
@@ -124,10 +120,9 @@ const kOnBoardingTitleTextStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.bold,
   letterSpacing: 2,
-  color: Colors.black,
 );
 const kOnBoardingContentTextStyle = TextStyle(
-  color: Colors.black54,
+  color: Colors.grey,
   fontSize: 18,
   fontWeight: FontWeight.bold,
 );
@@ -155,7 +150,7 @@ final List<String> allCategoriesCollectionList = [
 BoxDecoration kBoxShadow = BoxDecoration(
   boxShadow: [
     BoxShadow(
-      color: Colors.grey.withOpacity(.2),
+      color: Colors.black.withOpacity(.2),
       blurRadius: 20.0, // soften the shadow
       spreadRadius: 0.0, //extend the shadow
       offset: const Offset(

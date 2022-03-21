@@ -17,7 +17,6 @@ class NoDataFound extends StatelessWidget {
           const Text(
             'No Data Found',
             style: TextStyle(
-              color: Colors.black54,
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),

@@ -1,3 +1,5 @@
+import '../../../../constants/customExtension.dart';
+
 import '../../../../components/custom_app_bar.dart';
 import '../../../../constants/asset_constants.dart';
 import '../../../../constants/constants.dart';
@@ -24,7 +26,7 @@ class ReviewsScreen extends StatelessWidget {
             return _customReviewListTile(size);
           },
         ),
-      ),
+      ).padTop(),
     );
   }
 
@@ -86,7 +88,6 @@ class ReviewsScreen extends StatelessWidget {
         child: Text(
           'Sofa',
           style: TextStyle(
-            color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -97,7 +98,6 @@ class ReviewsScreen extends StatelessWidget {
         '\$ 50.00',
         style: TextStyle(
           fontSize: 20,
-          color: Colors.black,
         ),
       );
 
@@ -107,7 +107,10 @@ class ReviewsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _starsRow(),
-            const Text('20/03/2022'),
+            const Text(
+              '20/03/2022',
+              style: TextStyle(color: Colors.grey),
+            ),
           ],
         ),
       );

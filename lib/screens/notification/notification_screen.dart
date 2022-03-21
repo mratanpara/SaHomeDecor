@@ -1,3 +1,4 @@
+import '../../constants/customExtension.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class NotificationScreen extends StatelessWidget {
           },
           separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
-        ),
+        ).padTop(),
       ),
     );
   }
@@ -70,7 +71,6 @@ class NotificationScreen extends StatelessWidget {
         child: Text(
           'Your order #123456789 has been shipped successfully',
           style: TextStyle(
-            color: Colors.black,
             fontSize: kNormalFontSize,
             fontWeight: FontWeight.bold,
           ),
@@ -81,7 +81,6 @@ class NotificationScreen extends StatelessWidget {
         'Please help us to confirm and rate your order to get 10% discount code for next order.',
         style: TextStyle(
           fontSize: kNormalFontSize,
-          color: Colors.black,
         ),
       );
 }

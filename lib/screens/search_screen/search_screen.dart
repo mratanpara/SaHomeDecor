@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -37,19 +38,13 @@ class _SearchScreenState extends State<SearchScreen> {
     _categoryList.clear();
     _searchController = TextEditingController();
     _searchFocus = FocusNode();
-
+    resultLoaded = getCategoriesStreamSnapShot();
     _searchController.addListener(_onSearchChanged);
   }
 
   _onSearchChanged() {
     searchResultList();
     debugPrint(_searchController.text);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    resultLoaded = getCategoriesStreamSnapShot();
   }
 
   @override
@@ -115,10 +110,7 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Column(
         children: [
           _searchTextField(),
-          isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(color: Colors.black))
-              : _gridView(size),
+          isLoading ? const CustomProgressIndicator() : _gridView(size),
         ],
       ),
     );
