@@ -101,7 +101,6 @@ class DetailScreen extends StatelessWidget {
           data[paramName],
           style: const TextStyle(
             fontSize: 24,
-            color: Colors.black,
           ),
         ),
       );
@@ -133,7 +132,6 @@ class DetailScreen extends StatelessWidget {
               child: Text(
                 data[paramStar].toString(),
                 style: const TextStyle(
-                  color: Colors.black,
                   fontSize: kNormalFontSize,
                 ),
               ),
@@ -155,7 +153,6 @@ class DetailScreen extends StatelessWidget {
           data[paramDesc],
           style: const TextStyle(
             fontSize: kNormalFontSize,
-            color: Colors.grey,
           ),
         ),
       );

@@ -35,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _imageAnimation = Tween(begin: 100.0, end: 300.0).animate(curve);
 
-    _colorAnimation = ColorTween(begin: Colors.grey, end: Colors.black)
+    _colorAnimation = ColorTween(begin: Colors.white, end: Colors.grey)
         .animate(_colorAnimationController)
       ..addListener(() {
         setState(() {});
@@ -71,17 +71,20 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Widget builder(BuildContext context, Widget? child) {
-    return Stack(
-      fit: StackFit.passthrough,
-      alignment: Alignment.center,
-      children: [
-        Image.asset(
-          kBackgroundImage,
-          height: _imageAnimation.value,
-          width: _imageAnimation.value,
-        ),
-        Image.asset(kGroupImage),
-      ],
+    return Hero(
+      tag: 'logo',
+      child: Stack(
+        fit: StackFit.passthrough,
+        alignment: Alignment.center,
+        children: [
+          Image.asset(
+            kBackgroundImage,
+            height: _imageAnimation.value,
+            width: _imageAnimation.value,
+          ),
+          Image.asset(kGroupImage),
+        ],
+      ),
     );
   }
 

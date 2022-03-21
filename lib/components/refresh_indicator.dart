@@ -13,6 +13,7 @@ class CommonRefreshIndicator extends StatelessWidget {
       child: child,
       onRefresh: _refreshFurniture,
       color: Colors.black,
+      backgroundColor: Colors.white,
     );
   }
 

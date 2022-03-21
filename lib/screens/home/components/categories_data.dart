@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:decor/components/custom_progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -72,9 +73,10 @@ class _CategoriesDataState extends State<CategoriesData> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       color: Colors.black,
+      backgroundColor: Colors.white,
       onRefresh: getCategoriesStreamSnapShot,
       child: isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.black))
+          ? const CustomProgressIndicator()
           : GridView.builder(
               shrinkWrap: true,
               physics: kPhysics,

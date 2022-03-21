@@ -81,10 +81,15 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Padding _image(Size size) => Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: size.width * 0.01, horizontal: size.height * 0.02),
-        child: Image.asset(kSignUpAndSignInLogoImage),
+  Hero _image(Size size) => Hero(
+        tag: 'logo',
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(kBackgroundImage),
+            Image.asset(kGroupImage),
+          ],
+        ),
       );
 
   Padding _firstHeading(Size size) => Padding(
@@ -110,7 +115,6 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxShadow,
           child: Card(
             shadowColor: Colors.transparent,
-            color: kBgColor,
             child: Padding(
               padding: EdgeInsets.symmetric(
                   vertical: size.width * 0.01, horizontal: size.height * 0.01),
@@ -212,7 +216,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: 'Sign Up',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 ),
               ],

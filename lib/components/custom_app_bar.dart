@@ -36,7 +36,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(
           leadingIcon,
           size: kIconSize,
-          color: Colors.grey,
         ),
       );
 
@@ -60,7 +59,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(
             actionIcon,
             size: kIconSize,
-            color: Colors.grey,
           ),
         ),
       ];

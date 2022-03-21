@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'providers/address_provider.dart';
 import 'providers/amount_provider.dart';
@@ -27,62 +28,75 @@ import 'screens/search_screen/search_screen.dart';
 import 'screens/shipping_address/screens/shipping_addresses_screen.dart';
 import 'screens/splash_screen/splash_screen.dart';
 import 'screens/success/success_screen.dart';
-import 'themes/theme.dart';
+import 'providers/theme_provider.dart';
+
+final _route = {
+  DashBoard.id: (context) => const DashBoard(),
+  HomeScreen.id: (context) => const HomeScreen(),
+  FavouriteScreen.id: (context) => FavouriteScreen(),
+  NotificationScreen.id: (context) => const NotificationScreen(),
+  ProfileScreen.id: (context) => const ProfileScreen(),
+  SuccessScreen.id: (context) => const SuccessScreen(),
+  ChangePassword.id: (context) => const ChangePassword(),
+  ForgotPassword.id: (context) => const ForgotPassword(),
+  OrderScreen.id: (context) => const OrderScreen(),
+  PaymentMethodScreen.id: (context) => const PaymentMethodScreen(),
+  AddPaymentMethod.id: (context) => const AddPaymentMethod(),
+  ReviewsScreen.id: (context) => const ReviewsScreen(),
+  SearchScreen.id: (context) => const SearchScreen(),
+  SplashScreen.id: (context) => const SplashScreen(),
+  CartScreen.id: (context) => const CartScreen(),
+  ShippingAddresses.id: (context) => ShippingAddresses(),
+  LoginScreen.id: (context) => const LoginScreen(),
+  SignupScreen.id: (context) => const SignupScreen(),
+  FAQsScreen.id: (context) => const FAQsScreen(),
+  TermsAndConditionsScreen.id: (context) => const TermsAndConditionsScreen(),
+  PrivacyPolicyScreen.id: (context) => const PrivacyPolicyScreen(),
+  OnBoarding.id: (context) => const OnBoarding(),
+};
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => NavigationProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => AddressProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => AmountProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) =>
+            ThemeProvider(isDarkMode: prefs.getBool("isDarkTheme") ?? false),
+      ),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  final _route = {
-    DashBoard.id: (context) => const DashBoard(),
-    HomeScreen.id: (context) => const HomeScreen(),
-    FavouriteScreen.id: (context) => FavouriteScreen(),
-    NotificationScreen.id: (context) => const NotificationScreen(),
-    ProfileScreen.id: (context) => const ProfileScreen(),
-    SuccessScreen.id: (context) => const SuccessScreen(),
-    ChangePassword.id: (context) => const ChangePassword(),
-    ForgotPassword.id: (context) => const ForgotPassword(),
-    OrderScreen.id: (context) => const OrderScreen(),
-    PaymentMethodScreen.id: (context) => const PaymentMethodScreen(),
-    AddPaymentMethod.id: (context) => const AddPaymentMethod(),
-    ReviewsScreen.id: (context) => const ReviewsScreen(),
-    SearchScreen.id: (context) => const SearchScreen(),
-    SplashScreen.id: (context) => const SplashScreen(),
-    CartScreen.id: (context) => const CartScreen(),
-    ShippingAddresses.id: (context) => ShippingAddresses(),
-    LoginScreen.id: (context) => const LoginScreen(),
-    SignupScreen.id: (context) => const SignupScreen(),
-    FAQsScreen.id: (context) => const FAQsScreen(),
-    TermsAndConditionsScreen.id: (context) => const TermsAndConditionsScreen(),
-    PrivacyPolicyScreen.id: (context) => const PrivacyPolicyScreen(),
-    OnBoarding.id: (context) => const OnBoarding(),
-  };
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => NavigationProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AddressProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => AmountProvider(),
-        ),
-      ],
-      child: MaterialApp(
-        title: 'SaHomeDecor',
-        debugShowCheckedModeBanner: false,
-        initialRoute: SplashScreen.id,
-        routes: _route,
-        theme: lightTheme(),
+    return Theme(
+      data: ThemeData(fontFamily: 'Asap'),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return MaterialApp(
+            title: 'SaHomeDecor',
+            debugShowCheckedModeBanner: false,
+            initialRoute: SplashScreen.id,
+            routes: _route,
+            theme: themeProvider.getTheme,
+          );
+        },
       ),
     );
   }

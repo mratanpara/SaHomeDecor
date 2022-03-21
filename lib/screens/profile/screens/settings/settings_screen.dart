@@ -1,7 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors
 
+import 'package:decor/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../components/custom_app_bar.dart';
-import '../../../../components/custom_card_text_field.dart';
 import '../../../../constants/constants.dart';
 import '../../../../components/refresh_indicator.dart';
 import '../change_password/change_password.dart';
@@ -9,12 +12,12 @@ import 'components/custom_list_tile.dart';
 import 'screens/faqs_screen.dart';
 import 'screens/privacy_policy.dart';
 import 'screens/terms_and_conditions.dart';
-import '../../../../utils/methods/validation_methods.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String id = 'settings_screen';
+
   const SettingsScreen({required this.displayName, required this.email});
 
   final String displayName;
@@ -33,6 +36,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late FocusNode _emailFocus;
   late FocusNode _passwordFocus;
 
+  bool _isDarkMode = false;
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +51,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _nameFocus = FocusNode();
     _emailFocus = FocusNode();
     _passwordFocus = FocusNode();
+    getTheme();
+  }
+
+  getTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isDarkMode = prefs.getBool('isDarkTheme') ?? false;
+    });
   }
 
   @override
@@ -85,11 +98,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Column _column(BuildContext context) => Column(
         children: [
-          _headingRow(),
-          _nameTextField(),
-          _emailTextField(),
           _heading('Password'),
           _changePasswordTile(context),
+          _heading('Theme'),
+          _darkMode(),
           _heading('Notification'),
           _salesTile(),
           _newArrivalsTile(),
@@ -101,37 +113,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       );
 
-  Row _headingRow() => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text(
-            'Personal Information',
-            style: kSettingsHeadingTextStyle,
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.edit),
-          ),
-        ],
+  Consumer _darkMode() => Consumer<ThemeProvider>(
+        builder: (context, themeProvider, child) {
+          return CustomListTile(
+            trailing: CupertinoSwitch(
+                value: _isDarkMode,
+                onChanged: (val) async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  setState(() {
+                    prefs.setBool("isDarkTheme", val);
+                    _isDarkMode = val;
+                  });
+                  themeProvider.swapTheme();
+                }),
+            onTap: () {
+              setState(() {
+                _isDarkMode = !_isDarkMode;
+              });
+              themeProvider.swapTheme();
+            },
+            text: 'Dark Mode',
+          );
+        },
       );
-
-  CustomCardTextField _nameTextField() => CustomCardTextField(
-      controller: _nameController,
-      focusNode: _nameFocus,
-      label: 'Name',
-      validator: validateFullName,
-      onPressed: (val) {},
-      type: TextInputType.text,
-      hintText: 'Name');
-
-  CustomCardTextField _emailTextField() => CustomCardTextField(
-      controller: _emailController,
-      focusNode: _emailFocus,
-      label: 'Email',
-      validator: validateEmail,
-      onPressed: (val) {},
-      type: TextInputType.emailAddress,
-      hintText: 'Email');
 
   CustomListTile _changePasswordTile(BuildContext context) => CustomListTile(
       trailing: const Icon(CupertinoIcons.forward),
