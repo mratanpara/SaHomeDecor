@@ -72,7 +72,7 @@ const kProfileTileSubTitleTextStyle = TextStyle(fontSize: kNormalFontSize);
 //success page
 const kSuccessMsgTextStyle = TextStyle(
   fontSize: 22,
-  color: Colors.black54,
+  color: Colors.grey,
   fontWeight: FontWeight.w500,
 );
 

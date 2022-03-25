@@ -39,6 +39,8 @@ String? validateCardNumber(String? number) {
     return 'Card number can\'t be empty!';
   } else if (number.length < 16) {
     return 'Card number must be of 16 digit!';
+  } else if (number.length > 16) {
+    return 'Card number must be of 16 digit!';
   }
   return null;
 }
@@ -47,6 +49,8 @@ String? validateCVV(String? cvv) {
   if (cvv!.trim().isEmpty) {
     return 'CVV can\'t be empty!';
   } else if (cvv.length < 3) {
+    return 'CVV must be of 3 digit!';
+  } else if (cvv.length > 3) {
     return 'CVV must be of 3 digit!';
   }
   return null;
@@ -65,6 +69,8 @@ String? validateMobileNumber(String? number) {
     return 'Mobile number can\'t be empty!';
   } else if (number.length < 10) {
     return 'Mobile Number must be of 10 digit!';
+  } else if (number.length > 10) {
+    return 'Mobile Number must be of 10 digit!';
   }
   return null;
 }
@@ -80,6 +86,8 @@ String? validateZipcode(String? zipcode) {
   if (zipcode!.trim().isEmpty) {
     return 'Zipcode can\'t be empty!';
   } else if (zipcode.length < 6) {
+    return 'Zipcode must be of 6 digit!';
+  } else if (zipcode.length > 6) {
     return 'Zipcode must be of 6 digit!';
   }
   return null;

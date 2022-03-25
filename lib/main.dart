@@ -1,3 +1,4 @@
+import 'providers/user_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +25,8 @@ import 'screens/profile/screens/profile_screen.dart';
 import 'screens/profile/screens/settings/screens/faqs_screen.dart';
 import 'screens/profile/screens/settings/screens/privacy_policy.dart';
 import 'screens/profile/screens/settings/screens/terms_and_conditions.dart';
+import 'screens/profile/screens/shipping_address/screens/shipping_addresses_screen.dart';
 import 'screens/search_screen/search_screen.dart';
-import 'screens/shipping_address/screens/shipping_addresses_screen.dart';
 import 'screens/splash_screen/splash_screen.dart';
 import 'screens/success/success_screen.dart';
 import 'providers/theme_provider.dart';
@@ -72,11 +73,14 @@ Future<void> main() async {
         create: (context) => AmountProvider(),
       ),
       ChangeNotifierProvider(
+        create: (context) => UserDataProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (context) =>
             ThemeProvider(isDarkMode: prefs.getBool("isDarkTheme") ?? false),
       ),
     ],
-    child: MyApp(),
+    child: const MyApp(),
   ));
 }
 

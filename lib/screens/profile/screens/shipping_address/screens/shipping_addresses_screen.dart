@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../components/custom_app_bar.dart';
-import '../../../components/custom_progress_indicator.dart';
-import '../../../constants/constants.dart';
-import '../../../constants/params_constants.dart';
-import '../../../services/database_services.dart';
-import '../../../utils/methods/get_address_count.dart';
+import '../../../../../components/custom_app_bar.dart';
+import '../../../../../components/custom_progress_indicator.dart';
+import '../../../../../constants/constants.dart';
+import '../../../../../constants/params_constants.dart';
+import '../../../../../services/database_services.dart';
+import '../../../../../utils/methods/get_address_count.dart';
 import '../components/add_sipping_address.dart';
 
 class ShippingAddresses extends StatelessWidget {
