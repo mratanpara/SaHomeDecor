@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../components/custom_app_bar.dart';
 import '../../../constants/constants.dart';
 import '../../../constants/params_constants.dart';
+import '../../../utils/methods/reusable_methods.dart';
 import '../../cart/cart_screen.dart';
 import '../../search_screen/search_screen.dart';
 import '../components/all_categories_data.dart';
@@ -27,6 +29,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
+    getAllProduct();
+  }
+
+  Future<void> getAllProduct() async {
+    List<String> collection = [];
+    FirebaseFirestore.instance
+        .collection('categories')
+        .doc('products')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        print(documentSnapshot.reference);
+      }
+    });
   }
 
   @override

@@ -41,7 +41,6 @@ class SuccessScreen extends StatelessWidget {
   Text _text() => const Text(
         'Success!',
         style: TextStyle(
-          color: Colors.black,
           fontSize: 44,
           fontWeight: FontWeight.bold,
         ),
